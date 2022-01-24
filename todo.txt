@@ -1,0 +1,10 @@
+- Fix rgb2hsv
+- Write hsv2rgb
+
+- Create a rainbow effect
+- Create an effect class 
+
+- Implement Opengl, Imgui, and glfw
+- Create display of matrix
+- Create more effects and timing
+- 
