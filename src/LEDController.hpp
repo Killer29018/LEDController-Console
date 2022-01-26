@@ -19,7 +19,7 @@ struct cRGB
 
 struct cHSV
 {
-    uint16_t H;
+    uint8_t H;
     uint8_t S, V;
     cHSV(uint16_t H, uint8_t S, uint8_t V)
         : H(H), S(S), V(V) {}
@@ -27,8 +27,12 @@ struct cHSV
     cHSV() : H(0x0), S(0x0), V(0x0) {}
 };
 
-cHSV rgb2hsv(const cRGB& rgb);
-cRGB hsv2rgb(const cHSV& hsv);
+cHSV RGB2HSV(const cRGB& rgb);
+cRGB HSV2RGB(const cHSV& hsv);
+cRGB RGBFromHex(const uint32_t& colour);
+
+std::string printRGB(const cRGB& rgb);
+std::string printHSV(const cHSV& hsv);
 
 class LEDController
 {
@@ -50,9 +54,13 @@ public:
     uint8_t& getBrightness() { return m_Brightness; }
 
     void setLED(int index, const cRGB& led);
+    void setLED(int index, const cHSV& led);
     cRGB& getLED(int index);
 
-    void solidColour(const cRGB& led);
+    void fillSolid(cRGB led);
+    void fillSolid(cHSV led);
+    void fillRainbow(cRGB initial, uint8_t hueChange = 5);
+    void fillRainbow(cHSV initial, uint8_t hueChange = 5);
 private:
     void setDataBounds();
     void setDataSize(int size);

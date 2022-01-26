@@ -37,25 +37,36 @@ int main(int argc, char* argv[])
 
 
     controller.setBrightness(255);
-    controller.solidColour(cRGB(0x00, 0xFF, 0xFF));
-    // controller.setLED(0, 1, 255, 255, 255);
-    
-    cRGB colourRGB = cRGB(0x37, 0x52, 0x56);
-    cHSV hsv = rgb2hsv(colourRGB);
+    controller.fillSolid(cRGB(0x00, 0xFF, 0xFF));
 
-    std::cout << (int)hsv.H << " : " << (int)100 * (hsv.S / 255.0) << " : " << (int)100 * (hsv.V / 255.0) << "\n";
+    // cRGB colourRGB = RGBFromHex(0x00945ccc);
+    // std::cout << printRGB(colourRGB);
+    // cHSV hsv = RGB2HSV(colourRGB);
+    // std::cout << printHSV(hsv);
+    // cRGB rgb = HSV2RGB(hsv);
+    // std::cout << printRGB(rgb);
+
+    controller.fillRainbow(cHSV(0, 255, 255), 2);
 
     int count = 0;
-    bool even = false;
+    int count2 = 0;
+    int iteration = 0;
+    uint8_t temp = 0;
     while (true)
     {
-        // if (count >= 5000)
-        // {
-        //     setCheckerboard(controller, even);
-        //     even = !even;
-        //     count= 0;
-        // }
-        // count++;
-        controller.upload(socket);
+        if (count >= 100)
+        {
+            controller.fillRainbow(cHSV(temp, 255, 255), 1);
+            count = 0;
+            temp += 1;
+            iteration++;
+        }
+        if (count2 % 100)
+            controller.upload(socket);
+
+        std::cout << "Count: " << (int)iteration << "\t\r" << std::flush;
+
+        count++;
+        count2++;
     }
 }
