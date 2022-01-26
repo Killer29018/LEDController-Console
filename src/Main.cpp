@@ -37,14 +37,6 @@ int main(int argc, char* argv[])
 
 
     controller.setBrightness(255);
-    controller.fillSolid(cRGB(0x00, 0xFF, 0xFF));
-
-    // cRGB colourRGB = RGBFromHex(0x00945ccc);
-    // std::cout << printRGB(colourRGB);
-    // cHSV hsv = RGB2HSV(colourRGB);
-    // std::cout << printHSV(hsv);
-    // cRGB rgb = HSV2RGB(hsv);
-    // std::cout << printRGB(rgb);
 
     controller.fillRainbow(cHSV(0, 255, 255), 2);
 
