@@ -210,7 +210,47 @@ void HSV2RGB_rainbow(const cHSV& hsv, cRGB& rgb)
 
 void HSV2RGB_spectrum(const cHSV& hsv, cRGB& rgb)
 {
+    uint8_t val = hsv.val;
+    uint8_t sat = hsv.sat;
 
+    uint8_t invsat = 255 - sat;
+    uint8_t brightnessFloor = (val * invsat) / 256;
+
+    uint8_t colourAmplitude = val - brightnessFloor;
+
+    uint8_t section = hsv.hue / 0x40;
+    uint8_t offset = hsv.hue % 0x40;
+
+    uint8_t rampup = offset;
+    uint8_t rampdown = (0x40 - 1) - offset;
+
+    uint8_t rampupAmpAdj = (rampup * colourAmplitude) / (256 / 4);
+    uint8_t rampdownAmpAdj = (rampdown * colourAmplitude) / (256 / 4);
+
+    uint8_t rampupAdjWithFloor = rampupAmpAdj + brightnessFloor;
+    uint8_t rampdownAdjWithFloor = rampdownAmpAdj + brightnessFloor;
+
+    if (section)
+    {
+        if (section == 1)
+        {
+            rgb.r = brightnessFloor;
+            rgb.g = rampdownAdjWithFloor;
+            rgb.b = rampupAdjWithFloor;
+        }
+        else
+        {
+            rgb.r = rampupAdjWithFloor;
+            rgb.g = brightnessFloor;
+            rgb.b = rampdownAdjWithFloor;
+        }
+    }
+    else
+    {
+        rgb.r = rampdownAdjWithFloor;
+        rgb.g = rampupAdjWithFloor;
+        rgb.b = brightnessFloor;
+    }
 }
 
 std::string RGBToString(const cRGB& rgb)

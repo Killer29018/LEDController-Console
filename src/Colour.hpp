@@ -135,6 +135,7 @@ struct cRGB
         r = code >> 16;
         g = code >> 8;
         b = code >> 0;
+        return *this;
     }
 };
 

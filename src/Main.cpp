@@ -7,10 +7,7 @@
 #include "LEDMatrix.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <glad/gl.h>
-
-#include <GLFW/glfw3.h>
-#include "KRE/KRE.hpp"
+#include "Window.hpp"
 
 #define MAX_BYTES 1400
 
@@ -22,38 +19,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 int main()
 {
-    GLFWwindow* window;
-    if (!glfwInit())
-        return -1;
+    Window window;
+    window.setup("LED Controller", { SCREEN_WIDTH, SCREEN_HEIGHT });
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LED Controller", NULL, NULL);
-    if (!window)
-    {
-        std::cout << "Failed to create window\n";
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, keyCallback);
-    glfwSwapInterval(1);
-
-    int version = gladLoadGL(glfwGetProcAddress);
-    if (!version)
-    {
-        std::cout << "Failed to initialize GLAD\n";
-        return -1;
-    }
-
-    std::cout << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << "\n";
-
-    glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    glfwSetKeyCallback(window.window, keyCallback);
 
     Socket socket("192.168.0.99", 65506);
 
@@ -67,7 +36,7 @@ int main()
     uint8_t temp = 0;
     float deltaTotal = 0;
     float delta = 0;
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window.window))
     {
         KRE::Clock::tick();
         delta = KRE::Clock::deltaTime;
@@ -86,7 +55,7 @@ int main()
 
         deltaTotal += delta;
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window.window);
         glfwPollEvents();
     }
 
@@ -95,5 +64,6 @@ int main()
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
 }
