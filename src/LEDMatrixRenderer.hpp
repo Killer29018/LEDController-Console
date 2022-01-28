@@ -1,0 +1,43 @@
+#ifndef LEDMATRIX_RENDERER_HPP
+#define LEDMATRIX_RENDERER_HPP
+
+#include "ImguiWindow.hpp"
+
+#include "LEDMatrix.hpp"
+
+#include "glad/gl.h"
+#include "KRE/KRE.hpp"
+
+class LEDMatrixRenderer : public ImguiWindow
+{
+public:
+    uint32_t cellSize;
+    uint32_t cellSpacing;
+private:
+    LEDMatrix* m_Matrix;
+    uint32_t m_FrameBuffer;
+    uint32_t m_ImageBuffer;
+
+    uint32_t m_TotalWidth, m_TotalHeight;
+
+    KRE::Vertices m_Verticies;
+    KRE::Indices m_Indicies;
+
+    KRE::VertexArray m_VAO;
+    KRE::VertexBuffer m_VBO;
+    KRE::ElementArray m_EBO;
+
+    KRE::Shader m_Shader;
+public:
+    LEDMatrixRenderer() = default;
+    ~LEDMatrixRenderer() = default;
+
+    void init(LEDMatrix* matrix, uint16_t cellSize, uint16_t spacing);
+
+    void setupImage();
+    void renderImgui() override;
+private:
+    void renderMatrix(int width = 0, int height = 0);
+};
+
+#endif

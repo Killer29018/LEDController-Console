@@ -9,6 +9,9 @@
 
 #include "Colour.hpp"
 #include "LEDMatrix.hpp"
+#include "LEDMatrixRenderer.hpp"
+
+#include "ImguiManager.hpp"
 
 #define MAX_FPS 60
 
@@ -19,6 +22,7 @@ private:
     static Window m_Window;
     static Socket m_Socket;
     static LEDMatrix m_Controller;
+    static LEDMatrixRenderer m_MatrixRenderer;
 public:
     static void init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port);
     static void start();

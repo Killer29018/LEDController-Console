@@ -14,7 +14,7 @@ enum class StartPosition
 class LEDMatrix : public LEDController
 {
 private:
-    unsigned int m_Rows, m_Columns;
+    uint32_t m_Rows, m_Columns;
     uint16_t** m_IndexArr;
 public:
     LEDMatrix() = default;
@@ -25,6 +25,9 @@ public:
     void setLED(int x, int y, const cRGB& led);
 
     cRGB& getLED(int x, int y);
+
+    uint32_t getCols() { return m_Columns; }
+    uint32_t getRows() { return m_Rows; }
 private:
     int getIndex(int x, int y);
 };

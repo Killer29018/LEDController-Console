@@ -4,6 +4,7 @@
 Window Application::m_Window;
 Socket Application::m_Socket;
 LEDMatrix Application::m_Controller;
+LEDMatrixRenderer Application::m_MatrixRenderer;
 
 void Application::init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port)
 {
@@ -14,6 +15,13 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 
     m_Controller.setup(36, 21, StartPosition::TOP_RIGHT);
     m_Controller.setBrightness(255);
+    // m_Controller.fillSolid(cRGB(0, 255, 255));
+
+    m_MatrixRenderer.init(&m_Controller, 10, 10);
+    // m_MatrixRenderer.setupImage();
+
+    ImguiManager::init(m_Window.window);
+    ImguiManager::addWindow(&m_MatrixRenderer);
 }
 
 void Application::start()
@@ -25,8 +33,12 @@ void Application::start()
     {
         KRE::Clock::tick();
 
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ImguiManager::preRender();
+        ImguiManager::render();
+        ImguiManager::postRender();
+
+        glfwSwapBuffers(m_Window.window);
+        glfwPollEvents();
 
         if (deltaTotal >= (1/MAX_FPS))
         {
@@ -39,9 +51,6 @@ void Application::start()
         }
 
         deltaTotal += KRE::Clock::deltaTime;
-
-        glfwSwapBuffers(m_Window.window);
-        glfwPollEvents();
     }
 }
 
