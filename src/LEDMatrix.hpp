@@ -25,6 +25,7 @@ public:
     void setLED(int x, int y, const cRGB& led);
 
     cRGB& getLED(int x, int y);
+    cRGB getLEDWBrightness(int x, int y);
 
     uint32_t getCols() { return m_Columns; }
     uint32_t getRows() { return m_Rows; }

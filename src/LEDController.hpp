@@ -29,6 +29,7 @@ public:
 
     void setLED(int index, const cRGB& led);
     cRGB& getLED(int index);
+    cRGB getLEDWBrightness(int index);
 
     void fillSolid(cRGB led);
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);

@@ -53,6 +53,11 @@ cRGB& LEDMatrix::getLED(int x, int y)
     return m_LEDs[getIndex(x, y)];
 }
 
+cRGB LEDMatrix::getLEDWBrightness(int x, int y)
+{
+    return m_LEDs[getIndex(x, y)] / (255.0/ m_Brightness);
+}
+
 int LEDMatrix::getIndex(int x, int y)
 {
     return m_IndexArr[x][y];

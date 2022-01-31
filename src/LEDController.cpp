@@ -45,6 +45,11 @@ cRGB& LEDController::getLED(int index)
     return m_LEDs[index]; 
 }
 
+cRGB LEDController::getLEDWBrightness(int index)
+{
+    return m_LEDs[index] / (255.0 / m_Brightness);
+}
+
 void LEDController::fillSolid(cRGB led)
 {
     std::fill(m_LEDs.begin(), m_LEDs.end(), led);

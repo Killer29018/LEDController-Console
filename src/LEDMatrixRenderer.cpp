@@ -2,11 +2,12 @@
 
 #include "glm/glm.hpp"
 
-void LEDMatrixRenderer::init(LEDMatrix* matrix, uint16_t cellSize, uint16_t spacing)
+void LEDMatrixRenderer::init(LEDMatrix* matrix, uint16_t spacing)
 {
     this->m_Matrix = matrix;
-    this->cellSize=cellSize;
     this->cellSpacing = spacing;
+
+    m_CellSize = 0;
 
     m_Indicies = KRE::Indices({
             0, 1, 2,
@@ -34,23 +35,19 @@ void LEDMatrixRenderer::init(LEDMatrix* matrix, uint16_t cellSize, uint16_t spac
 
 void LEDMatrixRenderer::setupImage()
 {
-    m_TotalWidth  = cellSpacing + (m_Matrix->getCols() * (cellSize + cellSpacing));
-    m_TotalHeight = cellSpacing + (m_Matrix->getRows() * (cellSize + cellSpacing));
-
     glGenFramebuffers(1, &m_FrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 
     glGenTextures(1, &m_ImageBuffer);
-    glBindTexture(GL_TEXTURE_2D, m_ImageBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_TotalWidth, m_TotalHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
+    glBindTexture(GL_TEXTURE_2D, m_ImageBuffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_ImageBuffer, 0);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     m_VAO.bind();
     m_VBO.bind();
@@ -71,7 +68,10 @@ void LEDMatrixRenderer::renderImgui()
         ImGui::BeginChild("Render");
         ImVec2 wSize = ImGui::GetContentRegionAvail();
 
-        cellSize = (int)((float)(wSize.x - cellSpacing - (cellSpacing * m_Matrix->getCols())) / (float)(m_Matrix->getCols()));
+        setCellSize(wSize.x, wSize.y);
+
+        glBindTexture(GL_TEXTURE_2D, m_ImageBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wSize.x, wSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
         renderMatrix(wSize.x, wSize.y);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - wSize.x) * 0.5);
@@ -91,31 +91,51 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
 
     m_Shader.bind();
 
-    glViewport(0, 0, m_TotalWidth, m_TotalHeight);
-    glm::mat4 projection = glm::ortho(0.0f, (float)(width == 0 ? m_TotalWidth : width), (float)(height == 0 ? m_TotalHeight : height), 0.0f);
+    glViewport(0, 0, width, height);
+    glm::mat4 projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f);
     m_Shader.setUniformMatrix4("u_Projection", projection);
 
     m_VAO.bind();
 
     glm::mat4 model(1.0f);
+
+    float sizeX = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getCols()) / 2.0;
+    float sizeY = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getRows()) / 2.0;
+    float xStart = (width / 2) - sizeX;
+    float yStart = (height / 2) - sizeY;
     for (int y = 0; y < m_Matrix->getRows(); y++)
     {
         for (int x = 0; x < m_Matrix->getCols(); x++)
         {
-            int xPos = cellSpacing + (x * (cellSize + cellSpacing));
-            int yPos = cellSpacing + (y * (cellSize + cellSpacing));
+            float xPos = xStart + (m_CellSize / 2) + cellSpacing + (x * (m_CellSize + cellSpacing));
+            float yPos = yStart + (m_CellSize / 2) + cellSpacing + (y * (m_CellSize + cellSpacing));
 
             model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(xPos, yPos, 0.0f));
-            model = glm::scale(model, glm::vec3(cellSize, cellSize, 1.0f));
+            model = glm::scale(model, glm::vec3(m_CellSize, m_CellSize, 1.0f));
             m_Shader.setUniformMatrix4("u_Model", model);
-            cRGB& rgb = m_Matrix->getLED(x, y);
+            cRGB rgb = m_Matrix->getLEDWBrightness(x, y);
             m_Shader.setUniformVector3("u_Colour", glm::vec3(rgb.r / 255.0f, rgb.g / 255.0f, rgb.b / 255.0f));
-            // m_Shader.setUniformVector3("u_Colour", glm::vec3(0.0f, 1.0f, 1.0f));
             glDrawElements(GL_TRIANGLES, m_Indicies.getCount(), GL_UNSIGNED_INT, NULL);
         }
     }
 
     m_VAO.unbind();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void LEDMatrixRenderer::setCellSize(int width, int height)
+{
+    float aspectRatio = (float)m_Matrix->getCols() / (float)m_Matrix->getRows();
+
+    int correctWidth = height * aspectRatio;
+    int correctHeight = width / aspectRatio;
+
+    int widthDiff = correctWidth - width;
+    int heightDiff = correctHeight - height;
+
+    float size = (heightDiff < widthDiff) ? width : height;
+    float side = (heightDiff < widthDiff) ? m_Matrix->getCols() : m_Matrix->getRows();
+
+    m_CellSize = (size  - cellSpacing - (cellSpacing * side)) / side;
 }

@@ -11,14 +11,13 @@
 class LEDMatrixRenderer : public ImguiWindow
 {
 public:
-    uint32_t cellSize;
     uint32_t cellSpacing;
 private:
     LEDMatrix* m_Matrix;
     uint32_t m_FrameBuffer;
     uint32_t m_ImageBuffer;
 
-    uint32_t m_TotalWidth, m_TotalHeight;
+    float m_CellSize;
 
     KRE::Vertices m_Verticies;
     KRE::Indices m_Indicies;
@@ -32,12 +31,14 @@ public:
     LEDMatrixRenderer() = default;
     ~LEDMatrixRenderer() = default;
 
-    void init(LEDMatrix* matrix, uint16_t cellSize, uint16_t spacing);
+    void init(LEDMatrix* matrix, uint16_t spacing);
 
     void setupImage();
     void renderImgui() override;
 private:
     void renderMatrix(int width = 0, int height = 0);
+
+    void setCellSize(int width, int height);
 };
 
 #endif

@@ -137,6 +137,25 @@ struct cRGB
         b = code >> 0;
         return *this;
     }
+
 };
+
+inline cRGB operator*(cRGB& rgb, float mul)
+{
+    cRGB rgb2;
+    rgb2.r = rgb.r * mul;
+    rgb2.g = rgb.g * mul;
+    rgb2.b = rgb.b * mul;
+    return rgb2;
+}
+
+inline cRGB operator/(cRGB& rgb, float div)
+{
+    cRGB rgb2;
+    rgb2.r = rgb.r / div;
+    rgb2.g = rgb.g / div;
+    rgb2.b = rgb.b / div;
+    return rgb2;
+}
 
 #endif
