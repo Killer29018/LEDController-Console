@@ -66,7 +66,8 @@ void ImguiManager::showDockspace(bool* open)
 {
     static bool fullscreen = true;
 
-    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_AutoHideTabBar;
+    // static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_AutoHideTabBar;
+    static ImGuiDockNodeFlags dockspace_flags = 0;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     if (fullscreen)

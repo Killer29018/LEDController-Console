@@ -16,6 +16,8 @@
 #include "LEDMatrixRenderer.hpp"
 #include "Panels/Settings.hpp"
 
+#include "Effects/EffectManager.hpp"
+
 class Application
 {
 public:
@@ -26,6 +28,7 @@ public:
     static LEDMatrix m_Controller;
     static LEDMatrixRenderer m_MatrixRenderer;
     static Settings m_Settings_Panel;
+    static EffectManager m_EffectManager;
 private:
 public:
     static void init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port);

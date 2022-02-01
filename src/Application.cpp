@@ -8,6 +8,7 @@ Socket Application::m_Socket;
 LEDMatrix Application::m_Controller;
 LEDMatrixRenderer Application::m_MatrixRenderer;
 Settings Application::m_Settings_Panel;
+EffectManager Application::m_EffectManager;
 
 void Application::init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port)
 {
@@ -21,11 +22,15 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     // m_Controller.fillSolid(cRGB(0, 255, 255));
 
     m_MatrixRenderer.init(&m_Controller, 5);
+
+    m_EffectManager.init(m_Controller);
+    m_EffectManager.setEffect(EffectList::RAINBOW);
     // m_MatrixRenderer.setupImage();
 
     ImguiManager::init(m_Window.window);
     ImguiManager::addWindow(&m_MatrixRenderer);
     ImguiManager::addWindow(&m_Settings_Panel);
+    ImguiManager::addWindow(&m_EffectManager);
 }
 
 void Application::start()
@@ -46,11 +51,8 @@ void Application::start()
 
         if (deltaTotal >= (1/updateFPS))
         {
-            m_Controller.fillRainbow(cHSV(hue++, 255, 255), 1);
-
             m_Controller.upload(m_Socket);
 
-            // std::cout << "FPS: " << (int)(1 / KRE::Clock::deltaTime) << "\t\r" << std::flush;
             deltaTotal = 0;
         }
 
