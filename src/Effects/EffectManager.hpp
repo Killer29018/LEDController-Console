@@ -5,10 +5,11 @@
 #include "../LEDMatrix.hpp"
 #include "EffectList/Effect.hpp"
 
-#include "EffectList.hpp"
+#include "EffectList/AllEffects.hpp"
+
+#include "Effects.hpp"
 
 #include <vector>
-
 
 class EffectManager : public ImguiWindow
 {
@@ -17,6 +18,7 @@ private:
     LEDMatrix* m_Matrix;
 
     Effect* m_CurrentEffect = NULL;
+    EffectEnum m_CurrentEnum;
 
     const char* m_EffectSettings = "Effect Settings";
 public:
@@ -24,7 +26,7 @@ public:
     ~EffectManager();
 
     void init(LEDMatrix& matrix);
-    void setEffect(EffectList effect);
+    void setEffect(EffectEnum effect);
 
     void renderImgui();
 private:

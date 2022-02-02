@@ -3,19 +3,19 @@
 
 #include "../../LEDMatrix.hpp"
 
-#include "../EffectList.hpp"
-
 #include "../../ImguiWindow.hpp"
+
+#include "../Effects.hpp"
 
 class Effect
 {
 public:
-    EffectList effectEnum;
+    EffectEnum effectEnum;
 protected:
     float m_DeltaTotal;
     int m_FPS;
 public:
-    Effect(EffectList effectEnum) : effectEnum(effectEnum), m_FPS(40.0f), m_DeltaTotal(0.0f) {}
+    Effect(EffectEnum effectEnum) : effectEnum(effectEnum), m_FPS(40.0f), m_DeltaTotal(0.0f) {}
     virtual ~Effect() {}
 
     virtual void updateEffect(LEDMatrix* matrix, float dt) {}

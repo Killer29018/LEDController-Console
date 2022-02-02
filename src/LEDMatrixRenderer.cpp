@@ -79,8 +79,9 @@ void LEDMatrixRenderer::renderImgui()
 
         ImGui::Image((ImTextureID)m_ImageBuffer, wSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
+
+        ImGui::End();
     }
-    ImGui::End();
 }
 
 void LEDMatrixRenderer::renderMatrix(int width, int height)
