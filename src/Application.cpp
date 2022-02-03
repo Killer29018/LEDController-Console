@@ -14,6 +14,7 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 {
     m_Window.setup(name, windowSize);
     glfwSetKeyCallback(m_Window.window, Application::GLFWKeyCallback);
+    glfwSetWindowSizeCallback(m_Window.window, Application::GLFWResizeCallback);
 
     m_Socket.resetIp(ip, port);
 
@@ -70,6 +71,12 @@ void Application::GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int
     case GLFW_PRESS: KRE::Keyboard::pressKey(key); break;
     case GLFW_RELEASE: KRE::Keyboard::unpressKey(key); break;
     }
+}
+
+void Application::GLFWResizeCallback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+    m_Window.setWindowSize({ width, height } );
 }
 
 void Application::processKeys()

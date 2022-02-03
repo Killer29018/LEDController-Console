@@ -3,13 +3,9 @@
 
 #include "../ImguiWindow.hpp"
 #include "../LEDMatrix.hpp"
-#include "EffectList/Effect.hpp"
-
-#include "EffectList/AllEffects.hpp"
-
 #include "Effects.hpp"
 
-#include <vector>
+#include "EffectList/AllEffects.hpp"
 
 class EffectManager : public ImguiWindow
 {

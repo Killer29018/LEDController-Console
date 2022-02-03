@@ -15,6 +15,11 @@ void Window::setup(const char* name, glm::vec2 windowSize)
     initOpengl();
 }
 
+void Window::setWindowSize(glm::vec2 windowSize)
+{
+    m_WindowSize = windowSize;
+}
+
 void Window::initGLFW(const char* name)
 {
     if (!glfwInit())
@@ -24,7 +29,7 @@ void Window::initGLFW(const char* name)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     window = glfwCreateWindow(m_WindowSize.x, m_WindowSize.y, name, NULL, NULL);
 

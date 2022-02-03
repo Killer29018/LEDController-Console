@@ -35,6 +35,7 @@ public:
     static void start();
 
     static void GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+    static void GLFWResizeCallback(GLFWwindow* window, int width, int height);
 private:
     Application() = default;
     ~Application() = default;

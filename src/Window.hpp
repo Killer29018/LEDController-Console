@@ -19,6 +19,8 @@ public:
     ~Window();
 
     void setup(const char* name, glm::vec2 windowSize);
+
+    void setWindowSize(glm::vec2 windowSize);
 private:
     void initGLFW(const char* name);
     void initOpengl();
