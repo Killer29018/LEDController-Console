@@ -38,8 +38,16 @@ void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition dir
                 yIndex = (x%2 == 1 ? y : m_Rows - y - 1);
 
             m_IndexArr[x][y] = xIndex + yIndex;
-
         }
+    }
+
+    for (int y = 0; y < m_Rows; y++)
+    {
+        for (int x = 0; x < m_Columns; x++)
+        {
+            std::cout << m_IndexArr[x][y] << " ";
+        }
+        std::cout << "\n";
     }
 }
 
@@ -58,7 +66,29 @@ cRGB LEDMatrix::getLEDWBrightness(int x, int y)
     return m_LEDs[getIndex(x, y)] / (255.0/ m_Brightness);
 }
 
+void LEDMatrix::fillRainbow(cHSV hsv, uint8_t deltaHue)
+{
+    for (int i = 0; i < m_Columns; i++)
+    {
+        for (int j = 0; j < m_Rows; j++)
+        {
+            int x = i;
+            int y = m_Rows - j - 1;
+
+            if (i % 2 == 0)
+                y = j;
+
+            if (j == 0)
+                m_LEDs[getIndex(x, y)] = cRGB(255, 255, 255);
+
+            uint8_t hue = hsv.h + (deltaHue * (i * m_Rows + j));
+            m_LEDs[getIndex(x, y)] = cHSV(hue, hsv.S, hsv.V);
+        }
+    }
+}
+
 int LEDMatrix::getIndex(int x, int y)
 {
     return m_IndexArr[x][y];
 }
+

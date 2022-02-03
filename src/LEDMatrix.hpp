@@ -27,6 +27,8 @@ public:
     cRGB& getLED(int x, int y);
     cRGB getLEDWBrightness(int x, int y);
 
+    void fillRainbow(cHSV hsv, uint8_t deltaHue);
+
     uint32_t getCols() { return m_Columns; }
     uint32_t getRows() { return m_Rows; }
 private:

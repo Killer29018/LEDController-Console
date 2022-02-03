@@ -33,30 +33,45 @@ void EffectManager::renderImgui()
     if (ImGui::Begin("Effects"))
     {
         ImGui::PushItemWidth(-1);
-        int intEnum = static_cast<int>(m_CurrentEnum);
-        const char* currentItem = EffectName[intEnum];
 
-        if (ImGui::BeginCombo("##EffectCombo", currentItem, 0))
-        {
-            for (int n = 0; n < EffectName.size(); n++)
+        { // Selectable
+            int intEnum = static_cast<int>(m_CurrentEnum);
+            const char* currentItem = EffectName[intEnum];
+            if (ImGui::BeginCombo("##EffectCombo", currentItem, 0))
             {
-                const bool isSelected = (intEnum == n);
-                if (ImGui::Selectable(EffectName[n], isSelected))
+                for (int n = 0; n < EffectName.size(); n++)
                 {
-                    m_CurrentEnum = static_cast<EffectEnum>(n);
-                    setEffect(m_CurrentEnum);
-                }
+                    const bool isSelected = (intEnum == n);
+                    if (ImGui::Selectable(EffectName[n], isSelected))
+                    {
+                        m_CurrentEnum = static_cast<EffectEnum>(n);
+                        setEffect(m_CurrentEnum);
+                    }
 
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
             }
-            ImGui::EndCombo();
         }
 
         ImGui::Text("Speed");
         int fps = m_CurrentEffect->getFPS();
         ImGui::SliderInt("##EFFECT_FPS", &fps, 1, 100);
         m_CurrentEffect->setFPS(fps);
+
+        ImGui::Text("Primary Colour");
+        { // Colour
+            cRGB colour = m_CurrentEffect->getPrimaryColour();
+            ImVec4 imColour = ImVec4(colour.r / 255.0f, colour.g / 255.0f, colour.b / 255.0f, 0.0f);
+
+            static ImGuiColorEditFlags colourFlags = ImGuiColorEditFlags_NoAlpha | 
+                ImGuiColorEditFlags_PickerHueBar;
+
+            ImGui::ColorPicker4("##PrimaryColourPicker", (float*)&imColour, colourFlags, NULL);
+            colour = cRGB(imColour.x * 255.0f, imColour.y * 255.0f, imColour.z * 255.0f);
+            m_CurrentEffect->setPrimaryColour(colour);
+        }
 
         ImGui::PopItemWidth();
 

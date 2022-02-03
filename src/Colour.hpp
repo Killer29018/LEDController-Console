@@ -92,6 +92,8 @@ struct cRGB
         uint8_t raw[3];
     };
 
+    inline uint8_t getHue() { cHSV hsv; RGB2HSV(*this, hsv); return hsv.hue; }
+
     inline uint8_t& operator[] (uint8_t x) { return raw[x]; }
     inline const uint8_t& operator[] (uint8_t x) const { return raw[x]; }
 

@@ -12,9 +12,10 @@ public:
 protected:
     float m_DeltaTotal;
     int m_FPS;
+    cRGB m_PrimaryColour;
 public:
     Effect(EffectEnum effectEnum)
-        : effectEnum(effectEnum), m_FPS(40), m_DeltaTotal(0.0f) {}
+        : effectEnum(effectEnum), m_FPS(40), m_DeltaTotal(0.0f), m_PrimaryColour(255, 0, 0) {}
     virtual ~Effect() {}
 
     virtual void updateEffect(LEDMatrix* matrix, float dt) {}
@@ -22,6 +23,9 @@ public:
 
     int getFPS() { return m_FPS; }
     void setFPS(int fps) { m_FPS = fps; }
+
+    cRGB getPrimaryColour() { return m_PrimaryColour; }
+    void setPrimaryColour(cRGB colour) { m_PrimaryColour = colour; }
 };
 
 class Effect_None : public Effect
@@ -37,7 +41,6 @@ public:
 class Effect_SolidColour : public Effect
 {
 private:
-    cRGB m_Colour;
 public:
     Effect_SolidColour();
     ~Effect_SolidColour();
@@ -49,7 +52,10 @@ public:
 class Effect_Rainbow : public Effect
 {
 private:
-    uint8_t deltaHue;
+    uint8_t m_DeltaHue;
+    uint8_t m_CurrentHue;
+    uint8_t m_HueOffset;
+    bool m_ChangeHue;
 public:
     Effect_Rainbow();
     ~Effect_Rainbow();
