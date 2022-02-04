@@ -100,13 +100,13 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
 
     glm::mat4 model(1.0f);
 
-    float sizeX = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getCols()) / 2.0;
+    float sizeX = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getColumns()) / 2.0;
     float sizeY = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getRows()) / 2.0;
     float xStart = (width / 2) - sizeX;
     float yStart = (height / 2) - sizeY;
     for (int y = 0; y < m_Matrix->getRows(); y++)
     {
-        for (int x = 0; x < m_Matrix->getCols(); x++)
+        for (int x = 0; x < m_Matrix->getColumns(); x++)
         {
             float xPos = xStart + (m_CellSize / 2) + cellSpacing + (x * (m_CellSize + cellSpacing));
             float yPos = yStart + (m_CellSize / 2) + cellSpacing + (y * (m_CellSize + cellSpacing));
@@ -127,7 +127,7 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
 
 void LEDMatrixRenderer::setCellSize(int width, int height)
 {
-    float aspectRatio = (float)m_Matrix->getCols() / (float)m_Matrix->getRows();
+    float aspectRatio = (float)m_Matrix->getColumns() / (float)m_Matrix->getRows();
 
     int correctWidth = height * aspectRatio;
     int correctHeight = width / aspectRatio;
@@ -136,7 +136,7 @@ void LEDMatrixRenderer::setCellSize(int width, int height)
     int heightDiff = correctHeight - height;
 
     float size = (heightDiff < widthDiff) ? width : height;
-    float side = (heightDiff < widthDiff) ? m_Matrix->getCols() : m_Matrix->getRows();
+    float side = (heightDiff < widthDiff) ? m_Matrix->getColumns() : m_Matrix->getRows();
 
     m_CellSize = (size  - cellSpacing - (cellSpacing * side)) / side;
 }

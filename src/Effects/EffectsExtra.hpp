@@ -8,12 +8,14 @@ enum class EffectEnum
     NONE        = 0,
     SOLID_COLOUR= 1,
     RAINBOW     = 2,
+    GLITTER     = 3,
 };
 
 const std::vector<const char*> EffectName = {
     "Blank",
     "Solid Colour",
-    "Rainbow"
+    "Rainbow",
+    "Glitter"
 };
 
 #endif

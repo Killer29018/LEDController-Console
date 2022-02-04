@@ -4,5 +4,6 @@
 #include "EffectHeaders/Effect_None.hpp"
 #include "EffectHeaders/Effect_SolidColour.hpp"
 #include "EffectHeaders/Effect_Rainbow.hpp"
+#include "EffectHeaders/Effect_Glitter.hpp"
 
 #endif

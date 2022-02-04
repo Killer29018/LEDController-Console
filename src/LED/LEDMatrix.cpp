@@ -57,6 +57,22 @@ cRGB LEDMatrix::getLEDWBrightness(int x, int y)
     return m_LEDs[getIndex(x, y)] / (255.0/ m_Brightness);
 }
 
+void LEDMatrix::fillRow(cRGB colour, int row)
+{
+    for (int i = 0; i < m_Columns; i++)
+    {
+        m_LEDs[getIndex(i, row)] = colour;
+    }
+}
+
+void LEDMatrix::fillColumn(cRGB colour, int column)
+{
+    for (int i = 0; i < m_Rows; i++)
+    {
+        m_LEDs[getIndex(column, i)] = colour;
+    }
+}
+
 void LEDMatrix::fillRainbow(cHSV hsv, uint8_t deltaHue)
 {
     for (int i = 0; i < m_Columns; i++)

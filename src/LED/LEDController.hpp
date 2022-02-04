@@ -31,7 +31,8 @@ public:
     cRGB& getLED(int index);
     cRGB getLEDWBrightness(int index);
 
-    void fillSolid(cRGB led);
+    void fillSolid(cRGB colour);
+    void fillSolid(cRGB colour, int start, int length);
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);
 
     uint32_t getLEDCount() { return m_LEDs.size(); }

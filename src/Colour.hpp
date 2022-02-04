@@ -61,6 +61,19 @@ struct cHSV
         return *this;
     }
 
+    inline cHSV& operator+=(const uint8_t hue)
+    {
+        h += hue;
+        return *this;
+    }
+
+    inline cHSV operator+(const uint8_t hue)
+    {
+        cHSV result = *this;
+        result += hue;
+        return result;
+    }
+
 };
 
 struct cRGB

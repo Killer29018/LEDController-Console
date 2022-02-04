@@ -50,9 +50,15 @@ cRGB LEDController::getLEDWBrightness(int index)
     return m_LEDs[index] / (255.0 / m_Brightness);
 }
 
-void LEDController::fillSolid(cRGB led)
+void LEDController::fillSolid(cRGB colour)
 {
-    std::fill(m_LEDs.begin(), m_LEDs.end(), led);
+    std::fill(m_LEDs.begin(), m_LEDs.end(), colour);
+}
+
+void LEDController::fillSolid(cRGB colour, int start, int length)
+{
+    auto end = std::min(m_LEDs.begin() + start + length, m_LEDs.end());
+    std::fill(m_LEDs.begin() + start, end, colour);
 }
 
 void LEDController::fillRainbow(cHSV hsv, uint8_t deltaHue)
