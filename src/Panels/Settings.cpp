@@ -2,7 +2,7 @@
 
 #include "../Application.hpp"
 
-void Settings::renderImgui()
+void Settings::renderImGui()
 {
     if (ImGui::Begin("Settings"))
     {

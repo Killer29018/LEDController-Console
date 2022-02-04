@@ -1,5 +1,4 @@
 #include "Application.hpp"
-#include "Window.hpp"
 
 uint32_t Application::updateFPS = 60;
 
@@ -26,10 +25,10 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     m_EffectManager.init(m_Controller);
     m_EffectManager.setEffect(EffectEnum::RAINBOW);
 
-    ImguiManager::init(m_Window.window);
-    ImguiManager::addWindow(&m_MatrixRenderer);
-    ImguiManager::addWindow(&m_Settings_Panel);
-    ImguiManager::addWindow(&m_EffectManager);
+    ImGuiManager::init(m_Window.window);
+    ImGuiManager::addWindow(&m_MatrixRenderer);
+    ImGuiManager::addWindow(&m_Settings_Panel);
+    ImGuiManager::addWindow(&m_EffectManager);
 }
 
 void Application::start()
@@ -41,16 +40,16 @@ void Application::start()
     {
         KRE::Clock::tick();
 
-        ImguiManager::preRender();
-        ImguiManager::render();
-        ImguiManager::postRender();
+        ImGuiManager::preRender();
+        ImGuiManager::render();
+        ImGuiManager::postRender();
 
         glfwSwapBuffers(m_Window.window);
         glfwPollEvents();
 
         if (deltaTotal >= (1/updateFPS))
         {
-            m_Controller.upload(m_Socket);
+            // m_Controller.upload(m_Socket);
 
             deltaTotal = 0;
         }

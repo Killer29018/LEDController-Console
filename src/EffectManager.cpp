@@ -28,7 +28,7 @@ void EffectManager::setEffect(EffectEnum effect)
     }
 }
 
-void EffectManager::renderImgui()
+void EffectManager::renderImGui()
 {
     if (ImGui::Begin("Effects"))
     {

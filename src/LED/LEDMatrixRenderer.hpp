@@ -1,14 +1,14 @@
 #ifndef LEDMATRIX_RENDERER_HPP
 #define LEDMATRIX_RENDERER_HPP
 
-#include "ImguiWindow.hpp"
+#include "../ImGui/ImGuiPanel.hpp"
 
 #include "LEDMatrix.hpp"
 
 #include "glad/gl.h"
 #include "KRE/KRE.hpp"
 
-class LEDMatrixRenderer : public ImguiWindow
+class LEDMatrixRenderer : public ImGuiPanel
 {
 public:
     uint32_t cellSpacing;
@@ -34,7 +34,7 @@ public:
     void init(LEDMatrix* matrix, uint16_t spacing);
 
     void setupImage();
-    void renderImgui() override;
+    void renderImGui() override;
 private:
     void renderMatrix(int width = 0, int height = 0);
 

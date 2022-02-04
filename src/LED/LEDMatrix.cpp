@@ -40,15 +40,6 @@ void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition dir
             m_IndexArr[x][y] = xIndex + yIndex;
         }
     }
-
-    for (int y = 0; y < m_Rows; y++)
-    {
-        for (int x = 0; x < m_Columns; x++)
-        {
-            std::cout << m_IndexArr[x][y] << " ";
-        }
-        std::cout << "\n";
-    }
 }
 
 void LEDMatrix::setLED(int x, int y, const cRGB& led)

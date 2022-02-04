@@ -9,28 +9,28 @@
 
 #include <vector>
 
-#include "ImguiWindow.hpp"
+#include "ImGuiPanel.hpp"
 
-class ImguiManager
+class ImGuiManager
 {
 public:
     static ImGuiIO* io;
 private:
-    static std::vector<ImguiWindow*> m_Windows;
+    static std::vector<ImGuiPanel*> m_Windows;
     static GLFWwindow* m_Window;
 public:
     static void init(GLFWwindow* window);
 
-    static void addWindow(ImguiWindow* window);
+    static void addWindow(ImGuiPanel* window);
 
     static void preRender();
     static void render();
     static void postRender();
 private:
-    ImguiManager() = default;
-    ~ImguiManager() = default;
+    ImGuiManager() = default;
+    ~ImGuiManager() = default;
 
-    static void initImgui();
+    static void initImGui();
 
     static void showDockspace(bool* open);
     static void setupStyle();

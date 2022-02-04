@@ -1,10 +1,10 @@
 #ifndef EFFECT_EFFECT_HPP
 #define EFFECT_EFFECT_HPP
 
-#include "../../LEDMatrix.hpp"
+#include "../../LED/LEDMatrix.hpp"
 #include "../EffectsExtra.hpp"
 
-#include "../../ImguiWindow.hpp" // Get Imgui Functions
+#include "../../ImGui/ImGuiPanel.hpp" // Get Imgui Functions
 
 class Effect
 {

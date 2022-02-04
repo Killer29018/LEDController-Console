@@ -1,15 +1,15 @@
 #ifndef PANELS_SETTINGS_HPP
 #define PANELS_SETTINGS_HPP
 
-#include "../ImguiWindow.hpp"
+#include "../ImGui/ImGuiPanel.hpp"
 
-class Settings : public ImguiWindow
+class Settings : public ImGuiPanel
 {
 public:
     Settings() = default;
     ~Settings() = default;
 
-    void renderImgui();
+    void renderImGui();
 };
 
 #endif

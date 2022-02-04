@@ -61,7 +61,7 @@ void LEDMatrixRenderer::setupImage()
     m_Shader.compilePath("res/shaders/MatrixVertex.vs.glsl", "res/shaders/MatrixFragment.fs.glsl");
 }
 
-void LEDMatrixRenderer::renderImgui()
+void LEDMatrixRenderer::renderImGui()
 {
     if (ImGui::Begin("###MATRIX_RENDER"))
     {

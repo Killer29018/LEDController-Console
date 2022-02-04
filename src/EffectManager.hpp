@@ -1,12 +1,12 @@
 #ifndef EFFECTS_EFFECT_MANAGER_HPP
 #define EFFECTS_EFFECT_MANAGER_HPP
 
-#include "ImguiWindow.hpp"
-#include "LEDMatrix.hpp"
+#include "ImGui/ImGuiPanel.hpp"
+#include "LED/LEDMatrix.hpp"
 #include "Effects/Effects.hpp"
 #include "Effects/EffectsExtra.hpp"
 
-class EffectManager : public ImguiWindow
+class EffectManager : public ImGuiPanel
 {
 public:
 private:
@@ -23,7 +23,7 @@ public:
     void init(LEDMatrix& matrix);
     void setEffect(EffectEnum effect);
 
-    void renderImgui();
+    void renderImGui();
 private:
     void updateEffect();
 };

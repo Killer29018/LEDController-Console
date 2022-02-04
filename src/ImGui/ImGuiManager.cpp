@@ -1,30 +1,30 @@
-#include "ImguiManager.hpp"
+#include "ImGuiManager.hpp"
 
-ImGuiIO* ImguiManager::io;
+ImGuiIO* ImGuiManager::io;
 
-std::vector<ImguiWindow*> ImguiManager::m_Windows;
-GLFWwindow* ImguiManager::m_Window;
+std::vector<ImGuiPanel*> ImGuiManager::m_Windows;
+GLFWwindow* ImGuiManager::m_Window;
 
-void ImguiManager::init(GLFWwindow* window)
+void ImGuiManager::init(GLFWwindow* window)
 {
     m_Window = window;
 
-    initImgui();
+    initImGui();
 }
 
-void ImguiManager::addWindow(ImguiWindow* window)
+void ImGuiManager::addWindow(ImGuiPanel* window)
 {
     m_Windows.push_back(window);
 }
 
-void ImguiManager::preRender()
+void ImGuiManager::preRender()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void ImguiManager::render()
+void ImGuiManager::render()
 {
     static bool renderAll = true;
     showDockspace(&renderAll);
@@ -32,10 +32,10 @@ void ImguiManager::render()
     static bool showDemo = true;
     ImGui::ShowDemoWindow(&showDemo);
 
-    for (auto window : m_Windows) window->renderImgui();
+    for (auto window : m_Windows) window->renderImGui();
 }
 
-void ImguiManager::postRender()
+void ImGuiManager::postRender()
 {
     ImGui::Render();
     int displayW, displayH;
@@ -45,7 +45,7 @@ void ImguiManager::postRender()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImguiManager::initImgui()
+void ImGuiManager::initImGui()
 {
     IMGUI_CHECKVERSION();
 
@@ -62,7 +62,7 @@ void ImguiManager::initImgui()
     setupStyle();
 }
 
-void ImguiManager::showDockspace(bool* open)
+void ImGuiManager::showDockspace(bool* open)
 {
     static bool fullscreen = true;
 
@@ -102,7 +102,7 @@ void ImguiManager::showDockspace(bool* open)
     ImGui::End();
 }
 
-void ImguiManager::setupStyle()
+void ImGuiManager::setupStyle()
 {
     ImGuiStyle* style = &ImGui::GetStyle();
 	ImVec4* colors = style->Colors;

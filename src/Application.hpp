@@ -8,12 +8,12 @@
 #include "Socket.hpp"
 
 #include "Colour.hpp"
-#include "LEDMatrix.hpp"
+#include "LED/LEDMatrix.hpp"
 
-#include "ImguiManager.hpp"
-#include "ImguiWindow.hpp"
+#include "ImGui/ImGuiManager.hpp"
+#include "ImGui/ImGuiPanel.hpp"
 
-#include "LEDMatrixRenderer.hpp"
+#include "LED/LEDMatrixRenderer.hpp"
 #include "Panels/Settings.hpp"
 
 #include "EffectManager.hpp"

@@ -1,13 +1,4 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cmath>
-#include "Socket.hpp"
-#include "LEDController.hpp"
-#include "LEDMatrix.hpp"
-
 #define STB_IMAGE_IMPLEMENTATION
-#include "Window.hpp"
 
 #include "Application.hpp"
 
