@@ -1,12 +1,11 @@
-#include "AllEffects.hpp"
-
+#include "../EffectHeaders/Effect_SolidColour.hpp"
 
 Effect_SolidColour::Effect_SolidColour() 
     : Effect(EffectEnum::SOLID_COLOUR) {}
 
 Effect_SolidColour::~Effect_SolidColour() {}
 
-void Effect_SolidColour::updateEffect(LEDMatrix* matrix, float dt)
+void Effect_SolidColour::update(LEDMatrix* matrix, float dt)
 {
     m_DeltaTotal += dt;
     if (m_DeltaTotal >= (1.0 / (float)m_FPS))

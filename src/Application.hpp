@@ -16,7 +16,7 @@
 #include "LEDMatrixRenderer.hpp"
 #include "Panels/Settings.hpp"
 
-#include "Effects/EffectManager.hpp"
+#include "EffectManager.hpp"
 
 class Application
 {

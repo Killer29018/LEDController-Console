@@ -1,11 +1,11 @@
-#include "AllEffects.hpp"
+#include "../EffectHeaders/Effect_None.hpp"
 
 Effect_None::Effect_None()
     : Effect(EffectEnum::NONE) {}
 
 Effect_None::~Effect_None() {}
 
-void Effect_None::updateEffect(LEDMatrix* matrix, float dt)
+void Effect_None::update(LEDMatrix* matrix, float dt)
 {
     m_DeltaTotal += dt;
     if (m_DeltaTotal >= (1.0 / (float)m_FPS))

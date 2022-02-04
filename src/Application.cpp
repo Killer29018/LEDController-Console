@@ -20,13 +20,11 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 
     m_Controller.setup(36, 21, StartPosition::TOP_RIGHT);
     m_Controller.setBrightness(255);
-    // m_Controller.fillSolid(cRGB(0, 255, 255));
 
     m_MatrixRenderer.init(&m_Controller, 5);
 
     m_EffectManager.init(m_Controller);
     m_EffectManager.setEffect(EffectEnum::RAINBOW);
-    // m_MatrixRenderer.setupImage();
 
     ImguiManager::init(m_Window.window);
     ImguiManager::addWindow(&m_MatrixRenderer);

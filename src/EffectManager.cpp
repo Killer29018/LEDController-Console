@@ -90,7 +90,7 @@ void EffectManager::updateEffect()
 {
     if (!m_CurrentEffect) return;
 
-    m_CurrentEffect->updateEffect(m_Matrix, KRE::Clock::deltaTime);
+    m_CurrentEffect->update(m_Matrix, KRE::Clock::deltaTime);
 
     m_CurrentEffect->render("Effect Settings");
 }

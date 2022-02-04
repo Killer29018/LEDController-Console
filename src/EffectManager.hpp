@@ -1,11 +1,10 @@
 #ifndef EFFECTS_EFFECT_MANAGER_HPP
 #define EFFECTS_EFFECT_MANAGER_HPP
 
-#include "../ImguiWindow.hpp"
-#include "../LEDMatrix.hpp"
-#include "Effects.hpp"
-
-#include "EffectList/AllEffects.hpp"
+#include "ImguiWindow.hpp"
+#include "LEDMatrix.hpp"
+#include "Effects/Effects.hpp"
+#include "Effects/EffectsExtra.hpp"
 
 class EffectManager : public ImguiWindow
 {

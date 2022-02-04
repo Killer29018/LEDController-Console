@@ -1,20 +1,8 @@
-#ifndef EFFECT_EFFECT_LIST_HPP
-#define EFFECT_EFFECT_LIST_HPP
+#ifndef EFFECT_EFFECTS_HPP
+#define EFFECT_EFFECTS_HPP
 
-#include <vector>
-
-enum class EffectEnum
-{
-    NONE        = 0,
-    SOLID_COLOUR= 1,
-    RAINBOW     = 2,
-};
-
-const std::vector<const char*> EffectName = {
-    "Blank",
-    "Solid Colour",
-    "Rainbow",
-};
-
+#include "EffectHeaders/Effect_None.hpp"
+#include "EffectHeaders/Effect_SolidColour.hpp"
+#include "EffectHeaders/Effect_Rainbow.hpp"
 
 #endif

@@ -1,4 +1,4 @@
-#include "AllEffects.hpp"
+#include "../EffectHeaders/Effect_Rainbow.hpp"
 
 Effect_Rainbow::Effect_Rainbow()
     : Effect(EffectEnum::RAINBOW) 
@@ -10,7 +10,7 @@ Effect_Rainbow::Effect_Rainbow()
 
 Effect_Rainbow::~Effect_Rainbow() {}
 
-void Effect_Rainbow::updateEffect(LEDMatrix* matrix, float dt)
+void Effect_Rainbow::update(LEDMatrix* matrix, float dt)
 {
     uint8_t hue = m_PrimaryColour.getHue();
     if (m_CurrentHue != hue)
