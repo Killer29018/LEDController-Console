@@ -17,6 +17,7 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     glfwSetWindowSizeCallback(m_Window.window, Application::GLFWResizeCallback);
 
     m_Socket.resetIp(ip, port);
+    m_Settings_Panel.setIpAndPort(ip, port);
 
     m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT);
     m_Controller.setBrightness(255);

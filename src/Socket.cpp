@@ -19,6 +19,7 @@ Socket::~Socket()
 
 void Socket::resetIp(const char* ip, int port)
 {
+    closesocket(m_Socket);
     createSocket(ip, port);
 }
 

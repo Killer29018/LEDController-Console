@@ -2,6 +2,13 @@
 
 #include "../Application.hpp"
 
+void Settings::setIpAndPort(const char* ip, int port)
+{
+    strcpy(m_IpBuf, ip);
+    // m_IpBuf = ip;
+    m_Port = port;
+}
+
 void Settings::renderImGui()
 {
     if (ImGui::Begin("Settings"))
@@ -10,6 +17,19 @@ void Settings::renderImGui()
 
         ImGui::Text("Output");
         ImGui::Checkbox("##Output", &Application::m_Output);
+        
+        ImGui::Text("Ip");
+        if (ImGui::InputText("##IP", m_IpBuf, m_IpBytes, ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            Application::m_Socket.resetIp(m_IpBuf, m_Port);
+        }
+
+        ImGui::Text("Port");
+        uint16_t one = 1;
+        if (ImGui::InputScalar("##PORT", ImGuiDataType_U16, &m_Port, NULL, NULL, "%u", ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            Application::m_Socket.resetIp(m_IpBuf, m_Port);
+        }
 
         ImGui::Text("Master Update Speed");
         int fps = Application::updateFPS;
