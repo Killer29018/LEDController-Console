@@ -7,7 +7,6 @@ class Effect_Rainbow : public Effect
 {
 private:
     uint8_t m_DeltaHue;
-    uint8_t m_CurrentHue;
     uint8_t m_HueOffset;
     bool m_ChangeHue;
 public:

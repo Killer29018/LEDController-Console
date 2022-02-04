@@ -7,6 +7,10 @@ void Settings::renderImGui()
     if (ImGui::Begin("Settings"))
     {
         ImGui::PushItemWidth(-1);
+
+        ImGui::Text("Output");
+        ImGui::Checkbox("##Output", &Application::m_Output);
+
         ImGui::Text("Master Update Speed");
         int fps = Application::updateFPS;
         ImGui::SliderInt("##FPS", &fps, 10, 100);

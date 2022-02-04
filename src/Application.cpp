@@ -8,6 +8,7 @@ LEDMatrix Application::m_Controller;
 LEDMatrixRenderer Application::m_MatrixRenderer;
 Settings Application::m_Settings_Panel;
 EffectManager Application::m_EffectManager;
+bool Application::m_Output = false;
 
 void Application::init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port)
 {
@@ -17,13 +18,13 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 
     m_Socket.resetIp(ip, port);
 
-    m_Controller.setup(36, 21, StartPosition::TOP_RIGHT);
+    m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT);
     m_Controller.setBrightness(255);
 
     m_MatrixRenderer.init(&m_Controller, 5);
 
     m_EffectManager.init(m_Controller);
-    m_EffectManager.setEffect(EffectEnum::RAINBOW);
+    m_EffectManager.setEffect(EffectEnum::NONE);
 
     ImGuiManager::init(m_Window.window);
     ImGuiManager::addWindow(&m_MatrixRenderer);
@@ -49,7 +50,7 @@ void Application::start()
 
         if (deltaTotal >= (1/updateFPS))
         {
-            // m_Controller.upload(m_Socket);
+            if (m_Output) m_Controller.upload(m_Socket);
 
             deltaTotal = 0;
         }
