@@ -12,7 +12,7 @@ public:
     EffectEnum effectEnum;
 protected:
     float m_DeltaTotal;
-    int m_FPS;
+    uint8_t m_FPS;
     cRGB m_PrimaryColour;
 public:
     Effect(EffectEnum effectEnum)
@@ -24,8 +24,8 @@ public:
     virtual void update(LEDMatrix* matrix, float dt) {}
     virtual void render(const char* panelName) {}
 
-    int getFPS() { return m_FPS; }
-    void setFPS(int fps) { m_FPS = fps; }
+    uint8_t& getFPS() { return m_FPS; }
+    void setFPS(uint8_t fps) { m_FPS = fps; }
 
     cRGB getPrimaryColour() { return m_PrimaryColour; }
     void setPrimaryColour(cRGB colour) { m_PrimaryColour = colour; }

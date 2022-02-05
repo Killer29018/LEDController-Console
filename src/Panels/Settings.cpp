@@ -25,21 +25,19 @@ void Settings::renderImGui()
         }
 
         ImGui::Text("Port");
-        uint16_t one = 1;
         if (ImGui::InputScalar("##PORT", ImGuiDataType_U16, &m_Port, NULL, NULL, "%u", ImGuiInputTextFlags_EnterReturnsTrue))
         {
             Application::m_Socket.resetIp(m_IpBuf, m_Port);
         }
 
         ImGui::Text("Master Update Speed");
-        int fps = Application::updateFPS;
-        ImGui::SliderInt("##FPS", &fps, 10, 100);
-        Application::updateFPS = fps;
+        uint8_t min = 0, max = 255;
+        ImGui::SliderScalar("##FPS", ImGuiDataType_U8, &Application::updateFPS, &min, &max, "%u");
 
         ImGui::Text("Brightness");
-        int brightness = Application::m_Controller.getBrightness();
-        ImGui::SliderInt("##Brightness", &brightness, 1, 255);
-        Application::m_Controller.setBrightness((uint8_t)brightness);
+        uint8_t brightness = Application::m_Controller.getBrightness();
+        ImGui::SliderScalar("##Brightness", ImGuiDataType_U8, &brightness, &min, &max, "%u");
+        Application::m_Controller.setBrightness(brightness);
 
         ImGui::PopItemWidth();
 

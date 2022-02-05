@@ -57,8 +57,9 @@ void EffectManager::renderImGui()
         }
 
         ImGui::Text("Speed");
-        int fps = m_CurrentEffect->getFPS();
-        ImGui::SliderInt("##EFFECT_FPS", &fps, 1, 100);
+        uint8_t fps = m_CurrentEffect->getFPS();
+        int min = 0, max = 100;
+        ImGui::SliderScalar("##EFFECT_FPS", ImGuiDataType_U8, &fps, &min, &max, "%u");
         m_CurrentEffect->setFPS(fps);
 
         ImGui::Text("Primary Colour");

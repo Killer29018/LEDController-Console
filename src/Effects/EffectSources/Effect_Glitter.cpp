@@ -38,9 +38,10 @@ void Effect_Glitter::render(const char* panelName)
     {
         ImGui::PushItemWidth(-1);
 
-        int hue = m_DeltaHue;
+        uint8_t hue = m_DeltaHue;
+        uint8_t min = 0, max = 32;
         ImGui::Text("Hue Change");
-        ImGui::SliderInt("##DeltaHue", &hue, 0, 32);
+        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &hue, &min, &max, "%u");
         m_DeltaHue = hue;
 
         ImGui::Text("Reversed");

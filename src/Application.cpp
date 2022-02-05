@@ -1,6 +1,6 @@
 #include "Application.hpp"
 
-uint32_t Application::updateFPS = 60;
+uint8_t Application::updateFPS = 60;
 
 Window Application::m_Window;
 Socket Application::m_Socket;

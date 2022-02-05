@@ -21,7 +21,7 @@
 class Application
 {
 public:
-    static uint32_t updateFPS;
+    static uint8_t updateFPS;
 
     static Window m_Window;
     static Socket m_Socket;
