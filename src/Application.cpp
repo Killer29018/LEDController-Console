@@ -19,7 +19,8 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     m_Socket.resetIp(ip, port);
     m_Settings_Panel.setIpAndPort(ip, port);
 
-    m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT);
+    m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT, StartDirection::SNAKE_ROW);
+
     m_Controller.setBrightness(255);
 
     m_MatrixRenderer.init(&m_Controller, 2);

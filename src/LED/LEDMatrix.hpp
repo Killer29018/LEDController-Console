@@ -11,6 +11,12 @@ enum class StartPosition
     BOTTOM_RIGHT
 };
 
+enum class StartDirection
+{
+    SNAKE_COLUMN,
+    SNAKE_ROW
+};
+
 class LEDMatrix : public LEDController
 {
 private:
@@ -18,11 +24,12 @@ private:
     uint16_t** m_IndexArr;
 
     StartPosition m_StartPosition;
+    StartDirection m_Direction;
 public:
     LEDMatrix() = default;
     ~LEDMatrix();
 
-    void setup(unsigned int width, unsigned int height, StartPosition direction = StartPosition::TOP_RIGHT);
+    void setup(unsigned int width, unsigned int height, StartPosition position = StartPosition::TOP_RIGHT, StartDirection direction = StartDirection::SNAKE_ROW);
 
     void setLED(int x, int y, const cRGB& led);
 
@@ -44,6 +51,8 @@ private:
 
     void createIndexArr();
     void deleteIndexArr();
+
+    void printIndexArr();
 };
 
 #endif

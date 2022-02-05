@@ -1,5 +1,6 @@
 #include "LEDMatrix.hpp"
 
+#include <cmath>
 
 LEDMatrix::~LEDMatrix()
 {
@@ -10,11 +11,12 @@ LEDMatrix::~LEDMatrix()
     delete[] m_IndexArr;
 }
 
-void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition position)
+void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition position, StartDirection direction)
 {
     m_Rows = height;
     m_Columns = width;
     m_StartPosition = position;
+    m_Direction = direction;
 
     LEDController::setup(m_Rows * m_Columns);
 
@@ -108,22 +110,80 @@ void LEDMatrix::createIndexArr()
         m_IndexArr[i] = new uint16_t[m_Rows];
     }
 
-    for (int x = 0; x < m_Columns; x++)
+    int xIndex, yIndex;
+    if (m_Direction == StartDirection::SNAKE_ROW)
+    {
+        for (int x = 0; x < m_Columns; x++)
+        {
+            for (int y = 0; y < m_Rows; y++)
+            {
+                switch (m_StartPosition)
+                {
+                case StartPosition::TOP_LEFT:
+                    xIndex = x * m_Rows;
+                    yIndex = ((x & 1) == 0) ? y : m_Rows - y - 1;
+                    break;
+                case StartPosition::TOP_RIGHT:
+                    xIndex = (m_Columns - x - 1) * m_Rows;
+
+                    if ((m_Columns & 1) == 0)
+                        yIndex = ((x & 1) == 1) ? y : m_Rows - y - 1;
+                    else
+                        yIndex = ((x & 1) == 0) ? y : m_Rows - y - 1;
+                    break;
+                case StartPosition::BOTTOM_LEFT:
+                    xIndex = x * m_Rows;
+                    yIndex = ((x & 1) == 1) ? y : m_Rows - y - 1;
+                    break;
+                case StartPosition::BOTTOM_RIGHT:
+                    xIndex = (m_Columns - x - 1) * m_Rows;
+
+                    if ((m_Columns & 1) == 1)
+                        yIndex = ((x & 1) == 1) ? y : m_Rows - y - 1;
+                    else
+                        yIndex = ((x & 1) == 0) ? y : m_Rows - y - 1;
+                    break;
+                }
+                m_IndexArr[x][y] = xIndex + yIndex;
+            }
+        }
+    }
+    else
     {
         for (int y = 0; y < m_Rows; y++)
         {
-            int xIndex, yIndex;
-            if (m_StartPosition == StartPosition::TOP_LEFT || m_StartPosition == StartPosition::BOTTOM_LEFT)
-                xIndex = x * m_Rows;
-            else
-                xIndex = (m_Columns - x - 1) * m_Rows;
+            for (int x = 0; x < m_Columns; x++)
+            {
+                switch (m_StartPosition)
+                {
+                case StartPosition::TOP_LEFT:
+                    xIndex = ((y & 1) == 0) ? x : m_Columns - x - 1;
+                    yIndex = y * m_Columns;
+                    break;
+                case StartPosition::TOP_RIGHT:
+                    xIndex = ((y & 1) == 1) ? x : m_Columns - x - 1;
+                    yIndex = y * m_Columns;
+                    break;
+                case StartPosition::BOTTOM_LEFT:
+                    if ((m_Rows & 1) == 0)
+                        xIndex = ((y & 1) == 1) ? x : m_Columns - x - 1; 
+                    else
+                        xIndex = ((y & 1) == 0) ? x : m_Columns - x - 1;
 
-            if (m_StartPosition == StartPosition::TOP_LEFT || m_StartPosition == StartPosition::BOTTOM_RIGHT)
-                yIndex = (x%2 == 0 ? y : m_Rows - y - 1);
-            else
-                yIndex = (x%2 == 1 ? y : m_Rows - y - 1);
+                    yIndex = (m_Rows - y - 1) * m_Columns;
+                    break;
+                case StartPosition::BOTTOM_RIGHT:
+                    if ((m_Rows & 1) == 0)
+                        xIndex = ((y & 1) == 0) ? x : m_Columns - x - 1; 
+                    else
+                        xIndex = ((y & 1) == 1) ? x : m_Columns - x - 1;
 
-            m_IndexArr[x][y] = xIndex + yIndex;
+                    yIndex = (m_Rows - y - 1) * m_Columns;
+                    break;
+                }
+
+                m_IndexArr[x][y] = xIndex + yIndex;
+            }
         }
     }
 }
@@ -135,4 +195,17 @@ void LEDMatrix::deleteIndexArr()
         delete[] m_IndexArr[i];
     }
     delete[] m_IndexArr;
+}
+
+void LEDMatrix::printIndexArr()
+{
+    int characters = std::ceil(std::log10(m_Rows * m_Columns));
+    for (int y = 0; y < m_Rows; y++)
+    {
+        for (int x = 0; x < m_Columns; x++)
+        {
+            printf("%.*u ", characters, m_IndexArr[x][y]);
+        }
+        std::cout << "\n";
+    }
 }
