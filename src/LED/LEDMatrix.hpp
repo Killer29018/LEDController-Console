@@ -16,6 +16,8 @@ class LEDMatrix : public LEDController
 private:
     uint32_t m_Rows, m_Columns;
     uint16_t** m_IndexArr;
+
+    StartPosition m_StartPosition;
 public:
     LEDMatrix() = default;
     ~LEDMatrix();
@@ -33,8 +35,15 @@ public:
 
     uint32_t getColumns() { return m_Columns; }
     uint32_t getRows() { return m_Rows; }
+
+    void changeSize(int cols, int rows);
+    void changeCols(int cols);
+    void changeRows(int rows);
 private:
     int getIndex(int x, int y);
+
+    void createIndexArr();
+    void deleteIndexArr();
 };
 
 #endif

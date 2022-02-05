@@ -70,6 +70,11 @@ void LEDController::fillRainbow(cHSV hsv, uint8_t deltaHue)
     }
 }
 
+void LEDController::changeSize(uint32_t size)
+{
+    m_LEDs.resize(size);
+}
+
 void LEDController::setDataBounds()
 {
     m_DataBuffer[0] = 0x9C; // Start Byte

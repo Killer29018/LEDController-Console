@@ -39,6 +39,18 @@ void Settings::renderImGui()
         ImGui::SliderScalar("##Brightness", ImGuiDataType_U8, &brightness, &min, &max, "%u");
         Application::m_Controller.setBrightness(brightness);
 
+        ImGui::Text("Size");
+        uint32_t cols = Application::m_Controller.getColumns();
+        uint32_t rows = Application::m_Controller.getRows();
+        uint32_t elements[2] = { cols, rows };
+        
+        if (ImGui::InputScalarN("##SIZE", ImGuiDataType_U32, elements, 2, NULL, NULL, "%u"))
+        {
+            Application::m_Controller.changeSize(elements[0], elements[1]);
+        }
+
+
+
         ImGui::PopItemWidth();
 
         ImGui::End();

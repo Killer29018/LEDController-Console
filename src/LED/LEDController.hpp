@@ -36,6 +36,8 @@ public:
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);
 
     uint32_t getLEDCount() { return m_LEDs.size(); }
+
+    void changeSize(uint32_t size);
 private:
     void setDataBounds();
     void setDataSize(int size);

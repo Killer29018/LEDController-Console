@@ -63,7 +63,7 @@ void LEDMatrixRenderer::setupImage()
 
 void LEDMatrixRenderer::renderImGui()
 {
-    if (ImGui::Begin("###MATRIX_RENDER"))
+    if (ImGui::Begin("Preview"))
     {
         ImGui::BeginChild("Render");
         ImVec2 wSize = ImGui::GetContentRegionAvail();
@@ -80,14 +80,14 @@ void LEDMatrixRenderer::renderImGui()
         ImGui::Image((ImTextureID)m_ImageBuffer, wSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
 
-        ImGui::End();
     }
+    ImGui::End();
 }
 
 void LEDMatrixRenderer::renderMatrix(int width, int height)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_Shader.bind();
