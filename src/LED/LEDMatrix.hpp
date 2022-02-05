@@ -46,6 +46,12 @@ public:
     void changeSize(int cols, int rows);
     void changeCols(int cols);
     void changeRows(int rows);
+
+    void setStartPosition(StartPosition position);
+    void setStartDirection(StartDirection direction);
+
+    StartPosition getStartPosition() { return m_StartPosition; }
+    StartDirection getStartDirection() { return m_Direction; }
 private:
     int getIndex(int x, int y);
 

@@ -49,6 +49,46 @@ void Settings::renderImGui()
             Application::m_Controller.changeSize(elements[0], elements[1]);
         }
 
+        StartPosition position = Application::m_Controller.getStartPosition();
+        int positionInt = static_cast<int>(position);
+        static const char* positions[] = { "Top Left", "Top Right", "Bottom Left", "Bottom Right" };
+        ImGui::Text("Start Position");
+        if (ImGui::BeginCombo("##Position", positions[positionInt]))
+        {
+            for (int n = 0; n < 4; n++)
+            {
+                const bool isSelected = (positionInt == n);
+                if (ImGui::Selectable(positions[n], isSelected))
+                {
+                    Application::m_Controller.setStartPosition(static_cast<StartPosition>(n));
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        StartDirection direction = Application::m_Controller.getStartDirection();
+        int directionInt = static_cast<int>(direction);
+        static const char* directions[] =  { "Snake Column Wise", "Snake Row Wise" };
+        ImGui::Text("Start Direction");
+        if (ImGui::BeginCombo("##Directions", directions[directionInt]))
+        {
+            for (int n = 0; n < 2; n++)
+            {
+                const bool isSelected = (directionInt == n);
+                if (ImGui::Selectable(directions[n], isSelected))
+                {
+                    Application::m_Controller.setStartDirection(static_cast<StartDirection>(n));
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
         ImGui::PopItemWidth();
     }
     ImGui::End();

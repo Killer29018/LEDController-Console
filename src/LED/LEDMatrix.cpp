@@ -97,6 +97,20 @@ void LEDMatrix::changeRows(int rows)
     changeSize(m_Columns, rows);
 }
 
+void LEDMatrix::setStartPosition(StartPosition position)
+{
+    deleteIndexArr();
+    m_StartPosition = position;
+    createIndexArr();
+}
+
+void LEDMatrix::setStartDirection(StartDirection direction)
+{
+    deleteIndexArr();
+    m_Direction = direction;
+    createIndexArr();
+}
+
 int LEDMatrix::getIndex(int x, int y)
 {
     return m_IndexArr[x][y];
