@@ -5,7 +5,7 @@
 #include "KRE/KRE.hpp"
 
 #include "Window.hpp"
-#include "Socket.hpp"
+#include "System/Socket.hpp"
 
 #include "Colour.hpp"
 #include "LED/LEDMatrix.hpp"

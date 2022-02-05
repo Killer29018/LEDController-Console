@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <cstdint>
-#include "../Socket.hpp"
+#include "../System/Socket.hpp"
 #include "../Colour.hpp"
 
 #define MAX_BYTES 1400
