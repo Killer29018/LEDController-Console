@@ -47,8 +47,7 @@ void Effect_Rainbow::render(const char* panelName)
             m_HueOffset = 0;
         }
 
-
         ImGui::PopItemWidth();
-        ImGui::End();
     }
+    ImGui::End();
 }

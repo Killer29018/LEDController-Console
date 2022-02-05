@@ -19,6 +19,6 @@ void Effect_None::render(const char* panelName)
 {
     if (ImGui::Begin(panelName))
     {
-        ImGui::End();
     }
+    ImGui::End();
 }

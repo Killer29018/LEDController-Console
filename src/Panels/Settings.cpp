@@ -49,10 +49,7 @@ void Settings::renderImGui()
             Application::m_Controller.changeSize(elements[0], elements[1]);
         }
 
-
-
         ImGui::PopItemWidth();
-
-        ImGui::End();
     }
+    ImGui::End();
 }

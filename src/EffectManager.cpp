@@ -77,13 +77,13 @@ void EffectManager::renderImGui()
 
         ImGui::PopItemWidth();
 
-        ImGui::End();
     }
+    ImGui::End();
 
     if (ImGui::Begin(m_EffectSettings))
     {
-        ImGui::End();
     }
+    ImGui::End();
 
     updateEffect();
 }

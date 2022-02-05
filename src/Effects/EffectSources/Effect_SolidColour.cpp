@@ -19,7 +19,7 @@ void Effect_SolidColour::render(const char* panelName)
 {
     if (ImGui::Begin(panelName))
     {
-        ImGui::End();
     }
+    ImGui::End();
 }
 

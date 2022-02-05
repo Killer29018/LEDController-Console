@@ -48,7 +48,6 @@ void Effect_Glitter::render(const char* panelName)
         ImGui::Checkbox("##Reversed", &m_Reversed);
 
         ImGui::PopItemWidth();
-
-        ImGui::End();
     }
+    ImGui::End();
 }
