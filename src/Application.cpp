@@ -32,6 +32,8 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     ImGuiManager::addWindow(&m_MatrixRenderer);
     ImGuiManager::addWindow(&m_Settings_Panel);
     ImGuiManager::addWindow(&m_EffectManager);
+
+    DiamondSquare::generate(257);
 }
 
 void Application::start()

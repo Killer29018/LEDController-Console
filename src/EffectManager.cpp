@@ -26,6 +26,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::SOLID_COLOUR:  m_CurrentEffect = new Effect_SolidColour(); break;
     case EffectEnum::RAINBOW:       m_CurrentEffect = new Effect_Rainbow(); break;
     case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(); break;
+    case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(); break;
     }
 }
 
