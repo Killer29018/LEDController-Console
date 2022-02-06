@@ -7,7 +7,7 @@ class Effect_Plasma : public Effect
 {
 private:
     float m_Angle;
-    int32_t m_OffsetX, m_OffsetY;
+    float m_OffsetX, m_OffsetY;
     uint8_t m_HueOffset;
 
     uint8_t m_AngleChange;

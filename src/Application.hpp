@@ -18,8 +18,6 @@
 
 #include "EffectManager.hpp"
 
-#include "Utils/DiamondSquare.hpp"
-
 class Application
 {
 public:

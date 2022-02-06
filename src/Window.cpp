@@ -35,7 +35,9 @@ void Window::initGLFW(const char* name)
 
     if (!window)
     {
+#ifdef DEBUG_MODE
         std::cout << "Failed to create window\n";
+#endif
         glfwTerminate();
         exit(-1);
     }
@@ -50,11 +52,15 @@ void Window::initOpengl()
     int version = gladLoadGL(glfwGetProcAddress);
     if (!version)
     {
+#ifdef DEBUG_MODE
         std::cout << "Failed to initialise GLAD\n";
+#endif
         exit(-1);
     }
 
+#ifdef DEBUG_MODE
     std::cout << "Loaded Opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << "\n";
+#endif
 
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, m_WindowSize.x, m_WindowSize.y);
