@@ -34,11 +34,9 @@ void Effect_Rainbow::render(const char* panelName)
     {
         ImGui::PushItemWidth(-1);
 
-        uint8_t hue = m_DeltaHue;
         uint8_t min = 0, max = 16;
         ImGui::Text("Hue Change");
-        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &hue, &min, &max, "%u");
-        m_DeltaHue = hue;
+        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
 
         ImGui::Text("Animate the Hue");

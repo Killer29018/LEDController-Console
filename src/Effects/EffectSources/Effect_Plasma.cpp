@@ -9,6 +9,9 @@ Effect_Plasma::Effect_Plasma()
     m_OffsetY = 0;
     m_HueOffset = 0;
     m_Angle = 0.0f;
+
+    m_HueChange = 1;
+    m_AngleChange = 1;
 }
 
 Effect_Plasma::~Effect_Plasma() {}
@@ -42,10 +45,10 @@ void Effect_Plasma::update(LEDMatrix* matrix, float dt)
         m_OffsetY = ((maxX / 2)* std::cos(m_Angle + 1.534)) + (maxX / 2);
         m_OffsetY = std::max(minY, std::min(m_OffsetY, maxY));
 
-        m_Angle += 0.01;
+        if (m_AngleChange > 0) m_Angle += (m_AngleChange / 1000.0f);
 
 
-        m_HueOffset++;
+        m_HueOffset += m_HueChange;
         m_DeltaTotal = 0;
     }
 }
@@ -54,6 +57,17 @@ void Effect_Plasma::render(const char* panelName)
 {
      if (ImGui::Begin(panelName))
      {
+         ImGui::PushItemWidth(-1);
+
+         uint8_t min = 0, max = 16;
+         ImGui::Text("Colour Change Speed");
+         ImGui::SliderScalar("##HueChange", ImGuiDataType_U8, &m_HueChange, &min, &max, "%u");
+
+         max = 50;
+         ImGui::Text("Movement Speed");
+         ImGui::SliderScalar("##MoveSpeed", ImGuiDataType_U8, &m_AngleChange, &min, &max, "%u");
+
+         ImGui::PopItemWidth();
      }
      ImGui::End();
 }
