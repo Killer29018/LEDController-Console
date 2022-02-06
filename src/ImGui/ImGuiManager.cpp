@@ -29,8 +29,10 @@ void ImGuiManager::render()
     static bool renderAll = true;
     showDockspace(&renderAll);
 
+#ifdef DEBUG_MODE
     static bool showDemo = true;
     ImGui::ShowDemoWindow(&showDemo);
+#endif
 
     for (auto window : m_Windows) window->renderImGui();
 }

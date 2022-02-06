@@ -1,5 +1,7 @@
 #include "EffectManager.hpp"
 
+#include "Panels/Logger.hpp"
+
 #include "KRE/KRE.hpp"
 
 EffectManager::~EffectManager()
@@ -28,6 +30,8 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(); break;
     case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(); break;
     }
+
+    Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);
 }
 
 void EffectManager::renderImGui()

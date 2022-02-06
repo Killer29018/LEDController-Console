@@ -2,6 +2,8 @@
 
 #include "../Application.hpp"
 
+#include "../Panels/Logger.hpp"
+
 void Settings::setIpAndPort(const char* ip, int port)
 {
     strcpy(m_IpBuf, ip);
@@ -21,12 +23,14 @@ void Settings::renderImGui()
         ImGui::Text("Ip");
         if (ImGui::InputText("##IP", m_IpBuf, m_IpBytes, ImGuiInputTextFlags_EnterReturnsTrue))
         {
+            Logger::log(LoggerType::LOG_INFO, "Changed target IP to: %s\n", m_IpBuf);
             Application::m_Socket.resetIp(m_IpBuf, m_Port);
         }
 
         ImGui::Text("Port");
         if (ImGui::InputScalar("##PORT", ImGuiDataType_U16, &m_Port, NULL, NULL, "%u", ImGuiInputTextFlags_EnterReturnsTrue))
         {
+            Logger::log(LoggerType::LOG_INFO, "Changed target Port to: %u\n", m_Port);
             Application::m_Socket.resetIp(m_IpBuf, m_Port);
         }
 

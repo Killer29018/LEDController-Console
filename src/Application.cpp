@@ -8,6 +8,8 @@ LEDMatrix Application::m_Controller;
 LEDMatrixRenderer Application::m_MatrixRenderer;
 Settings Application::m_Settings_Panel;
 EffectManager Application::m_EffectManager;
+Logger Application::m_Logger;
+
 bool Application::m_Output = false;
 
 void Application::init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port)
@@ -32,6 +34,7 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     ImGuiManager::addWindow(&m_MatrixRenderer);
     ImGuiManager::addWindow(&m_Settings_Panel);
     ImGuiManager::addWindow(&m_EffectManager);
+    ImGuiManager::addWindow(&m_Logger);
 }
 
 void Application::start()

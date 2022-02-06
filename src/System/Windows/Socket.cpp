@@ -1,5 +1,7 @@
 #include "Socket.hpp"
 
+#include "../../Panels/Logger.hpp"
+
 Socket::Socket()
 {
     setupWSA();
@@ -27,7 +29,9 @@ void Socket::sendData(uint8_t* buffer, int size)
 {
     int sendOK = sendto(m_Socket, (char*)buffer, size, 0, (sockaddr*)&m_Server, sizeof(m_Server));
     if (sendOK == SOCKET_ERROR)
-        std::cout << "Failed to send: " << WSAGetLastError() << "\n";
+    {
+        Logger::log(LoggerType::LOG_ERROR, "Failed to send: %s", WSAGetLastError());
+    }
 }
 
 void Socket::createSocket(const char* ip, int port)
@@ -46,7 +50,7 @@ void Socket::setupWSA()
 
     if (wsOK != 0)
     {
-        std::cout << "Can't start winsock: " << wsOK << "\n";
+        Logger::log(LoggerType::LOG_ERROR, "Can't start winsock: %d", wsOK);
         exit(-1);
     }
 }

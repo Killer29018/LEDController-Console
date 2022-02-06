@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-#include <iostream>
+#include "Panels/Logger.hpp"
 
 Window::~Window()
 {
@@ -36,7 +36,7 @@ void Window::initGLFW(const char* name)
     if (!window)
     {
 #ifdef DEBUG_MODE
-        std::cout << "Failed to create window\n";
+        Logger::log(LoggerType::LOG_ERROR, "Failed to create window\n");
 #endif
         glfwTerminate();
         exit(-1);
@@ -53,13 +53,13 @@ void Window::initOpengl()
     if (!version)
     {
 #ifdef DEBUG_MODE
-        std::cout << "Failed to initialise GLAD\n";
+        Logger::log(LoggerType::LOG_ERROR, "Failed to initialize GLAD\n");
 #endif
         exit(-1);
     }
 
 #ifdef DEBUG_MODE
-    std::cout << "Loaded Opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << "\n";
+    Logger::log(LoggerType::LOG_INFO, "Loaded OpenGL %u.%u\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 #endif
 
     glEnable(GL_DEPTH_TEST);

@@ -15,6 +15,7 @@
 
 #include "LED/LEDMatrixRenderer.hpp"
 #include "Panels/Settings.hpp"
+#include "Panels/Logger.hpp"
 
 #include "EffectManager.hpp"
 
@@ -29,6 +30,7 @@ public:
     static LEDMatrixRenderer m_MatrixRenderer;
     static Settings m_Settings_Panel;
     static EffectManager m_EffectManager;
+    static Logger m_Logger;
 
     static bool m_Output;
 private:
