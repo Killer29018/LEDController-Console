@@ -1,5 +1,7 @@
 #include "../EffectHeaders/Effect_Rainbow.hpp"
 
+#include "../../Panels/Logger.hpp"
+
 Effect_Rainbow::Effect_Rainbow()
     : Effect(EffectEnum::RAINBOW) 
 {
@@ -12,6 +14,7 @@ Effect_Rainbow::~Effect_Rainbow() {}
 void Effect_Rainbow::update(LEDMatrix* matrix, float dt)
 {
     uint8_t hue = m_PrimaryColour.getHue();
+    // Logger::log(LoggerType::LOG_INFO, "%u\n", hue);
 
     m_DeltaTotal += dt;
 

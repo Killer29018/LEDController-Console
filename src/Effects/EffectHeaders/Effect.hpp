@@ -17,7 +17,7 @@ protected:
 public:
     Effect(EffectEnum effectEnum)
         : effectEnum(effectEnum), m_FPS(40), m_DeltaTotal(0.0f),
-        m_PrimaryColour(0, 255, 255) {}
+        m_PrimaryColour(cHSV(0, 0xFF, 0xFF)) {}
 
     virtual ~Effect() {}
 

@@ -35,7 +35,7 @@ void Settings::renderImGui()
         }
 
         ImGui::Text("Master Update Speed");
-        uint8_t min = 0, max = 255;
+        uint8_t min = 1, max = 255;
         ImGui::SliderScalar("##FPS", ImGuiDataType_U8, &Application::updateFPS, &min, &max, "%u");
 
         ImGui::Text("Brightness");

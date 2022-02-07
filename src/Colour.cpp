@@ -16,7 +16,7 @@ void RGB2HSV(const cRGB& rgb, cHSV& hsv)
      min = std::min(min, Bp);
 
      float delta = max - min;
-     uint16_t h;
+     float h;
 
      hsv.v = 255 * max;
      if (max < 0.0001)
@@ -27,7 +27,7 @@ void RGB2HSV(const cRGB& rgb, cHSV& hsv)
      if (delta < 0.0001)
          h = 0;
      else if (max == Rp)
-         h = 60 * std::fmod(((Gp-Bp) / delta), 6);
+         h = 60 * std::fmod(((Gp-Bp) / delta), 6.0);
      else if (max == Gp)
          h = 60 * (((Bp-Rp) / delta) + 2);
      else if (max == Bp)

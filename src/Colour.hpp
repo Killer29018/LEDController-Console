@@ -48,10 +48,14 @@ struct cHSV
     inline cHSV() = default;
     inline cHSV(uint8_t hue, uint8_t sat, uint8_t val)
         : h(hue), s(sat), v(val) {}
+    inline cHSV(uint8_t hue)
+        : h(hue), s(sat), v(val) {}
 
     // Copy Constructors
     inline cHSV(const cHSV& rhs) = default;
     inline cHSV& operator=(const cHSV& rhs) = default;
+    inline cHSV(const cRGB& rhs) { RGB2HSV(rhs, *this); }
+    inline cHSV& operator=(const cRGB& rhs) { RGB2HSV(rhs, *this); return *this; }
 
     inline cHSV& setHSV(uint8_t hue, uint8_t sat, uint8_t val)
     {
@@ -113,6 +117,8 @@ struct cRGB
     inline cRGB() = default;
     inline cRGB(uint8_t red, uint8_t green, uint8_t blue)
         : r(red), g(green), b(blue) {}
+    inline cRGB(uint8_t value)
+        : r(value), g(value), b(value) {}
 
     inline cRGB(const cRGB& rhs) = default;
     inline cRGB& operator=(const cRGB& rhs) = default;

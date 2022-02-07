@@ -29,6 +29,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::RAINBOW:       m_CurrentEffect = new Effect_Rainbow(); break;
     case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(); break;
     case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(); break;
+    case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(); break;
     }
 
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);
@@ -75,7 +76,7 @@ void EffectManager::renderImGui()
             static ImGuiColorEditFlags colourFlags = ImGuiColorEditFlags_NoAlpha | 
                 ImGuiColorEditFlags_PickerHueBar;
 
-            ImGui::ColorPicker4("##PrimaryColourPicker", (float*)&imColour, colourFlags, NULL);
+            ImGui::ColorPicker3("##PrimaryColourPicker", (float*)&imColour, colourFlags);
             colour = cRGB(imColour.x * 255.0f, imColour.y * 255.0f, imColour.z * 255.0f);
             m_CurrentEffect->setPrimaryColour(colour);
         }

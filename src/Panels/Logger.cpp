@@ -5,7 +5,7 @@
 ImGuiTextBuffer Logger::m_Buf;
 ImGuiTextFilter Logger::m_Filter;
 ImVector<int> Logger::m_LineOffsets;
-bool Logger::m_AutoScroll = false;
+bool Logger::m_AutoScroll = true;
 
 Logger::Logger()
 {
