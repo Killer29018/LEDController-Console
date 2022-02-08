@@ -30,6 +30,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(); break;
     case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(); break;
     case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(); break;
+    case EffectEnum::FIREWORKS:     m_CurrentEffect = new Effect_Fireworks(); break;
     }
 
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);

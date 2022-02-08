@@ -10,7 +10,8 @@ enum class EffectEnum
     RAINBOW     = 2,
     GLITTER     = 3,
     PLASMA      = 4,
-    METABALLS   = 5
+    METABALLS   = 5,
+    FIREWORKS   = 6,
 };
 
 const std::vector<const char*> EffectName = {
@@ -19,7 +20,8 @@ const std::vector<const char*> EffectName = {
     "Rainbow",
     "Glitter",
     "Plasma",
-    "Metaballs"
+    "Metaballs",
+    "Fireworks"
 };
 
 #endif

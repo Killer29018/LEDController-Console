@@ -7,5 +7,6 @@
 #include "EffectHeaders/Effect_Glitter.hpp"
 #include "EffectHeaders/Effect_Plasma.hpp"
 #include "EffectHeaders/Effect_Metaballs.hpp"
+#include "EffectHeaders/Effect_Fireworks.hpp"
 
 #endif
