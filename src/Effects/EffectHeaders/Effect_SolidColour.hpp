@@ -7,10 +7,10 @@ class Effect_SolidColour : public Effect
 {
 private:
 public:
-    Effect_SolidColour();
+    Effect_SolidColour(LEDMatrix* matrix);
     ~Effect_SolidColour();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 };
 

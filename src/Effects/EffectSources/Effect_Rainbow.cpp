@@ -2,8 +2,8 @@
 
 #include "../../Panels/Logger.hpp"
 
-Effect_Rainbow::Effect_Rainbow()
-    : Effect(EffectEnum::RAINBOW) 
+Effect_Rainbow::Effect_Rainbow(LEDMatrix* matrix)
+    : Effect(EffectEnum::RAINBOW, matrix) 
 {
     m_DeltaHue = 1;
     m_ChangeHue = true;
@@ -11,11 +11,11 @@ Effect_Rainbow::Effect_Rainbow()
 
 Effect_Rainbow::~Effect_Rainbow() {}
 
-void Effect_Rainbow::update(LEDMatrix* matrix)
+void Effect_Rainbow::update()
 {
     uint8_t hue = m_PrimaryColour.getHue();
 
-    matrix->fillRainbow(cHSV(hue + m_HueOffset, 255, 255), m_DeltaHue);
+    m_Matrix->fillRainbow(cHSV(hue + m_HueOffset, 255, 255), m_DeltaHue);
 
     if (m_ChangeHue)
         m_HueOffset++;

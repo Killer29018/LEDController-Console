@@ -4,44 +4,39 @@
 
 #include "../../Panels/Logger.hpp"
 
-Effect_Metaballs::Effect_Metaballs()
-    : Effect(EffectEnum::METABALLS)
+Effect_Metaballs::Effect_Metaballs(LEDMatrix* matrix)
+    : Effect(EffectEnum::METABALLS, matrix)
 {
     m_Threshold = 128;
     m_CurrentBlobs = 2;
     m_MaxSpeed = 0.3f;
     m_Size = 5;
+
+    createBlobs();
 }
 
 Effect_Metaballs::~Effect_Metaballs() {}
 
-void Effect_Metaballs::update(LEDMatrix* matrix)
+void Effect_Metaballs::update()
 {
-    static bool created = false;
-    if (!created)
-    {
-        created = true;
-        createBlobs(matrix->getColumns(), matrix->getRows());
-    }
-
     uint8_t hue = m_PrimaryColour.getHue();
 
-    matrix->fillSolid({ 0, 0, 0 });
-    for (int x = 0; x < matrix->getColumns(); x++)
+    m_Matrix->fillSolid({ 0, 0, 0 });
+    for (int x = 0; x < m_Matrix->getColumns(); x++)
     {
-        for (int y = 0; y < matrix->getRows(); y++)
+        for (int y = 0; y < m_Matrix->getRows(); y++)
         {
             uint8_t value = (255 - getValue(x, y));
             cHSV colour(value + hue, 255, 255);
 
             if (value < 255 - m_Threshold)
             {
-                matrix->setLED(x, y, colour);
+                m_Matrix->setLED(x, y, colour);
             }
         }
     }
 
-    updateBlobs(matrix->getColumns(), matrix->getRows());
+    updateBlobs();
 }
 
 void Effect_Metaballs::render(const char* panelName)
@@ -76,8 +71,11 @@ void Effect_Metaballs::render(const char* panelName)
     ImGui::End();
 }
 
-void Effect_Metaballs::createBlobs(int width, int height)
+void Effect_Metaballs::createBlobs()
 {
+    int width  = m_Matrix->getColumns();
+    int height = m_Matrix->getRows();
+
     for (int i = 0; i < MAX_BLOBS; i++)
     {
         m_Blobs[i].x = (rand() % width) + 0.01;
@@ -88,8 +86,11 @@ void Effect_Metaballs::createBlobs(int width, int height)
     }
 }
 
-void Effect_Metaballs::updateBlobs(int width, int height)
+void Effect_Metaballs::updateBlobs()
 {
+    int width = m_Matrix->getColumns();
+    int height = m_Matrix->getRows();
+
     float x, y;
     for (int i = 0; i < m_CurrentBlobs; i++)
     {

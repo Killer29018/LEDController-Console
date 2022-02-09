@@ -10,10 +10,10 @@ private:
     uint8_t m_HueOffset;
     bool m_ChangeHue;
 public:
-    Effect_Rainbow();
+    Effect_Rainbow(LEDMatrix* matrix);
     ~Effect_Rainbow();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 };
 

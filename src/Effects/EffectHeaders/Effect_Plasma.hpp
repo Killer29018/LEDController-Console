@@ -13,10 +13,10 @@ private:
     uint8_t m_AngleChange;
     uint8_t m_HueChange;
 public:
-    Effect_Plasma();
+    Effect_Plasma(LEDMatrix* matrix);
     ~Effect_Plasma();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 };
 

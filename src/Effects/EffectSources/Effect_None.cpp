@@ -1,13 +1,13 @@
 #include "../EffectHeaders/Effect_None.hpp"
 
-Effect_None::Effect_None()
-    : Effect(EffectEnum::NONE) {}
+Effect_None::Effect_None(LEDMatrix* matrix)
+    : Effect(EffectEnum::NONE, matrix) {}
 
 Effect_None::~Effect_None() {}
 
-void Effect_None::update(LEDMatrix* matrix)
+void Effect_None::update()
 {
-    matrix->fillSolid({ 0, 0, 0 });
+    m_Matrix->fillSolid({ 0, 0, 0 });
 }
 
 void Effect_None::render(const char* panelName)

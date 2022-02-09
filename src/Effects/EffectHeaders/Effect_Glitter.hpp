@@ -11,10 +11,10 @@ private:
 
     bool m_Reversed = false;
 public:
-    Effect_Glitter();
+    Effect_Glitter(LEDMatrix* matrix);
     ~Effect_Glitter();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 };
 

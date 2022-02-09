@@ -13,7 +13,7 @@ void EffectManager::init(LEDMatrix& matrix)
 {
     m_Matrix = &matrix;
 
-    m_CurrentEffect = new Effect_None();
+    m_CurrentEffect = new Effect_None(m_Matrix);
 }
 
 void EffectManager::setEffect(EffectEnum effect)
@@ -24,13 +24,13 @@ void EffectManager::setEffect(EffectEnum effect)
 
     switch (effect)
     {
-    case EffectEnum::NONE:          m_CurrentEffect = new Effect_None(); break;
-    case EffectEnum::SOLID_COLOUR:  m_CurrentEffect = new Effect_SolidColour(); break;
-    case EffectEnum::RAINBOW:       m_CurrentEffect = new Effect_Rainbow(); break;
-    case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(); break;
-    case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(); break;
-    case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(); break;
-    case EffectEnum::FIREWORKS:     m_CurrentEffect = new Effect_Fireworks(); break;
+    case EffectEnum::NONE:          m_CurrentEffect = new Effect_None(m_Matrix); break;
+    case EffectEnum::SOLID_COLOUR:  m_CurrentEffect = new Effect_SolidColour(m_Matrix); break;
+    case EffectEnum::RAINBOW:       m_CurrentEffect = new Effect_Rainbow(m_Matrix); break;
+    case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(m_Matrix); break;
+    case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(m_Matrix); break;
+    case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(m_Matrix); break;
+    case EffectEnum::FIREWORKS:     m_CurrentEffect = new Effect_Fireworks(m_Matrix); break;
     }
 
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);
@@ -102,7 +102,7 @@ void EffectManager::updateEffect()
 
     if (m_DeltaTotal >= (1.0 / (float)m_CurrentEffect->getFPS()))
     {
-        m_CurrentEffect->update(m_Matrix);
+        m_CurrentEffect->update();
         m_DeltaTotal = 0.0f;
     }
 

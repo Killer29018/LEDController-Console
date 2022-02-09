@@ -116,30 +116,24 @@ bool Firework::isDead()
 
 
 
-Effect_Fireworks::Effect_Fireworks() 
-    : Effect(EffectEnum::FIREWORKS)
+Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
+    : Effect(EffectEnum::FIREWORKS, matrix)
 {
     m_CurrentFireworks = 10;
+        createFireworks();
 }
 
 Effect_Fireworks::~Effect_Fireworks() {}
 
-void Effect_Fireworks::update(LEDMatrix* matrix)
+void Effect_Fireworks::update()
 {
-    static bool created = false;
-    if (!created)
-    {
-        createFireworks(matrix);
-        created = true;
-    }
-
     uint8_t hue = m_PrimaryColour.getHue();
 
-    matrix->fillSolid({ 0, 0, 0 });
+    m_Matrix->fillSolid({ 0, 0, 0 });
 
     for (int i = 0; i < m_CurrentFireworks; i++)
     {
-        fireworkUpdate(i, matrix);
+        fireworkUpdate(i);
     }
 }
 
@@ -169,25 +163,25 @@ void Effect_Fireworks::render(const char* panelName)
     ImGui::End();
 }
 
-void Effect_Fireworks::createFireworks(LEDMatrix* matrix)
+void Effect_Fireworks::createFireworks()
 {
     for (int i = 0; i < MAX_FIREWORKS; i++)
     {
-        int rX = random() * matrix->getColumns();
-        int rY = matrix->getRows() + random() * 5;
+        int rX = random() * m_Matrix->getColumns();
+        int rY = m_Matrix->getRows() + random() * 5;
         m_Fireworks[i] = Firework(rX, rY, s_FireworkMaxSpeed);
     }
 }
 
-void Effect_Fireworks::fireworkUpdate(int i, LEDMatrix* matrix)
+void Effect_Fireworks::fireworkUpdate(int i)
 {
 
-    m_Fireworks[i].draw(matrix);
+    m_Fireworks[i].draw(m_Matrix);
     m_Fireworks[i].update();
     if (m_Fireworks[i].isDead() || m_Fireworks[i].posY < 0)
     {
-        int rX = random() * matrix->getColumns();
-        int rY = matrix->getRows() + random() * 5;
+        int rX = random() * m_Matrix->getColumns();
+        int rY = m_Matrix->getRows() + random() * 5;
         m_Fireworks[i] = Firework(rX, rY, s_FireworkMaxSpeed);
     }
 }

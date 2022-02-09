@@ -49,14 +49,14 @@ private:
     uint32_t m_CurrentFireworks;
 
 public:
-    Effect_Fireworks();
+    Effect_Fireworks(LEDMatrix* matrix);
     ~Effect_Fireworks();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 private:
-    void createFireworks(LEDMatrix* matrix);
-    void fireworkUpdate(int i, LEDMatrix* matrix);
+    void createFireworks();
+    void fireworkUpdate(int i);
 };
 
 #endif

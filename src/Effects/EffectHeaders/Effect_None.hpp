@@ -6,10 +6,10 @@
 class Effect_None : public Effect
 {
 public:
-    Effect_None();
+    Effect_None(LEDMatrix* matrix);
     ~Effect_None();
 
-    void update(LEDMatrix* matrix) override;
+    void update() override;
     void render(const char* panelName) override;
 };
 

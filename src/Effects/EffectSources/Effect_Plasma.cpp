@@ -2,8 +2,8 @@
 
 #include <glm/gtc/noise.hpp>
 
-Effect_Plasma::Effect_Plasma()
-    : Effect(EffectEnum::PLASMA)
+Effect_Plasma::Effect_Plasma(LEDMatrix* matrix)
+    : Effect(EffectEnum::PLASMA, matrix)
 {
     m_OffsetX = 0;
     m_OffsetY = 0;
@@ -16,22 +16,22 @@ Effect_Plasma::Effect_Plasma()
 
 Effect_Plasma::~Effect_Plasma() {}
 
-void Effect_Plasma::update(LEDMatrix* matrix)
+void Effect_Plasma::update()
 {
     const int32_t maxX = 2 << 8;
     const int32_t maxY = 2 << 8;
 
-    for (int i = 0; i < matrix->getColumns(); i++)
+    for (int i = 0; i < m_Matrix->getColumns(); i++)
     {
-        for (int j = 0; j < matrix->getRows(); j++)
+        for (int j = 0; j < m_Matrix->getRows(); j++)
         {
-            float x = (i + m_OffsetX) / (float)(matrix->getColumns() + (maxX / 4.0));
-            float y = (j + m_OffsetY) / (float)(matrix->getRows() + (maxY / 4.0));
+            float x = (i + m_OffsetX) / (float)(m_Matrix->getColumns() + (maxX / 4.0));
+            float y = (j + m_OffsetY) / (float)(m_Matrix->getRows() + (maxY / 4.0));
             float fvalue = glm::simplex(glm::vec2(x, y));
             uint8_t value = (fvalue + 1) * 128;
-            // uint8_t value = DiamondSquare::getValue(x, y);
             cHSV colour(value + m_HueOffset, 255, 255);
-            matrix->setLED(i, j, colour);
+
+            m_Matrix->setLED(i, j, colour);
         }
     }
 
