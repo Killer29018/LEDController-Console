@@ -31,6 +31,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(m_Matrix); break;
     case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(m_Matrix); break;
     case EffectEnum::FIREWORKS:     m_CurrentEffect = new Effect_Fireworks(m_Matrix); break;
+    case EffectEnum::FALLING_RAIN:  m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
     }
 
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);

@@ -7,7 +7,7 @@ static float s_ParticleDecaySpeed = 2.2f;
 static float s_FireworkDeceleration = 0.1;
 static uint32_t s_FireworkMinDistance = 2;
 
-float random() { return (rand() / (float)RAND_MAX); }
+static float random() { return (rand() / (float)RAND_MAX); }
 
 Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
     : Effect(EffectEnum::FIREWORKS, matrix)

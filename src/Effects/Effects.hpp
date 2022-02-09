@@ -8,5 +8,6 @@
 #include "EffectHeaders/Effect_Plasma.hpp"
 #include "EffectHeaders/Effect_Metaballs.hpp"
 #include "EffectHeaders/Effect_Fireworks.hpp"
+#include "EffectHeaders/Effect_FallingRain.hpp"
 
 #endif
