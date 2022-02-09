@@ -83,7 +83,6 @@ void EffectManager::renderImGui()
         }
 
         ImGui::PopItemWidth();
-
     }
     ImGui::End();
 
@@ -99,7 +98,13 @@ void EffectManager::updateEffect()
 {
     if (!m_CurrentEffect) return;
 
-    m_CurrentEffect->update(m_Matrix, KRE::Clock::deltaTime);
+    m_DeltaTotal += KRE::Clock::deltaTime;
+
+    if (m_DeltaTotal >= (1.0 / (float)m_CurrentEffect->getFPS()))
+    {
+        m_CurrentEffect->update(m_Matrix);
+        m_DeltaTotal = 0.0f;
+    }
 
     m_CurrentEffect->render("Effect Settings");
 }

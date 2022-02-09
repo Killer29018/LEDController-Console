@@ -13,7 +13,7 @@ public:
     Effect_Rainbow();
     ~Effect_Rainbow();
 
-    void update(LEDMatrix* matrix, float dt) override;
+    void update(LEDMatrix* matrix) override;
     void render(const char* panelName) override;
 };
 

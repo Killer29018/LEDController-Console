@@ -9,27 +9,21 @@ Effect_Glitter::Effect_Glitter()
 
 Effect_Glitter::~Effect_Glitter() {}
 
-void Effect_Glitter::update(LEDMatrix* matrix, float dt)
+void Effect_Glitter::update(LEDMatrix* matrix)
 {
     uint8_t hue = m_PrimaryColour.getHue();
 
-    m_DeltaTotal += dt;
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
+    cRGB colour;
+    for (int i = 0; i < matrix->getColumns(); i++)
     {
-        m_DeltaTotal = 0;
+        cHSV newHue = cHSV(hue + (i * m_DeltaHue), 255, 255);
+        HSV2RGB_rainbow(newHue + m_HueOffset, colour);
 
-        cRGB colour;
-        for (int i = 0; i < matrix->getColumns(); i++)
-        {
-            cHSV newHue = cHSV(hue + (i * m_DeltaHue), 255, 255);
-            HSV2RGB_rainbow(newHue + m_HueOffset, colour);
-
-            matrix->fillColumn(colour, i);
-        }
-
-        if (!m_Reversed) m_HueOffset--;
-        else m_HueOffset++;
+        matrix->fillColumn(colour, i);
     }
+
+    if (!m_Reversed) m_HueOffset--;
+    else m_HueOffset++;
 }
 
 void Effect_Glitter::render(const char* panelName)

@@ -26,7 +26,7 @@ public:
     Effect_Metaballs();
     ~Effect_Metaballs();
 
-    void update(LEDMatrix* matrix, float dt) override;
+    void update(LEDMatrix* matrix) override;
     void render(const char* panelName) override;
 private:
     void createBlobs(int width, int height);

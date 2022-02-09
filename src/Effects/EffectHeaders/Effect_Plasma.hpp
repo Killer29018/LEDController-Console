@@ -16,7 +16,7 @@ public:
     Effect_Plasma();
     ~Effect_Plasma();
 
-    void update(LEDMatrix* matrix, float dt) override;
+    void update(LEDMatrix* matrix) override;
     void render(const char* panelName) override;
 };
 

@@ -16,6 +16,8 @@ private:
     EffectEnum m_CurrentEnum;
 
     const char* m_EffectSettings = "Effect Settings";
+
+    float m_DeltaTotal = 0.0f;
 public:
     EffectManager() = default;
     ~EffectManager();

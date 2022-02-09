@@ -15,7 +15,7 @@ Effect_Metaballs::Effect_Metaballs()
 
 Effect_Metaballs::~Effect_Metaballs() {}
 
-void Effect_Metaballs::update(LEDMatrix* matrix, float dt)
+void Effect_Metaballs::update(LEDMatrix* matrix)
 {
     static bool created = false;
     if (!created)
@@ -26,28 +26,22 @@ void Effect_Metaballs::update(LEDMatrix* matrix, float dt)
 
     uint8_t hue = m_PrimaryColour.getHue();
 
-    m_DeltaTotal += dt;
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
+    matrix->fillSolid({ 0, 0, 0 });
+    for (int x = 0; x < matrix->getColumns(); x++)
     {
-        matrix->fillSolid({ 0, 0, 0 });
-        for (int x = 0; x < matrix->getColumns(); x++)
+        for (int y = 0; y < matrix->getRows(); y++)
         {
-            for (int y = 0; y < matrix->getRows(); y++)
-            {
-                uint8_t value = (255 - getValue(x, y));
-                cHSV colour(value + hue, 255, 255);
+            uint8_t value = (255 - getValue(x, y));
+            cHSV colour(value + hue, 255, 255);
 
-                if (value < 255 - m_Threshold)
-                {
-                    matrix->setLED(x, y, colour);
-                }
+            if (value < 255 - m_Threshold)
+            {
+                matrix->setLED(x, y, colour);
             }
         }
-
-        updateBlobs(matrix->getColumns(), matrix->getRows());
-
-        m_DeltaTotal = 0;
     }
+
+    updateBlobs(matrix->getColumns(), matrix->getRows());
 }
 
 void Effect_Metaballs::render(const char* panelName)

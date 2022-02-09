@@ -16,38 +16,32 @@ Effect_Plasma::Effect_Plasma()
 
 Effect_Plasma::~Effect_Plasma() {}
 
-void Effect_Plasma::update(LEDMatrix* matrix, float dt)
+void Effect_Plasma::update(LEDMatrix* matrix)
 {
-    m_DeltaTotal += dt;
-
     const int32_t maxX = 2 << 8;
     const int32_t maxY = 2 << 8;
 
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
+    for (int i = 0; i < matrix->getColumns(); i++)
     {
-        for (int i = 0; i < matrix->getColumns(); i++)
+        for (int j = 0; j < matrix->getRows(); j++)
         {
-            for (int j = 0; j < matrix->getRows(); j++)
-            {
-                float x = (i + m_OffsetX) / (float)(matrix->getColumns() + (maxX / 4.0));
-                float y = (j + m_OffsetY) / (float)(matrix->getRows() + (maxY / 4.0));
-                float fvalue = glm::simplex(glm::vec2(x, y));
-                uint8_t value = (fvalue + 1) * 128;
-                // uint8_t value = DiamondSquare::getValue(x, y);
-                cHSV colour(value + m_HueOffset, 255, 255);
-                matrix->setLED(i, j, colour);
-            }
+            float x = (i + m_OffsetX) / (float)(matrix->getColumns() + (maxX / 4.0));
+            float y = (j + m_OffsetY) / (float)(matrix->getRows() + (maxY / 4.0));
+            float fvalue = glm::simplex(glm::vec2(x, y));
+            uint8_t value = (fvalue + 1) * 128;
+            // uint8_t value = DiamondSquare::getValue(x, y);
+            cHSV colour(value + m_HueOffset, 255, 255);
+            matrix->setLED(i, j, colour);
         }
-
-        m_OffsetX = maxX * std::sin(m_Angle + 2.13);
-        m_OffsetY = maxY * std::cos(m_Angle + 1.534);
-
-        if (m_AngleChange > 0) m_Angle += (m_AngleChange / 1000.0f);
-
-
-        m_HueOffset += m_HueChange;
-        m_DeltaTotal = 0;
     }
+
+    m_OffsetX = maxX * std::sin(m_Angle + 2.13);
+    m_OffsetY = maxY * std::cos(m_Angle + 1.534);
+
+    if (m_AngleChange > 0) m_Angle += (m_AngleChange / 1000.0f);
+
+
+    m_HueOffset += m_HueChange;
 }
 
 void Effect_Plasma::render(const char* panelName)

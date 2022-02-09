@@ -10,7 +10,7 @@ public:
     Effect_SolidColour();
     ~Effect_SolidColour();
 
-    void update(LEDMatrix* matrix, float dt) override;
+    void update(LEDMatrix* matrix) override;
     void render(const char* panelName) override;
 };
 

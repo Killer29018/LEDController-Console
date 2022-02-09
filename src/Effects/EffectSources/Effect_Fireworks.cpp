@@ -124,7 +124,7 @@ Effect_Fireworks::Effect_Fireworks()
 
 Effect_Fireworks::~Effect_Fireworks() {}
 
-void Effect_Fireworks::update(LEDMatrix* matrix, float dt)
+void Effect_Fireworks::update(LEDMatrix* matrix)
 {
     static bool created = false;
     if (!created)
@@ -135,16 +135,11 @@ void Effect_Fireworks::update(LEDMatrix* matrix, float dt)
 
     uint8_t hue = m_PrimaryColour.getHue();
 
-    m_DeltaTotal += dt;
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
-    {
-        matrix->fillSolid({ 0, 0, 0 });
-        m_DeltaTotal = 0;
+    matrix->fillSolid({ 0, 0, 0 });
 
-        for (int i = 0; i < m_CurrentFireworks; i++)
-        {
-            fireworkUpdate(i, matrix);
-        }
+    for (int i = 0; i < m_CurrentFireworks; i++)
+    {
+        fireworkUpdate(i, matrix);
     }
 }
 

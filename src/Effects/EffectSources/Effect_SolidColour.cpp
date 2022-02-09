@@ -5,14 +5,9 @@ Effect_SolidColour::Effect_SolidColour()
 
 Effect_SolidColour::~Effect_SolidColour() {}
 
-void Effect_SolidColour::update(LEDMatrix* matrix, float dt)
+void Effect_SolidColour::update(LEDMatrix* matrix)
 {
-    m_DeltaTotal += dt;
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
-    {
-        matrix->fillSolid(m_PrimaryColour);
-        m_DeltaTotal = 0;
-    }
+    matrix->fillSolid(m_PrimaryColour);
 }
 
 void Effect_SolidColour::render(const char* panelName)

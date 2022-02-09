@@ -5,14 +5,9 @@ Effect_None::Effect_None()
 
 Effect_None::~Effect_None() {}
 
-void Effect_None::update(LEDMatrix* matrix, float dt)
+void Effect_None::update(LEDMatrix* matrix)
 {
-    m_DeltaTotal += dt;
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
-    {
-        matrix->fillSolid({ 0, 0, 0 });
-        m_DeltaTotal = 0;
-    }
+    matrix->fillSolid({ 0, 0, 0 });
 }
 
 void Effect_None::render(const char* panelName)

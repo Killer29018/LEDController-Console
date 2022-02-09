@@ -52,7 +52,7 @@ public:
     Effect_Fireworks();
     ~Effect_Fireworks();
 
-    void update(LEDMatrix* matrix, float dt) override;
+    void update(LEDMatrix* matrix) override;
     void render(const char* panelName) override;
 private:
     void createFireworks(LEDMatrix* matrix);

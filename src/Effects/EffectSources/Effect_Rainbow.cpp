@@ -11,24 +11,16 @@ Effect_Rainbow::Effect_Rainbow()
 
 Effect_Rainbow::~Effect_Rainbow() {}
 
-void Effect_Rainbow::update(LEDMatrix* matrix, float dt)
+void Effect_Rainbow::update(LEDMatrix* matrix)
 {
     uint8_t hue = m_PrimaryColour.getHue();
-    // Logger::log(LoggerType::LOG_INFO, "%u\n", hue);
 
-    m_DeltaTotal += dt;
+    matrix->fillRainbow(cHSV(hue + m_HueOffset, 255, 255), m_DeltaHue);
 
-    if (m_DeltaTotal >= (1.0 / (float)m_FPS))
-    {
-        matrix->fillRainbow(cHSV(hue + m_HueOffset, 255, 255), m_DeltaHue);
-
-        if (m_ChangeHue)
-            m_HueOffset++;
-        else
-            m_HueOffset = 0;
-
-        m_DeltaTotal = 0;
-    }
+    if (m_ChangeHue)
+        m_HueOffset++;
+    else
+        m_HueOffset = 0;
 }
 
 void Effect_Rainbow::render(const char* panelName)
