@@ -3,41 +3,127 @@
 #include "../../Panels/Logger.hpp"
 
 static float s_ParticleMaxSpeed = 0.05f;
-static float s_FireworkMaxSpeed = 0.05f;
 static float s_ParticleDecaySpeed = 2.2f;
-static float s_FireworkDeceleration = 0.075f;
+static float s_FireworkDeceleration = 0.1;
+static uint32_t s_FireworkMinDistance = 2;
 
 float random() { return (rand() / (float)RAND_MAX); }
 
-Particle::Particle(float x, float y, cRGB colour, float maxSpeed)
+Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
+    : Effect(EffectEnum::FIREWORKS, matrix)
+{
+    m_CurrentFireworks = 10;
+    createFireworks();
+}
+
+Effect_Fireworks::~Effect_Fireworks() {}
+
+void Effect_Fireworks::update()
+{
+    uint8_t hue = m_PrimaryColour.getHue();
+
+    m_Matrix->fillSolid({ 0, 0, 0 });
+
+    for (int i = 0; i < m_CurrentFireworks; i++)
+    {
+        updateFirework(i);
+    }
+}
+
+void Effect_Fireworks::render(const char* panelName)
+{
+    if (ImGui::Begin(panelName))
+    {
+        ImGui::PushItemWidth(-1);
+
+        ImGui::Text("Firework: ");
+        ImGui::Text("Count");
+        uint32_t min = 1, max = MAX_FIREWORKS;
+        ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_CurrentFireworks, &min, &max, "%u");
+
+        min = 0;
+        max = m_Matrix->getRows() - 1;
+        ImGui::Text("Bottom Distance");
+        ImGui::SliderScalar("##FDistance", ImGuiDataType_U32, &s_FireworkMinDistance, &min, &max, "%u");
+
+        ImGui::Text("Deceleration");
+        ImGui::SliderFloat("##FDeceleration", &s_FireworkDeceleration, 0.01f, 1.0f, "%.3f");
+
+        ImGui::Text("\nParticles");
+        ImGui::Text("Max Speed");
+        ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 1.0f, "%.3f");
+        ImGui::Text("Decay Speed");
+        ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 3.0f, "%.3f");
+
+        ImGui::PopItemWidth();
+    }
+    ImGui::End();
+}
+
+void Effect_Fireworks::createFireworks()
+{
+    for (int i = 0; i < MAX_FIREWORKS; i++)
+    {
+        resetFirework(m_Fireworks[i]);
+    }
+}
+
+void Effect_Fireworks::updateFirework(int i)
+{
+    m_Fireworks[i].draw(m_Matrix);
+    m_Fireworks[i].update();
+    if (m_Fireworks[i].isDead() || m_Fireworks[i].posY < 0)
+    {
+        resetFirework(m_Fireworks[i]);
+    }
+}
+
+void Effect_Fireworks::resetFirework(Firework& firework)
+{
+    int rX = random() * m_Matrix->getColumns();
+    int rY = (m_Matrix->getRows() * 2) + (random() * (m_Matrix->getRows() * 2));
+    
+    float minY = std::sqrt(2 * s_FireworkDeceleration * (rY - m_Matrix->getRows() + s_FireworkMinDistance));
+    float maxY = std::sqrt(2 * s_FireworkDeceleration * (rY - 2));
+    firework = Firework(rX, rY, minY, maxY);
+}
+
+
+/// PARTICLES
+
+
+Particle::Particle(float x, float y, cRGB colour)
 {
     pColour = colour;
-    lifetime = (random() * 155) + 100;
+    lifetime = (random() * 255);
     posX = x;
     posY = y;
 
     float t = 2*3.14159*random();
     float u = random()+random();
     float r = u < 1 ? 2 - u : u;
-    velX = r*cos(t) * maxSpeed;
-    velY = r*sin(t) * maxSpeed;
+    velX = r * cos(t) * s_ParticleMaxSpeed;
+    velY = r * sin(t) * s_ParticleMaxSpeed;
 }
 
-void Particle::update(float decayAmount)
+void Particle::update()
 {
     if (lifetime <= 0) return;
     posX += velX;
     posY += velY;
-    lifetime -= decayAmount;
+    lifetime -= s_ParticleDecaySpeed;
 }
 
-Firework::Firework(float x, float y, float maxSpeed)
+
+// FIREWORK
+
+
+Firework::Firework(float x, float y, float minY, float maxY)
 {
     posX = x;
     posY = y;
 
-    // velY = -((rand() % 1000) * (maxSpeed) / 1000.0f);
-    velY = -(random() * 0.8f) - 0.8f;
+    velY = -((random() * (maxY - minY)) + minY);
     accY = s_FireworkDeceleration;
 
     uint8_t hue = random() * 255;
@@ -58,7 +144,7 @@ void Firework::update()
     {
         for (Particle& p : particles)
         {
-            p.update(s_ParticleDecaySpeed);
+            p.update();
         }
     }
 }
@@ -67,7 +153,7 @@ void Firework::explode()
 {
     for (Particle& p : particles)
     {
-        p = Particle(posX, posY, colour, s_ParticleMaxSpeed);
+        p = Particle(posX, posY, colour);
     }
     exploded = true;
 }
@@ -112,76 +198,4 @@ bool Firework::isDead()
         if (p.lifetime > 0) return false;
     }
     return true;
-}
-
-
-
-Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
-    : Effect(EffectEnum::FIREWORKS, matrix)
-{
-    m_CurrentFireworks = 10;
-        createFireworks();
-}
-
-Effect_Fireworks::~Effect_Fireworks() {}
-
-void Effect_Fireworks::update()
-{
-    uint8_t hue = m_PrimaryColour.getHue();
-
-    m_Matrix->fillSolid({ 0, 0, 0 });
-
-    for (int i = 0; i < m_CurrentFireworks; i++)
-    {
-        fireworkUpdate(i);
-    }
-}
-
-void Effect_Fireworks::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
-
-        ImGui::Text("Firework: ");
-        ImGui::Text("Count");
-        uint32_t min = 1, max = MAX_FIREWORKS;
-        ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_CurrentFireworks, &min, &max, "%u");
-        ImGui::Text("Max speed");
-        ImGui::SliderFloat("##FMaxSpeed", &s_FireworkMaxSpeed, 0.01f, 1.0f, "%.3f");
-        ImGui::Text("Deceleration");
-        ImGui::SliderFloat("##FDeceleration", &s_FireworkDeceleration, 0.01f, 1.0f, "%.3f");
-
-        ImGui::Text("\nParticles");
-        ImGui::Text("Max Speed");
-        ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 1.0f, "%.3f");
-        ImGui::Text("Decay Speed");
-        ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 3.0f, "%.3f");
-
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
-
-void Effect_Fireworks::createFireworks()
-{
-    for (int i = 0; i < MAX_FIREWORKS; i++)
-    {
-        int rX = random() * m_Matrix->getColumns();
-        int rY = m_Matrix->getRows() + random() * 5;
-        m_Fireworks[i] = Firework(rX, rY, s_FireworkMaxSpeed);
-    }
-}
-
-void Effect_Fireworks::fireworkUpdate(int i)
-{
-
-    m_Fireworks[i].draw(m_Matrix);
-    m_Fireworks[i].update();
-    if (m_Fireworks[i].isDead() || m_Fireworks[i].posY < 0)
-    {
-        int rX = random() * m_Matrix->getColumns();
-        int rY = m_Matrix->getRows() + random() * 5;
-        m_Fireworks[i] = Firework(rX, rY, s_FireworkMaxSpeed);
-    }
 }

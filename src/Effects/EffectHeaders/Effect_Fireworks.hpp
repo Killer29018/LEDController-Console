@@ -16,9 +16,9 @@ public:
     cRGB pColour;
 public:
     Particle() = default;
-    Particle(float x, float y, cRGB colour, float maxSpeed);
+    Particle(float x, float y, cRGB colour);
 
-    void update(float decayAmount);
+    void update();
 };
 
 class Firework
@@ -33,7 +33,7 @@ public:
     bool exploded = false;
 public:
     Firework() = default;
-    Firework(float x, float y, float maxSpeed);
+    Firework(float x, float y, float minY, float maxY);
 
     void update();
     void explode();
@@ -56,7 +56,8 @@ public:
     void render(const char* panelName) override;
 private:
     void createFireworks();
-    void fireworkUpdate(int i);
+    void updateFirework(int i);
+    void resetFirework(Firework& firework);
 };
 
 #endif
