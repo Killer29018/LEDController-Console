@@ -13,10 +13,10 @@ public:
     float posY;
     float velX;
     float velY;
-    cRGB pColour;
+    cHSV pColour;
 public:
     Particle() = default;
-    Particle(float x, float y, cRGB colour);
+    Particle(float x, float y);
 
     void update();
 };
@@ -25,7 +25,7 @@ class Firework
 {
 public:
     Particle particles[50];
-    cRGB colour;
+    cHSV fColour;
     float posX;
     float posY;
     float velY;
@@ -37,7 +37,7 @@ public:
 
     void update();
     void explode();
-    void draw(LEDMatrix* matrix);
+    void draw(LEDMatrix* matrix, cRGB& primaryColour);
     bool isDead();
 };
 
@@ -47,6 +47,7 @@ private:
     static constexpr uint16_t MAX_FIREWORKS = 50;
     Firework m_Fireworks[MAX_FIREWORKS];
     uint32_t m_CurrentFireworks;
+    bool m_RainbowColours;
 
 public:
     Effect_Fireworks(LEDMatrix* matrix);

@@ -6,8 +6,19 @@ static float s_ParticleMaxSpeed = 0.05f;
 static float s_ParticleDecaySpeed = 2.2f;
 static float s_FireworkDeceleration = 0.1;
 static uint32_t s_FireworkMinDistance = 2;
+static uint32_t s_TrailIntensity = 5;
+
+static bool s_FireworkRandomColour = false;
+static bool s_ParticleFireworkColour = false;
+static bool s_ParticleRandomColour = false;
 
 static float random() { return (rand() / (float)RAND_MAX); }
+
+static float mapValue(float initial, float iS, float iE, float oS, float oE)
+{
+    float slope = (oE - oS) / (iE - iS);
+    return oS + slope * (initial - iS);
+}
 
 Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
     : Effect(EffectEnum::FIREWORKS, matrix)
@@ -38,6 +49,10 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::PushItemWidth(-1);
 
         ImGui::Text("Firework: ");
+
+        ImGui::Text("Random Colours");
+        ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
+
         ImGui::Text("Count");
         uint32_t min = 1, max = MAX_FIREWORKS;
         ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_CurrentFireworks, &min, &max, "%u");
@@ -50,9 +65,22 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::Text("Deceleration");
         ImGui::SliderFloat("##FDeceleration", &s_FireworkDeceleration, 0.01f, 1.0f, "%.3f");
 
+        min = 0;
+        max = m_Matrix->getRows();
+        ImGui::Text("Trail Intensity");
+        ImGui::SliderScalar("##TrailIntensity", ImGuiDataType_U32, &s_TrailIntensity, &min, &max, "%u");
+
         ImGui::Text("\nParticles");
+
+        ImGui::Text("Firework Colours");
+        ImGui::Checkbox("##PFirework", &s_ParticleFireworkColour);
+
+        ImGui::Text("Random Colours");
+        ImGui::Checkbox("##PRandom", &s_ParticleRandomColour);
+
         ImGui::Text("Max Speed");
         ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 1.0f, "%.3f");
+
         ImGui::Text("Decay Speed");
         ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 3.0f, "%.3f");
 
@@ -71,7 +99,7 @@ void Effect_Fireworks::createFireworks()
 
 void Effect_Fireworks::updateFirework(int i)
 {
-    m_Fireworks[i].draw(m_Matrix);
+    m_Fireworks[i].draw(m_Matrix, m_PrimaryColour);
     m_Fireworks[i].update();
     if (m_Fireworks[i].isDead() || m_Fireworks[i].posY < 0)
     {
@@ -93,12 +121,13 @@ void Effect_Fireworks::resetFirework(Firework& firework)
 /// PARTICLES
 
 
-Particle::Particle(float x, float y, cRGB colour)
+Particle::Particle(float x, float y)
 {
-    pColour = colour;
     lifetime = (random() * 255);
     posX = x;
     posY = y;
+
+    pColour = cHSV(random() * 255, 255, 255);
 
     float t = 2*3.14159*random();
     float u = random()+random();
@@ -128,7 +157,7 @@ Firework::Firework(float x, float y, float minY, float maxY)
     accY = s_FireworkDeceleration;
 
     uint8_t hue = random() * 255;
-    colour = cHSV(hue, 255, 255);
+    fColour = cHSV(hue, 255, 255);
 }
 
 void Firework::update()
@@ -154,20 +183,36 @@ void Firework::explode()
 {
     for (Particle& p : particles)
     {
-        p = Particle(posX, posY, colour);
+        p = Particle(posX, posY);
     }
     exploded = true;
 }
 
-void Firework::draw(LEDMatrix* matrix)
+void Firework::draw(LEDMatrix* matrix, cRGB& primaryColour)
 {
     int maxX = matrix->getColumns();
     int maxY = matrix->getRows();
     if (!exploded)
     {
-        if (posX >= maxX || posY >= maxY || posX < 0 || posY < 0) return;
+        if (posX >= maxX  || posX < 0) return;
 
-        matrix->setLED(posX, posY, colour);
+        for (uint32_t i = 0; i < s_TrailIntensity; i++)
+        {
+            float x = posX;
+            float y = posY - (i * velY);
+            if (y < 0 || y >= maxY) continue;
+
+            cHSV currentColour;
+            if (s_FireworkRandomColour)
+                currentColour = fColour;
+            else
+                currentColour = primaryColour;
+
+            float value = mapValue(i, 0, s_TrailIntensity - 1, 255, 64);
+            currentColour.v = value;
+
+            matrix->setLED(x, y, currentColour);
+        }
     }
     else
     {
@@ -177,13 +222,17 @@ void Firework::draw(LEDMatrix* matrix)
             if (p.posX >= maxX || p.posY >= maxY || p.posX < 0 || p.posY < 0) continue;
             if (p.lifetime <= 0) continue;
 
-            cRGB newColour = p.pColour;
-            float multiplier = p.lifetime / 255.0f;
-            float r = (float)newColour.R * multiplier;
-            float g = (float)newColour.G * multiplier;
-            float b = (float)newColour.B * multiplier;
+            cHSV newColour;
+            if (s_ParticleRandomColour)
+                newColour = p.pColour;
+            else if (s_ParticleFireworkColour)
+                newColour = fColour;
+            else
+                newColour = primaryColour;
 
-            newColour = cRGB(r, g, b);
+            float multiplier = p.lifetime / 255.0f;
+            newColour.v *= multiplier;
+
             matrix->setLED(p.posX, p.posY, newColour);
             index++;
         }
