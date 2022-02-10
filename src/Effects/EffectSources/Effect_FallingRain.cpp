@@ -64,7 +64,7 @@ void Effect_FallingRain::render(const char* panelName)
 
 void Effect_FallingRain::createRaindrops()
 {
-    for (int i = 0; i < MAX_RAINDROPS; i++)
+    for (uint32_t i = 0; i < MAX_RAINDROPS; i++)
     {
         resetRaindrop(m_Raindrops[i]);
     }
@@ -79,7 +79,7 @@ void Effect_FallingRain::resetRaindrop(Raindrop& raindrop)
 
 void Effect_FallingRain::updateRaindrops()
 {
-    for (int i = 0; i < m_CurrentRaindrops; i++)
+    for (uint32_t i = 0; i < m_CurrentRaindrops; i++)
     {
         m_Raindrops[i].update();
 
@@ -90,7 +90,7 @@ void Effect_FallingRain::updateRaindrops()
 
 void Effect_FallingRain::renderRaindrops()
 {
-    for (int i = 0; i < m_CurrentRaindrops; i++)
+    for (uint32_t i = 0; i < m_CurrentRaindrops; i++)
     {
         m_Raindrops[i].draw(m_Matrix, m_PrimaryColour);
     }
@@ -121,7 +121,7 @@ void Raindrop::update()
 void Raindrop::draw(LEDMatrix* matrix, cRGB targetColour)
 {
     cHSV currentColour;
-    for (int i = 0; i < s_TrailLength; i++)
+    for (uint32_t i = 0; i < s_TrailLength; i++)
     {
         if (*m_RandomColour)
             currentColour = cHSV(colour.hue, colour.sat, colour.v);

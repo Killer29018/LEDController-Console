@@ -30,7 +30,7 @@ void Socket::sendData(uint8_t* buffer, int size)
     int sendOK = sendto(m_Socket, (char*)buffer, size, 0, (sockaddr*)&m_Server, sizeof(m_Server));
     if (sendOK == SOCKET_ERROR)
     {
-        Logger::log(LoggerType::LOG_ERROR, "Failed to send: %s", WSAGetLastError());
+        Logger::log(LoggerType::LOG_ERROR, "Failed to send: %d", WSAGetLastError());
     }
 }
 

@@ -20,11 +20,12 @@ Effect_Fireworks::~Effect_Fireworks() {}
 
 void Effect_Fireworks::update()
 {
-    uint8_t hue = m_PrimaryColour.getHue();
+    // TODO: Add random Colour option
+    // uint8_t hue = m_PrimaryColour.getHue();
 
     m_Matrix->fillSolid({ 0, 0, 0 });
 
-    for (int i = 0; i < m_CurrentFireworks; i++)
+    for (uint32_t i = 0; i < m_CurrentFireworks; i++)
     {
         updateFirework(i);
     }
@@ -62,7 +63,7 @@ void Effect_Fireworks::render(const char* panelName)
 
 void Effect_Fireworks::createFireworks()
 {
-    for (int i = 0; i < MAX_FIREWORKS; i++)
+    for (uint32_t i = 0; i < MAX_FIREWORKS; i++)
     {
         resetFirework(m_Fireworks[i]);
     }

@@ -62,8 +62,8 @@ void HSV2RGB_rainbow(const cHSV& hsv, cRGB& rgb)
 #define K171 171
 #define K170 170
 #define K85  85
-#define scale8(i, sc) ((uint16_t)(i) * (uint16_t)(sc)) >> 8 
-#define scale8_video(i, sc) (((int)i * (int)sc) >> 8) + ((i && sc) ? 1 : 0) 
+#define scale8(i, sc) (((uint16_t)(i) * (uint16_t)(sc)) >> 8)
+#define scale8_video(i, sc) ((((int)i * (int)sc) >> 8) + ((i && sc) ? 1 : 0))
     uint8_t third = scale8(offset8, (256 / 3));
 
     if (!(hue & 0x80))

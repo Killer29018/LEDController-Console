@@ -34,7 +34,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::FALLING_RAIN:  m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
     }
 
-    Logger::log(LoggerType::LOG_INFO, "Changed effect to %s\n", EffectName[static_cast<int>(effect)]);
+    Logger::log(LoggerType::LOG_INFO, "Changed effect to %s", EffectName[static_cast<int>(effect)]);
 }
 
 void EffectManager::renderImGui()
@@ -44,11 +44,11 @@ void EffectManager::renderImGui()
         ImGui::PushItemWidth(-1);
 
         { // Selectable
-            int intEnum = static_cast<int>(m_CurrentEnum);
+            size_t intEnum = static_cast<int>(m_CurrentEnum);
             const char* currentItem = EffectName[intEnum];
             if (ImGui::BeginCombo("##EffectCombo", currentItem, 0))
             {
-                for (int n = 0; n < EffectName.size(); n++)
+                for (size_t n = 0; n < EffectName.size(); n++)
                 {
                     const bool isSelected = (intEnum == n);
                     if (ImGui::Selectable(EffectName[n], isSelected))

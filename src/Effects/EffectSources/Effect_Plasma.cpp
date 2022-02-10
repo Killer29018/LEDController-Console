@@ -21,9 +21,9 @@ void Effect_Plasma::update()
     const int32_t maxX = 2 << 8;
     const int32_t maxY = 2 << 8;
 
-    for (int i = 0; i < m_Matrix->getColumns(); i++)
+    for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
-        for (int j = 0; j < m_Matrix->getRows(); j++)
+        for (uint32_t j = 0; j < m_Matrix->getRows(); j++)
         {
             float x = (i + m_OffsetX) / (float)(m_Matrix->getColumns() + (maxX / 4.0));
             float y = (j + m_OffsetY) / (float)(m_Matrix->getRows() + (maxY / 4.0));

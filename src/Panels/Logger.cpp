@@ -23,18 +23,24 @@ void Logger::log(LoggerType type, const char* fmt, ...)
 {
 #ifdef DEBUG_MODE
     int oldSize = m_Buf.size();
-    std::string newString;
+    std::string tag;
     switch (type)
     {
-    case LoggerType::LOG_INFO:  newString += "[info] ";     break;
-    case LoggerType::LOG_WARN:  newString += "[warn] ";     break;
-    case LoggerType::LOG_ERROR: newString += "[error] ";    break;
+    case LoggerType::LOG_INFO:  tag = "INFO";     break;
+    case LoggerType::LOG_WARN:  tag = "WARN";     break;
+    case LoggerType::LOG_ERROR: tag = "ERROR";    break;
     }
-    newString += fmt;
+
+    const char* fmtTemplate = "[%s] %s\n";
 
     va_list args;
-    va_start(args, newString.c_str());
-    m_Buf.appendfv(newString.c_str(), args);
+    
+    size_t length = snprintf(NULL, 0, fmtTemplate, tag.c_str(), fmt);
+    char* newFmt = (char*)malloc(length + 1);
+    snprintf(newFmt, length + 1, fmtTemplate, tag.c_str(), fmt);
+
+    va_start(args, fmt);
+    m_Buf.appendfv(newFmt, args);
     va_end(args);
 
     for (int newSize = m_Buf.size(); oldSize < newSize; oldSize++)

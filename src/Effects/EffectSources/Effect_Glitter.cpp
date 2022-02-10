@@ -14,7 +14,7 @@ void Effect_Glitter::update()
     uint8_t hue = m_PrimaryColour.getHue();
 
     cRGB colour;
-    for (int i = 0; i < m_Matrix->getColumns(); i++)
+    for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
         cHSV newHue = cHSV(hue + (i * m_DeltaHue), 255, 255);
         HSV2RGB_rainbow(newHue + m_HueOffset, colour);

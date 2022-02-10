@@ -4,7 +4,7 @@
 
 LEDMatrix::~LEDMatrix()
 {
-    for (int i= 0; i < m_Columns; i++)
+    for (uint32_t i= 0; i < m_Columns; i++)
     {
         delete[] m_IndexArr[i];
     }
@@ -40,7 +40,7 @@ cRGB LEDMatrix::getLEDWBrightness(int x, int y)
 
 void LEDMatrix::fillRow(cRGB colour, int row)
 {
-    for (int i = 0; i < m_Columns; i++)
+    for (uint32_t i = 0; i < m_Columns; i++)
     {
         m_LEDs[getIndex(i, row)] = colour;
     }
@@ -48,7 +48,7 @@ void LEDMatrix::fillRow(cRGB colour, int row)
 
 void LEDMatrix::fillColumn(cRGB colour, int column)
 {
-    for (int i = 0; i < m_Rows; i++)
+    for (uint32_t i = 0; i < m_Rows; i++)
     {
         m_LEDs[getIndex(column, i)] = colour;
     }
@@ -56,9 +56,9 @@ void LEDMatrix::fillColumn(cRGB colour, int column)
 
 void LEDMatrix::fillRainbow(cHSV hsv, uint8_t deltaHue)
 {
-    for (int i = 0; i < m_Columns; i++)
+    for (uint32_t i = 0; i < m_Columns; i++)
     {
-        for (int j = 0; j < m_Rows; j++)
+        for (uint32_t j = 0; j < m_Rows; j++)
         {
             int x = i;
             int y = m_Rows - j - 1;
@@ -119,7 +119,7 @@ int LEDMatrix::getIndex(int x, int y)
 void LEDMatrix::createIndexArr()
 {
     m_IndexArr = new uint16_t*[m_Columns];
-    for (int i = 0; i < m_Columns; i++)
+    for (uint32_t i = 0; i < m_Columns; i++)
     {
         m_IndexArr[i] = new uint16_t[m_Rows];
     }
@@ -127,9 +127,9 @@ void LEDMatrix::createIndexArr()
     int xIndex, yIndex;
     if (m_Direction == StartDirection::SNAKE_ROW)
     {
-        for (int x = 0; x < m_Columns; x++)
+        for (uint32_t x = 0; x < m_Columns; x++)
         {
-            for (int y = 0; y < m_Rows; y++)
+            for (uint32_t y = 0; y < m_Rows; y++)
             {
                 switch (m_StartPosition)
                 {
@@ -164,9 +164,9 @@ void LEDMatrix::createIndexArr()
     }
     else
     {
-        for (int y = 0; y < m_Rows; y++)
+        for (uint32_t y = 0; y < m_Rows; y++)
         {
-            for (int x = 0; x < m_Columns; x++)
+            for (uint32_t x = 0; x < m_Columns; x++)
             {
                 switch (m_StartPosition)
                 {
@@ -204,7 +204,7 @@ void LEDMatrix::createIndexArr()
 
 void LEDMatrix::deleteIndexArr()
 {
-    for (int i= 0; i < m_Columns; i++)
+    for (uint32_t i= 0; i < m_Columns; i++)
     {
         delete[] m_IndexArr[i];
     }
@@ -214,9 +214,9 @@ void LEDMatrix::deleteIndexArr()
 void LEDMatrix::printIndexArr()
 {
     int characters = std::ceil(std::log10(m_Rows * m_Columns));
-    for (int y = 0; y < m_Rows; y++)
+    for (uint32_t y = 0; y < m_Rows; y++)
     {
-        for (int x = 0; x < m_Columns; x++)
+        for (uint32_t x = 0; x < m_Columns; x++)
         {
             printf("%.*u ", characters, m_IndexArr[x][y]);
         }

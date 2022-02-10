@@ -16,9 +16,9 @@ void LEDController::setup(unsigned int LEDCount)
 void LEDController::upload(Socket& socket)
 {
     int currentByte = 0;
-    int currentIndex = 0;
+    uint32_t currentIndex = 0;
     constexpr int offset = 6;
-    for (int i = 0; i < m_TotalPackets; i++)
+    for (uint32_t i = 0; i < m_TotalPackets; i++)
     {
         m_DataBuffer[4] = i + 1; // Current Packet
         while (currentByte <= (MAX_BYTES - 7 - 3) || currentIndex == m_LEDs.size())
@@ -63,7 +63,7 @@ void LEDController::fillSolid(cRGB colour, int start, int length)
 
 void LEDController::fillRainbow(cHSV hsv, uint8_t deltaHue)
 {
-    for (int i = 0; i < m_LEDs.size(); i++)
+    for (uint32_t i = 0; i < m_LEDs.size(); i++)
     {
         uint8_t hue = hsv.H + (deltaHue * i);
         m_LEDs[i] = cHSV(hue, hsv.S, hsv.V);

@@ -13,7 +13,7 @@ class LEDController
 public:
 private:
     uint8_t m_DataBuffer[MAX_BYTES];
-    unsigned int m_TotalPackets;
+    uint32_t m_TotalPackets;
 protected:
     std::vector<cRGB> m_LEDs;
     uint8_t m_Brightness = 255;

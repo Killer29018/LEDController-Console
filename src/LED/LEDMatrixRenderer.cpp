@@ -77,7 +77,7 @@ void LEDMatrixRenderer::renderImGui()
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - wSize.x) * 0.5);
         ImGui::SetCursorPosY((ImGui::GetWindowSize().y - wSize.y) * 0.5);
 
-        ImGui::Image((ImTextureID)m_ImageBuffer, wSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((void*)(intptr_t)m_ImageBuffer, wSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
 
     }
@@ -104,9 +104,9 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
     float sizeY = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getRows()) / 2.0;
     float xStart = (width / 2) - sizeX;
     float yStart = (height / 2) - sizeY;
-    for (int y = 0; y < m_Matrix->getRows(); y++)
+    for (uint32_t y = 0; y < m_Matrix->getRows(); y++)
     {
-        for (int x = 0; x < m_Matrix->getColumns(); x++)
+        for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)
         {
             float xPos = xStart + (m_CellSize / 2) + cellSpacing + (x * (m_CellSize + cellSpacing));
             float yPos = yStart + (m_CellSize / 2) + cellSpacing + (y * (m_CellSize + cellSpacing));

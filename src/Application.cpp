@@ -40,7 +40,6 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 void Application::start()
 {
     static float deltaTotal = 0;
-    static uint8_t hue = 0;
 
     while (!glfwWindowShouldClose(m_Window.window))
     {

@@ -22,9 +22,9 @@ void Effect_Metaballs::update()
     uint8_t hue = m_PrimaryColour.getHue();
 
     m_Matrix->fillSolid({ 0, 0, 0 });
-    for (int x = 0; x < m_Matrix->getColumns(); x++)
+    for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)
     {
-        for (int y = 0; y < m_Matrix->getRows(); y++)
+        for (uint32_t y = 0; y < m_Matrix->getRows(); y++)
         {
             uint8_t value = (255 - getValue(x, y));
             cHSV colour(value + hue, 255, 255);
