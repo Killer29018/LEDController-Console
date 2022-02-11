@@ -10,7 +10,7 @@
 - [x] Falling Rain
 - [ ] Puddles
 - [ ] Fire effects
-- [ ] Fading Pixels
+- [x] Fading Pixels
 - [ ] Scrolling Text
 - [ ] Sound Reactive
 - [ ] Display Screen

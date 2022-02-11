@@ -9,5 +9,6 @@
 #include "EffectHeaders/Effect_Metaballs.hpp"
 #include "EffectHeaders/Effect_Fireworks.hpp"
 #include "EffectHeaders/Effect_FallingRain.hpp"
+#include "EffectHeaders/Effect_FadingPixels.hpp"
 
 #endif

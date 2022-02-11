@@ -2,6 +2,8 @@
 
 #include "../../Panels/Logger.hpp"
 
+#include "../../Utils/Helper.hpp"
+
 static float s_ParticleMaxSpeed = 0.05f;
 static float s_ParticleDecaySpeed = 2.2f;
 static float s_FireworkDeceleration = 0.1;
@@ -11,14 +13,6 @@ static uint32_t s_TrailIntensity = 5;
 static bool s_FireworkRandomColour = false;
 static bool s_ParticleFireworkColour = false;
 static bool s_ParticleRandomColour = false;
-
-static float random() { return (rand() / (float)RAND_MAX); }
-
-static float mapValue(float initial, float iS, float iE, float oS, float oE)
-{
-    float slope = (oE - oS) / (iE - iS);
-    return oS + slope * (initial - iS);
-}
 
 Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
     : Effect(EffectEnum::FIREWORKS, matrix)

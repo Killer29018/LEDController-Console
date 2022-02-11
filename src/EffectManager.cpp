@@ -24,14 +24,18 @@ void EffectManager::setEffect(EffectEnum effect)
 
     switch (effect)
     {
-    case EffectEnum::NONE:          m_CurrentEffect = new Effect_None(m_Matrix); break;
-    case EffectEnum::SOLID_COLOUR:  m_CurrentEffect = new Effect_SolidColour(m_Matrix); break;
-    case EffectEnum::RAINBOW:       m_CurrentEffect = new Effect_Rainbow(m_Matrix); break;
-    case EffectEnum::GLITTER:       m_CurrentEffect = new Effect_Glitter(m_Matrix); break;
-    case EffectEnum::PLASMA:        m_CurrentEffect = new Effect_Plasma(m_Matrix); break;
-    case EffectEnum::METABALLS:     m_CurrentEffect = new Effect_Metaballs(m_Matrix); break;
-    case EffectEnum::FIREWORKS:     m_CurrentEffect = new Effect_Fireworks(m_Matrix); break;
-    case EffectEnum::FALLING_RAIN:  m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
+    case EffectEnum::NONE:              m_CurrentEffect = new Effect_None(m_Matrix); break;
+    case EffectEnum::SOLID_COLOUR:      m_CurrentEffect = new Effect_SolidColour(m_Matrix); break;
+    case EffectEnum::RAINBOW:           m_CurrentEffect = new Effect_Rainbow(m_Matrix); break;
+    case EffectEnum::GLITTER:           m_CurrentEffect = new Effect_Glitter(m_Matrix); break;
+    case EffectEnum::PLASMA:            m_CurrentEffect = new Effect_Plasma(m_Matrix); break;
+    case EffectEnum::METABALLS:         m_CurrentEffect = new Effect_Metaballs(m_Matrix); break;
+    case EffectEnum::FIREWORKS:         m_CurrentEffect = new Effect_Fireworks(m_Matrix); break;
+    case EffectEnum::FALLING_RAIN:      m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
+    case EffectEnum::FADING_PIXELS:     m_CurrentEffect = new Effect_FadingPixels(m_Matrix); break;
+
+    default:
+        Logger::log(LoggerType::LOG_WARN, "Unreachable, Effect Enum added but not new Effect");
     }
 
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s", EffectName[static_cast<int>(effect)]);

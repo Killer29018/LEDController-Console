@@ -2,13 +2,7 @@
 
 #include "../../Panels/Logger.hpp"
 
-static float random() { return (rand() / (float)RAND_MAX); }
-
-static float mapValue(float initial, float iS, float iE, float oS, float oE)
-{
-    float slope = (oE - oS) / (iE - iS);
-    return oS + slope * (initial - iS);
-}
+#include "../../Utils/Helper.hpp"
 
 static float s_RaindropMinSpeed = 0.5f;
 static float s_RaindropMaxSpeed = 0.9f;

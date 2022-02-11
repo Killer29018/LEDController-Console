@@ -5,14 +5,15 @@
 
 enum class EffectEnum
 {
-    NONE        = 0,
-    SOLID_COLOUR= 1,
-    RAINBOW     = 2,
-    GLITTER     = 3,
-    PLASMA      = 4,
-    METABALLS   = 5,
-    FIREWORKS   = 6,
-    FALLING_RAIN= 7,
+    NONE,
+    SOLID_COLOUR,
+    RAINBOW,
+    GLITTER,
+    PLASMA,
+    METABALLS,
+    FIREWORKS,
+    FALLING_RAIN,
+    FADING_PIXELS,
 };
 
 const std::vector<const char*> EffectName = {
@@ -24,6 +25,7 @@ const std::vector<const char*> EffectName = {
     "Metaballs",
     "Fireworks",
     "Falling Rain",
+    "Fading Pixels",
 };
 
 #endif
