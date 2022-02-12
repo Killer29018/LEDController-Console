@@ -15,6 +15,12 @@ Effect_FallingRain::Effect_FallingRain(LEDMatrix* matrix)
     m_CurrentRaindrops = 20;
     m_RainbowColours = false;
 
+    m_AnimateHue = true;
+    m_DeltaHue = 1;
+    m_HueOffset = 0;
+
+    m_MaxCount = 10;
+
     createRaindrops();
 }
 
@@ -23,8 +29,16 @@ Effect_FallingRain::~Effect_FallingRain() {}
 void Effect_FallingRain::update()
 {
     m_Matrix->fillSolid({ 0, 0, 0 });
+
     updateRaindrops();
     renderRaindrops();
+
+    m_CurrentCount++;
+    if (m_CurrentCount >= m_MaxCount)
+    {
+        m_HueOffset += m_DeltaHue;
+        m_CurrentCount = 0;
+    }
 }
 
 void Effect_FallingRain::render(const char* panelName)
@@ -40,6 +54,23 @@ void Effect_FallingRain::render(const char* panelName)
         uint32_t min = 1, max = MAX_RAINDROPS;
         ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
 
+        ImGui::Text("Animate Hue");
+        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+
+        if (m_AnimateHue)
+        {
+            ImGui::Text("Delta Hue");
+            min = 0;
+            max = 255;
+            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+
+            ImGui::Text("Hue Update Speed");
+            uint8_t value = max - m_MaxCount;
+            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+            m_MaxCount = max - value;
+        }
+
+        ImGui::Text("Speed");
         float minF = 0.01f, maxF = 1.0f;
         ImGui::DragFloatRange2("##Speed", &s_RaindropMinSpeed, &s_RaindropMaxSpeed, 0.01f, minF, maxF, "%.3f", "%.3f");
 
@@ -84,9 +115,13 @@ void Effect_FallingRain::updateRaindrops()
 
 void Effect_FallingRain::renderRaindrops()
 {
+    cHSV colour = m_PrimaryColour;
+    if (m_AnimateHue)
+        colour.h += m_HueOffset;
+
     for (uint32_t i = 0; i < m_CurrentRaindrops; i++)
     {
-        m_Raindrops[i].draw(m_Matrix, m_PrimaryColour);
+        m_Raindrops[i].draw(m_Matrix, colour);
     }
 }
 
@@ -112,7 +147,7 @@ void Raindrop::update()
     velY = std::min(velY, s_RaindropMaxSpeed);
 }
 
-void Raindrop::draw(LEDMatrix* matrix, cRGB targetColour)
+void Raindrop::draw(LEDMatrix* matrix, cHSV targetColour)
 {
     cHSV currentColour;
     for (uint32_t i = 0; i < s_TrailLength; i++)

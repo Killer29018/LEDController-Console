@@ -22,7 +22,7 @@ public:
     Raindrop(float x, float y, bool* useRandom);
 
     void update();
-    void draw(LEDMatrix* matrix, cRGB targetColour);
+    void draw(LEDMatrix* matrix, cHSV targetColour);
 };
 
 class Effect_FallingRain : public Effect
@@ -32,6 +32,13 @@ private:
     uint32_t m_CurrentRaindrops;
     Raindrop m_Raindrops[MAX_RAINDROPS];
     bool m_RainbowColours;
+
+    bool m_AnimateHue;
+    uint8_t m_DeltaHue;
+    uint8_t m_HueOffset;
+
+    uint8_t m_CurrentCount;
+    uint8_t m_MaxCount;
 public:
     Effect_FallingRain(LEDMatrix* matrix);
     ~Effect_FallingRain();

@@ -18,8 +18,8 @@ private:
 
     uint8_t m_HueOffset;
     uint8_t m_DeltaHue;
-    uint8_t m_Count;
-    uint8_t m_CountMax;
+    uint8_t m_CurrentCount;
+    uint8_t m_MaxCount;
 public:
     Effect_FadingPixels(LEDMatrix* matrix);
     ~Effect_FadingPixels();

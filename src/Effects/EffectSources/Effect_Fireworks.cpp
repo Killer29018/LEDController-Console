@@ -88,15 +88,18 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
 
-        ImGui::Text("Delta Hue");
-        min = 0;
-        max = 255;
-        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+        if (m_AnimateHue)
+        {
+            ImGui::Text("Delta Hue");
+            min = 0;
+            max = 255;
+            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-        ImGui::Text("Hue Update Speed");
-        uint8_t value = max - m_MaxCount;
-        ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-        m_MaxCount = max - value;
+            ImGui::Text("Hue Update Speed");
+            uint8_t value = max - m_MaxCount;
+            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+            m_MaxCount = max - value;
+        }
 
         ImGui::Text("\nParticles");
 
