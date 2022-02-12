@@ -17,22 +17,43 @@ static bool s_ParticleRandomColour = false;
 Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
     : Effect(EffectEnum::FIREWORKS, matrix)
 {
-    m_CurrentFireworks = 10;
+    m_ActiveFireworks = 0;
+    m_MaxFireworks = 20;
+
+    m_AnimateHue = false;
+    m_HueOffset = 0;
+    m_DeltaHue = 1;
+
+    m_CurrentCount = 0;
+    m_MaxCount = 10;
+
     createFireworks();
+
+    while (m_ActiveFireworks < (m_MaxFireworks / 2))
+    {
+        addNewFirework();
+    }
+
+    // createFireworks();
 }
 
 Effect_Fireworks::~Effect_Fireworks() {}
 
 void Effect_Fireworks::update()
 {
-    // TODO: Add random Colour option
-    // uint8_t hue = m_PrimaryColour.getHue();
-
     m_Matrix->fillSolid({ 0, 0, 0 });
 
-    for (uint32_t i = 0; i < m_CurrentFireworks; i++)
+    for (uint32_t i = 0; i < MAX_FIREWORKS; i++)
     {
         updateFirework(i);
+    }
+
+    m_CurrentCount++;
+
+    if (m_CurrentCount >= m_MaxCount)
+    {
+        m_HueOffset += m_DeltaHue;
+        m_CurrentCount = 0;
     }
 }
 
@@ -44,12 +65,9 @@ void Effect_Fireworks::render(const char* panelName)
 
         ImGui::Text("Firework: ");
 
-        ImGui::Text("Random Colours");
-        ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
-
         ImGui::Text("Count");
         uint32_t min = 1, max = MAX_FIREWORKS;
-        ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_CurrentFireworks, &min, &max, "%u");
+        ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_MaxFireworks, &min, &max, "%u");
 
         min = 0;
         max = m_Matrix->getRows() - 1;
@@ -64,6 +82,22 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::Text("Trail Intensity");
         ImGui::SliderScalar("##TrailIntensity", ImGuiDataType_U32, &s_TrailIntensity, &min, &max, "%u");
 
+        ImGui::Text("Random Colours");
+        ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
+
+        ImGui::Text("Animate Hue");
+        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+
+        ImGui::Text("Delta Hue");
+        min = 0;
+        max = 255;
+        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+
+        ImGui::Text("Hue Update Speed");
+        uint8_t value = max - m_MaxCount;
+        ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+        m_MaxCount = max - value;
+
         ImGui::Text("\nParticles");
 
         ImGui::Text("Firework Colours");
@@ -73,10 +107,10 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::Checkbox("##PRandom", &s_ParticleRandomColour);
 
         ImGui::Text("Max Speed");
-        ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 1.0f, "%.3f");
+        ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 2.0f, "%.3f");
 
         ImGui::Text("Decay Speed");
-        ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 3.0f, "%.3f");
+        ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 10.0f, "%.3f");
 
         ImGui::PopItemWidth();
     }
@@ -93,22 +127,69 @@ void Effect_Fireworks::createFireworks()
 
 void Effect_Fireworks::updateFirework(int i)
 {
-    m_Fireworks[i].draw(m_Matrix, m_PrimaryColour);
-    m_Fireworks[i].update();
-    if (m_Fireworks[i].isDead() || m_Fireworks[i].posY < 0)
+    if (m_Fireworks[i].alive)
     {
-        resetFirework(m_Fireworks[i]);
+        cHSV colour = m_PrimaryColour;
+        if (m_AnimateHue)
+            colour.h += m_HueOffset;
+
+        m_Fireworks[i].draw(m_Matrix, colour);
+
+        m_Fireworks[i].update();
     }
+
+    if (m_Fireworks[i].exploded && !m_Fireworks[i].checked)
+    {
+        m_Fireworks[i].checked = true;
+        addNewFirework();
+    }
+
+    if (m_Fireworks[i].alive && m_Fireworks[i].isDead())
+    {
+        m_Fireworks[i].alive = false;
+        m_ActiveFireworks--;
+
+        if (random() > 0.5)
+            addNewFirework();
+    }
+
+
 }
 
 void Effect_Fireworks::resetFirework(Firework& firework)
 {
+    if (m_ActiveFireworks > m_MaxFireworks)
+    {
+        firework.alive = false;
+        m_ActiveFireworks--;
+        return;
+    }
+
     int rX = random() * m_Matrix->getColumns();
     int rY = (m_Matrix->getRows() * 2) + (random() * (m_Matrix->getRows() * 2));
     
     float minY = std::sqrt(2 * s_FireworkDeceleration * (rY - m_Matrix->getRows() + s_FireworkMinDistance));
     float maxY = std::sqrt(2 * s_FireworkDeceleration * (rY - 2));
     firework = Firework(rX, rY, minY, maxY);
+}
+
+void Effect_Fireworks::addNewFirework()
+{
+    if (m_ActiveFireworks < m_MaxFireworks)
+    {
+        for (int i = 0; i < MAX_FIREWORKS; i++)
+        {
+            if (!m_Fireworks[i].alive)
+            {
+                resetFirework(m_Fireworks[i]);
+                m_Fireworks[i].makeAlive();
+
+                m_ActiveFireworks++;
+                return;
+            }
+
+        }
+    }
 }
 
 
@@ -182,7 +263,7 @@ void Firework::explode()
     exploded = true;
 }
 
-void Firework::draw(LEDMatrix* matrix, cRGB& primaryColour)
+void Firework::draw(LEDMatrix* matrix, cHSV& primaryColour)
 {
     int maxX = matrix->getColumns();
     int maxY = matrix->getRows();
