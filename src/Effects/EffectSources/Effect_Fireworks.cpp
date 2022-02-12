@@ -11,7 +11,6 @@ static uint32_t s_FireworkMinDistance = 2;
 static uint32_t s_TrailIntensity = 5;
 
 static bool s_FireworkRandomColour = false;
-static bool s_ParticleFireworkColour = false;
 static bool s_ParticleRandomColour = false;
 
 Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix) 
@@ -102,9 +101,6 @@ void Effect_Fireworks::render(const char* panelName)
         }
 
         ImGui::Text("\nParticles");
-
-        ImGui::Text("Firework Colours");
-        ImGui::Checkbox("##PFirework", &s_ParticleFireworkColour);
 
         ImGui::Text("Random Colours");
         ImGui::Checkbox("##PRandom", &s_ParticleRandomColour);
@@ -303,7 +299,7 @@ void Firework::draw(LEDMatrix* matrix, cHSV& primaryColour)
             cHSV newColour;
             if (s_ParticleRandomColour)
                 newColour = p.pColour;
-            else if (s_ParticleFireworkColour)
+            else if (s_FireworkRandomColour)
                 newColour = fColour;
             else
                 newColour = primaryColour;

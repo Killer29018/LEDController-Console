@@ -2,8 +2,8 @@
 
 #include "Application.hpp"
 
-static const unsigned int SCREEN_WIDTH  = 800;
-static const unsigned int SCREEN_HEIGHT = 600;
+static const unsigned int SCREEN_WIDTH  = 960;
+static const unsigned int SCREEN_HEIGHT = 540;
 
 int main()
 {

@@ -45,6 +45,14 @@ void ImGuiManager::postRender()
     glfwGetFramebufferSize(m_Window, &displayW, &displayH);
     glViewport(0, 0, displayW, displayH);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        GLFWwindow* backupContext = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backupContext);
+    }
 }
 
 void ImGuiManager::initImGui()
@@ -55,6 +63,7 @@ void ImGuiManager::initImGui()
     io = &ImGui::GetIO(); (void)io;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     ImGui::StyleColorsDark();
 
