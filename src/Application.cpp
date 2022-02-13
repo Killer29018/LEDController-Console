@@ -65,8 +65,8 @@ void Application::start()
 
 void Application::GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    //     glfwSetWindowShouldClose(window, true);
 
     switch (action)
     {
