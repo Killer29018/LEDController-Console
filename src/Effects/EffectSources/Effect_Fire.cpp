@@ -10,71 +10,85 @@ Effect_Fire::Effect_Fire(LEDMatrix* matrix)
     : Effect(EffectEnum::FIRE, matrix)
 { 
     m_OffsetY = 0.0f;
+    m_OffsetX = 0.0f;
+    m_CoolingFactor = 40.0f;
+    m_Speed = 0.04f;
+
     m_BufferSizeX = m_Matrix->getColumns();
     m_BufferSizeY = m_Matrix->getRows();
-    buffer1 = new cHSV[m_BufferSizeX * m_BufferSizeY];
-    buffer2 = new cHSV[m_BufferSizeX * m_BufferSizeY];
+    m_Buffer1.resize(m_BufferSizeX * m_BufferSizeY);
+    m_Buffer2.resize(m_BufferSizeX * m_BufferSizeY);
+
     checkBufferSize();
 
-    memset(buffer1, 0, m_BufferSizeX * m_BufferSizeY * sizeof(cHSV));
-    memset(buffer2, 0, m_BufferSizeX * m_BufferSizeY * sizeof(cHSV));
-
-    for (int i = 0; i < m_Matrix->getColumns(); i++)
+    for (uint32_t y = 0; y < m_Matrix->getRows(); y++)
     {
-        buffer1[getIndex(i, m_Matrix->getRows() - 1)] = cHSV(0, 255, 255);
+        for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)
+        {
+            m_Buffer1.at(getIndex(x, y)) = cHSV(0, 255, 255);
+            m_Buffer2.at(getIndex(x, y)) = cHSV(0, 255, 255);
+        }
     }
 }
 
-Effect_Fire::~Effect_Fire()
-{
-    delete[] buffer1;
-    delete[] buffer2;
-}
+Effect_Fire::~Effect_Fire() {}
 
 
 void Effect_Fire::update()
 {
-    for (int i = 0; i < m_Matrix->getColumns(); i++)
+    checkBufferSize();
+
+    for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
-        buffer1[getIndex(i, m_Matrix->getRows() - 1)] = cHSV(0, 255, 255);
-        buffer1[getIndex(i, m_Matrix->getRows() - 2)] = cHSV(0, 255, 128);
+        uint8_t value = (255-60) + random() * 60;
+        m_Buffer1.at(getIndex(i, m_Matrix->getRows() - 1)) = cHSV(0, 255, value);
+        m_Buffer2.at(getIndex(i, m_Matrix->getRows() - 1)) = cHSV(0, 255, value);
     }
+    m_Matrix->fillSolid({ 0, 0, 0 });
 
-    uint8_t n1, n2, n3, n4;
-    float c;
-    for (uint32_t y = 1; y < m_Matrix->getRows() - 1; y++)
+    for (uint32_t y = 0; y < m_Matrix->getRows(); y++)
     {
-        for (uint32_t x = 1; x < m_Matrix->getColumns() - 1; x++)
+        for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)
         {
-            n1 = buffer1[getIndex(x + 1, y)].v;
-            n2 = buffer1[getIndex(x - 1, y)].v;
-            n3 = buffer1[getIndex(x, y + 1)].v;
-            n4 = buffer1[getIndex(x, y - 1)].v;
+            uint8_t newValue;
+            if (y < m_Matrix->getRows() - 1)
+                newValue = getAverage(x, y);
+            else
+                newValue = m_Buffer1.at(getIndex(x, y)).v;
 
-            c = (getValue(x, y) / 255.0f) * 10.0f;
-            int16_t value = (n1 + n2 + n3 + n4) / 4;
-            value -= c;
+            cHSV& c = m_Buffer2.at(getIndex(x, y));
+            c.v = newValue;
 
-            buffer2[getIndex(x,y-1)].v = value;
-            value = std::min((int16_t)255, std::max(value, (int16_t)0));
-            Logger::log(LoggerType::LOG_INFO, "%d", value);
+            uint8_t hue = newValue;
+            c.h = getConvertedHue(hue);
 
-            cHSV colour = cHSV(0, 255, value);
-            m_Matrix->setLED(x, y - 1, colour);
+            m_Buffer2.at(getIndex(x, y)) = c;
+            m_Matrix->setLED(x, y, c);
         }
     }
 
-    memcpy(buffer1, buffer2, m_BufferSizeX * m_BufferSizeY * sizeof(cHSV));
+    m_Buffer1 = m_Buffer2;
 
-    m_OffsetY += random() * 0.04f;
-    m_OffsetX += 0.01f * glm::perlin(glm::vec2(1.0f, m_OffsetY));
+    m_OffsetY += random() * m_Speed;
+    m_OffsetX += m_Speed * glm::perlin(glm::vec2(1.0f, m_OffsetY));
 }
 
 void Effect_Fire::render(const char* panelName)
 {
     if (ImGui::Begin(panelName))
     {
+        uint8_t min = 0, max = 100;
 
+        ImGui::Text("Movement Speed");
+        uint8_t value = 100 * m_Speed;
+        ImGui::SliderScalar("##MovementSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
+        m_Speed = value / 100.0f;
+
+        ImGui::Text("Cooling Speed");
+        value = m_CoolingFactor;
+        max = 255.0f;
+        ImGui::SliderScalar("##CoolingSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
+        m_CoolingFactor = value;
     }
     ImGui::End();
 }
@@ -111,9 +125,102 @@ void Effect_Fire::checkBufferSize()
         m_BufferSizeY = m_Matrix->getRows();
 
         uint32_t newSize = m_BufferSizeX * m_BufferSizeY;
-        buffer1 = (cHSV*)realloc((void*)buffer1, newSize);
-        buffer2 = (cHSV*)realloc((void*)buffer2, newSize);
+        m_Buffer1.resize(newSize);
+        m_Buffer2.resize(newSize);
     }
 }
 
+uint8_t Effect_Fire::getAverage(uint32_t x, uint32_t y)
+{
+    // average_EvenBelow(x, y);
+    average_EvenBelow(x, y);
+}
 
+uint8_t Effect_Fire::average_EvenBelow(uint32_t x, uint32_t y)
+{
+    float value = 0.0f;
+    uint8_t count = 0;
+
+    const uint32_t maxX = m_Matrix->getColumns() - 1;
+    const uint32_t maxY = m_Matrix->getRows() - 1;
+    
+    if (y < maxY)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 1)).v;
+        count++;
+
+        if (x > 0)
+        {
+            value += m_Buffer1.at(getIndex(x - 1, y + 1)).v;
+            count++;
+        }
+
+        if (x < maxX)
+        {
+            value += m_Buffer1.at(getIndex(x + 1, y + 1)).v;
+            count++;
+        }
+    }
+
+    if (y < maxY - 1)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 2)).v;
+        count++;
+    }
+
+    value /= (float)count;
+    value -= (getValue(x, y) / 255.0f) * m_CoolingFactor;
+
+    value = std::max(0.0f, std::min(255.0f, value));
+
+    return value;
+}
+
+uint8_t Effect_Fire::average_DirectBelow(uint32_t x, uint32_t y)
+{
+    float value = 0.0f;
+    uint8_t count = 0;
+
+    const uint32_t maxX = m_Matrix->getColumns() - 1;
+    const uint32_t maxY = m_Matrix->getRows() - 1;
+    
+    if (y < maxY)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 1)).v;
+        count++;
+    }
+    if (y < maxY - 1)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 2)).v;
+        count++;
+    }
+    if (y < maxY - 2)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 3)).v;
+        count++;
+    }
+    if (y < maxY - 3)
+    {
+        value += m_Buffer1.at(getIndex(x, y + 4)).v;
+        count++;
+    }
+
+    value /= (float)count;
+    value -= (getValue(x, y) / 255.0f) * m_CoolingFactor;
+
+    value = std::max(0.0f, std::min(255.0f, value));
+
+    return value;
+}
+
+
+uint8_t Effect_Fire::getConvertedHue(uint8_t value)
+{
+    uint8_t value1 = 190, value2 = 130;
+    if (value >= value1) // Yellow
+        return mapValue(value, value1, 255, 32, 64);
+    else if (value >= value2) // Orange
+        return mapValue(value, value2, value1, 16, 32);
+    else  // Red
+        return mapValue(value, 0, value2, 0, 16);
+}

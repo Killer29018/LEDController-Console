@@ -6,7 +6,8 @@
 
 EffectManager::~EffectManager()
 {
-    delete m_CurrentEffect;
+    if (m_CurrentEffect)
+        delete m_CurrentEffect;
 }
 
 void EffectManager::init(LEDMatrix& matrix)
