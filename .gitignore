@@ -1,5 +1,6 @@
 .git/**
 bin/**
 build/**
+buildRelease/**
 **.bat
 **.txt

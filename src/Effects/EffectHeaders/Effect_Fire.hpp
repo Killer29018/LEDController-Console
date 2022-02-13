@@ -32,7 +32,6 @@ private:
 
     uint8_t getAverage(uint32_t x, uint32_t y);
     uint8_t average_EvenBelow(uint32_t x, uint32_t y);
-    uint8_t average_DirectBelow(uint32_t x, uint32_t y);
 
     uint8_t getConvertedHue(uint8_t value);
 };

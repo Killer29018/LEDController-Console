@@ -132,8 +132,7 @@ void Effect_Fire::checkBufferSize()
 
 uint8_t Effect_Fire::getAverage(uint32_t x, uint32_t y)
 {
-    // average_EvenBelow(x, y);
-    average_EvenBelow(x, y);
+   return average_EvenBelow(x, y);
 }
 
 uint8_t Effect_Fire::average_EvenBelow(uint32_t x, uint32_t y)
@@ -143,7 +142,7 @@ uint8_t Effect_Fire::average_EvenBelow(uint32_t x, uint32_t y)
 
     const uint32_t maxX = m_Matrix->getColumns() - 1;
     const uint32_t maxY = m_Matrix->getRows() - 1;
-    
+
     if (y < maxY)
     {
         value += m_Buffer1.at(getIndex(x, y + 1)).v;
@@ -175,44 +174,6 @@ uint8_t Effect_Fire::average_EvenBelow(uint32_t x, uint32_t y)
 
     return value;
 }
-
-uint8_t Effect_Fire::average_DirectBelow(uint32_t x, uint32_t y)
-{
-    float value = 0.0f;
-    uint8_t count = 0;
-
-    const uint32_t maxX = m_Matrix->getColumns() - 1;
-    const uint32_t maxY = m_Matrix->getRows() - 1;
-    
-    if (y < maxY)
-    {
-        value += m_Buffer1.at(getIndex(x, y + 1)).v;
-        count++;
-    }
-    if (y < maxY - 1)
-    {
-        value += m_Buffer1.at(getIndex(x, y + 2)).v;
-        count++;
-    }
-    if (y < maxY - 2)
-    {
-        value += m_Buffer1.at(getIndex(x, y + 3)).v;
-        count++;
-    }
-    if (y < maxY - 3)
-    {
-        value += m_Buffer1.at(getIndex(x, y + 4)).v;
-        count++;
-    }
-
-    value /= (float)count;
-    value -= (getValue(x, y) / 255.0f) * m_CoolingFactor;
-
-    value = std::max(0.0f, std::min(255.0f, value));
-
-    return value;
-}
-
 
 uint8_t Effect_Fire::getConvertedHue(uint8_t value)
 {

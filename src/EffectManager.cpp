@@ -51,13 +51,13 @@ void EffectManager::renderImGui()
 
         { // Selectable
             size_t intEnum = static_cast<int>(m_CurrentEnum);
-            const char* currentItem = EffectName[intEnum];
+            const char* currentItem = EffectName.at(intEnum);
             if (ImGui::BeginCombo("##EffectCombo", currentItem, ImGuiComboFlags_HeightLarge))
             {
                 for (size_t n = 0; n < EffectName.size(); n++)
                 {
                     const bool isSelected = (intEnum == n);
-                    if (ImGui::Selectable(EffectName[n], isSelected))
+                    if (ImGui::Selectable(EffectName.at(n), isSelected))
                     {
                         m_CurrentEnum = static_cast<EffectEnum>(n);
                         setEffect(m_CurrentEnum);
