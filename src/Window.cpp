@@ -4,7 +4,7 @@
 
 Window::~Window()
 {
-    glfwDestroyWindow(window)
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
 
