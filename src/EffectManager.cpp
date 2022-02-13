@@ -33,6 +33,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::FIREWORKS:         m_CurrentEffect = new Effect_Fireworks(m_Matrix); break;
     case EffectEnum::FALLING_RAIN:      m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
     case EffectEnum::FADING_PIXELS:     m_CurrentEffect = new Effect_FadingPixels(m_Matrix); break;
+    case EffectEnum::FIRE:              m_CurrentEffect = new Effect_Fire(m_Matrix); break;
 
     default:
         Logger::log(LoggerType::LOG_WARN, "Unreachable, Effect Enum added but not new Effect");
@@ -50,7 +51,7 @@ void EffectManager::renderImGui()
         { // Selectable
             size_t intEnum = static_cast<int>(m_CurrentEnum);
             const char* currentItem = EffectName[intEnum];
-            if (ImGui::BeginCombo("##EffectCombo", currentItem, 0))
+            if (ImGui::BeginCombo("##EffectCombo", currentItem, ImGuiComboFlags_HeightLarge))
             {
                 for (size_t n = 0; n < EffectName.size(); n++)
                 {
