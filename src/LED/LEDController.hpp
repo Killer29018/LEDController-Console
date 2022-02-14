@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "../System/Socket.hpp"
 #include "../Colour.hpp"
+#include "../ColourPalettes.hpp"
 
 #define MAX_BYTES 1400
 
@@ -17,8 +18,10 @@ private:
 protected:
     std::vector<cRGB> m_LEDs;
     uint8_t m_Brightness = 255;
+    
+    ColourPalette& m_CurrentColourPalette;
 public:
-    LEDController() = default;
+    LEDController();
 
     virtual void setup(unsigned int LEDCount);
 
@@ -30,10 +33,14 @@ public:
     void setLED(int index, const cRGB& led);
     cRGB& getLED(int index);
     cRGB getLEDWBrightness(int index);
+    float getBrightnessFactor();
 
     void fillSolid(cRGB colour);
     void fillSolid(cRGB colour, int start, int length);
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);
+
+    void setColourPalette(ColourPalette& palette);
+    ColourPalette& getColourPalette();
 
     uint32_t getLEDCount() { return m_LEDs.size(); }
 

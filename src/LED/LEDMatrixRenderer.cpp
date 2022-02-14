@@ -2,6 +2,8 @@
 
 #include "glm/glm.hpp"
 
+#include "../ColourPalettes.hpp"
+
 void LEDMatrixRenderer::init(LEDMatrix* matrix, uint16_t spacing)
 {
     this->m_Matrix = matrix;
@@ -104,6 +106,12 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
     float sizeY = (cellSpacing + (m_CellSize + cellSpacing) * m_Matrix->getRows()) / 2.0;
     float xStart = (width / 2) - sizeX;
     float yStart = (height / 2) - sizeY;
+
+    cHSV colourHSV;
+    cRGB colour;
+    ColourPalette& palette = m_Matrix->getColourPalette();
+    float brightness = m_Matrix->getBrightnessFactor();
+
     for (uint32_t y = 0; y < m_Matrix->getRows(); y++)
     {
         for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)
@@ -115,8 +123,20 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
             model = glm::translate(model, glm::vec3(xPos, yPos, 0.0f));
             model = glm::scale(model, glm::vec3(m_CellSize, m_CellSize, 1.0f));
             m_Shader.setUniformMatrix4("u_Model", model);
-            cRGB rgb = m_Matrix->getLEDWBrightness(x, y);
-            m_Shader.setUniformVector3("u_Colour", glm::vec3(rgb.r / 255.0f, rgb.g / 255.0f, rgb.b / 255.0f));
+
+            // cRGB rgb = m_Matrix->getLEDWBrightness(x, y);
+            // m_Shader.setUniformVector3("u_Colour", glm::vec3(rgb.r / 255.0f, rgb.g / 255.0f, rgb.b / 255.0f));
+
+            uint8_t hue = getHueFromPalette(palette, m_Matrix->getLED(x, y));
+
+            colourHSV = m_Matrix->getLED(x, y);
+            colourHSV.h = hue;
+            colour = colourHSV;
+
+            glm::vec3 vectorColour((colour.r / brightness) / 255.0f, (colour.g / brightness) / 255.0f, (colour.b / brightness) / 255.0f);
+
+            m_Shader.setUniformVector3("u_Colour", vectorColour);
+
             glDrawElements(GL_TRIANGLES, m_Indicies.getCount(), GL_UNSIGNED_INT, NULL);
         }
     }

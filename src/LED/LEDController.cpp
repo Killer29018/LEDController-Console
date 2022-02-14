@@ -3,12 +3,19 @@
 #include <cmath>
 #include <algorithm>
 
+LEDController::LEDController()
+    : m_CurrentColourPalette(defaultPalette)
+{
+}
+
 void LEDController::setup(unsigned int LEDCount)
 {
     m_LEDs.resize(LEDCount);
     memset(&m_LEDs[0], 0x10, LEDCount * sizeof(cRGB));
 
     m_TotalPackets = std::ceil((LEDCount * sizeof(cRGB)) / (MAX_BYTES - 7.0));
+
+    m_CurrentColourPalette = defaultPalette;
 
     setDataBounds();
 }
@@ -18,15 +25,27 @@ void LEDController::upload(Socket& socket)
     int currentByte = 0;
     uint32_t currentIndex = 0;
     constexpr int offset = 6;
+    float brightness = getBrightnessFactor();
+
+    cHSV colourHSV;
+    cRGB colour;
+
     for (uint32_t i = 0; i < m_TotalPackets; i++)
     {
         m_DataBuffer[4] = i + 1; // Current Packet
         while (currentByte <= (MAX_BYTES - 7 - 3) || currentIndex == m_LEDs.size())
         {
-            float brightness = 1.0 / (255.0 / m_Brightness);
-            m_DataBuffer[offset + currentByte++] = m_LEDs[currentIndex].R * brightness;
-            m_DataBuffer[offset + currentByte++] = m_LEDs[currentIndex].G * brightness;
-            m_DataBuffer[offset + currentByte++] = m_LEDs[currentIndex].B * brightness;
+
+            uint8_t hue = getHueFromPalette(m_CurrentColourPalette, m_LEDs[currentIndex]);
+
+            colourHSV = m_LEDs[currentIndex];
+            colourHSV.h = hue;
+            colour = colourHSV;
+
+            m_DataBuffer[offset + currentByte++] = colour.r / brightness;
+            m_DataBuffer[offset + currentByte++] = colour.g / brightness;
+            m_DataBuffer[offset + currentByte++] = colour.b / brightness;
+
             currentIndex++;
         }
         setDataSize(currentByte);
@@ -47,7 +66,12 @@ cRGB& LEDController::getLED(int index)
 
 cRGB LEDController::getLEDWBrightness(int index)
 {
-    return m_LEDs[index] / (255.0 / m_Brightness);
+    return m_LEDs[index] / getBrightnessFactor();
+}
+
+float LEDController::getBrightnessFactor()
+{
+    return (255.0 / m_Brightness);
 }
 
 void LEDController::fillSolid(cRGB colour)
@@ -68,6 +92,16 @@ void LEDController::fillRainbow(cHSV hsv, uint8_t deltaHue)
         uint8_t hue = hsv.H + (deltaHue * i);
         m_LEDs[i] = cHSV(hue, hsv.S, hsv.V);
     }
+}
+
+void LEDController::setColourPalette(ColourPalette& palette)
+{
+    m_CurrentColourPalette = palette;
+}
+
+ColourPalette& LEDController::getColourPalette()
+{
+    return m_CurrentColourPalette;
 }
 
 void LEDController::changeSize(uint32_t size)
