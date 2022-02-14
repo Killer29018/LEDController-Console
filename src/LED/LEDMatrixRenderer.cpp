@@ -124,12 +124,10 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
             model = glm::scale(model, glm::vec3(m_CellSize, m_CellSize, 1.0f));
             m_Shader.setUniformMatrix4("u_Model", model);
 
-            colourHSV = cHSV(m_Matrix->getLED(x, y));
-            uint8_t hue = getHueFromPalette(palette, colourHSV);
+            colourHSV = m_Matrix->getLED(x, y);
+            colourHSV.h = getHueFromPalette(palette, colourHSV);
+            colour = colourHSV;
 
-            colourHSV.h = hue;
-            cRGB colour1 = cRGB(colourHSV);
-            
             glm::vec3 vectorColour((colour.r * brightness) / 255.0f, (colour.g * brightness) / 255.0f, (colour.b * brightness) / 255.0f);
 
             m_Shader.setUniformVector3("u_Colour", vectorColour);

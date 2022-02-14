@@ -16,7 +16,7 @@ private:
     uint8_t m_DataBuffer[MAX_BYTES];
     uint32_t m_TotalPackets;
 protected:
-    std::vector<cRGB> m_LEDs;
+    std::vector<cHSV> m_LEDs;
     uint8_t m_Brightness = 255;
     
     ColourPalette& m_CurrentColourPalette;
@@ -30,13 +30,13 @@ public:
     void setBrightness(uint8_t brightness) { m_Brightness = brightness; }
     uint8_t& getBrightness() { return m_Brightness; }
 
-    void setLED(int index, const cRGB& led);
-    cRGB& getLED(int index);
-    cRGB getLEDWBrightness(int index);
+    void setLED(int index, const cHSV& led);
+    cHSV& getLED(int index);
+    cHSV getLEDWBrightness(int index);
     float getBrightnessFactor();
 
-    void fillSolid(cRGB colour);
-    void fillSolid(cRGB colour, int start, int length);
+    void fillSolid(cHSV colour);
+    void fillSolid(cHSV colour, int start, int length);
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);
 
     void setColourPalette(ColourPalette& palette);

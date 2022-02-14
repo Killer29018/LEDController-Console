@@ -16,10 +16,9 @@ void Effect_Glitter::update()
     cRGB colour;
     for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
-        cHSV newHue = cHSV(hue + (i * m_DeltaHue), 255, 255);
-        HSV2RGB_rainbow(newHue + m_HueOffset, colour);
+        cHSV newHue = cHSV(hue + (i * m_DeltaHue) + m_HueOffset, 255, 255);
 
-        m_Matrix->fillColumn(colour, i);
+        m_Matrix->fillColumn(newHue, i);
     }
 
     if (!m_Reversed) m_HueOffset--;

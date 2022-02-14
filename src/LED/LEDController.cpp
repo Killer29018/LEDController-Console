@@ -11,9 +11,9 @@ LEDController::LEDController()
 void LEDController::setup(unsigned int LEDCount)
 {
     m_LEDs.resize(LEDCount);
-    memset(&m_LEDs[0], 0x10, LEDCount * sizeof(cRGB));
+    memset(&m_LEDs[0], 0x10, LEDCount * sizeof(cHSV));
 
-    m_TotalPackets = std::ceil((LEDCount * sizeof(cRGB)) / (MAX_BYTES - 7.0));
+    m_TotalPackets = std::ceil((LEDCount * sizeof(cHSV)) / (MAX_BYTES - 7.0));
 
     m_CurrentColourPalette = defaultPalette;
 
@@ -35,11 +35,8 @@ void LEDController::upload(Socket& socket)
         m_DataBuffer[4] = i + 1; // Current Packet
         while (currentByte <= (MAX_BYTES - 7 - 3) || currentIndex == m_LEDs.size())
         {
-
-            uint8_t hue = getHueFromPalette(m_CurrentColourPalette, m_LEDs[currentIndex]);
-
             colourHSV = m_LEDs[currentIndex];
-            colourHSV.h = hue;
+            colourHSV.h = getHueFromPalette(m_CurrentColourPalette, m_LEDs[currentIndex]);
             colour = colourHSV;
 
             m_DataBuffer[offset + currentByte++] = colour.r * brightness;
@@ -54,19 +51,22 @@ void LEDController::upload(Socket& socket)
     }
 }
 
-void LEDController::setLED(int index, const cRGB& led) 
+void LEDController::setLED(int index, const cHSV& led) 
 { 
     m_LEDs[index] = led; 
 }
 
-cRGB& LEDController::getLED(int index) 
+cHSV& LEDController::getLED(int index) 
 { 
     return m_LEDs[index]; 
 }
 
-cRGB LEDController::getLEDWBrightness(int index)
+cHSV LEDController::getLEDWBrightness(int index)
 {
-    return m_LEDs[index] / getBrightnessFactor();
+    cHSV c = m_LEDs[index];
+    c.v *= getBrightnessFactor();
+    return c;
+    // return m_LEDs[index] / getBrightnessFactor();
 }
 
 float LEDController::getBrightnessFactor()
@@ -74,12 +74,12 @@ float LEDController::getBrightnessFactor()
     return (m_Brightness / 255.0f);
 }
 
-void LEDController::fillSolid(cRGB colour)
+void LEDController::fillSolid(cHSV colour)
 {
     std::fill(m_LEDs.begin(), m_LEDs.end(), colour);
 }
 
-void LEDController::fillSolid(cRGB colour, int start, int length)
+void LEDController::fillSolid(cHSV colour, int start, int length)
 {
     auto end = std::min(m_LEDs.begin() + start + length, m_LEDs.end());
     std::fill(m_LEDs.begin() + start, end, colour);

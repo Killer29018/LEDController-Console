@@ -31,13 +31,13 @@ public:
 
     void setup(unsigned int width, unsigned int height, StartPosition position = StartPosition::TOP_RIGHT, StartDirection direction = StartDirection::SNAKE_ROW);
 
-    void setLED(int x, int y, const cRGB& led);
+    void setLED(int x, int y, const cHSV& led);
 
-    cRGB& getLED(int x, int y);
-    cRGB getLEDWBrightness(int x, int y);
+    cHSV& getLED(int x, int y);
+    cHSV getLEDWBrightness(int x, int y);
 
-    void fillRow(cRGB colour, int row);
-    void fillColumn(cRGB colour, int col);
+    void fillRow(cHSV colour, int row);
+    void fillColumn(cHSV colour, int col);
     void fillRainbow(cHSV hsv, uint8_t deltaHue);
 
     uint32_t getColumns() { return m_Columns; }

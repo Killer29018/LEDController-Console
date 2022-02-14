@@ -23,22 +23,25 @@ void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition pos
     createIndexArr();
 }
 
-void LEDMatrix::setLED(int x, int y, const cRGB& led)
+void LEDMatrix::setLED(int x, int y, const cHSV& led)
 {
     m_LEDs[getIndex(x, y)] = led;
 }
 
-cRGB& LEDMatrix::getLED(int x, int y)
+cHSV& LEDMatrix::getLED(int x, int y)
 {
     return m_LEDs[getIndex(x, y)];
 }
 
-cRGB LEDMatrix::getLEDWBrightness(int x, int y)
+cHSV LEDMatrix::getLEDWBrightness(int x, int y)
 {
-    return m_LEDs[getIndex(x, y)] / (255.0/ m_Brightness);
+    cHSV c = m_LEDs[getIndex(x, y)];
+    c.v *= getBrightnessFactor();
+    return c;
+    // return m_LEDs[getIndex(x, y)] / (255.0 / m_Brightness);
 }
 
-void LEDMatrix::fillRow(cRGB colour, int row)
+void LEDMatrix::fillRow(cHSV colour, int row)
 {
     for (uint32_t i = 0; i < m_Columns; i++)
     {
@@ -46,7 +49,7 @@ void LEDMatrix::fillRow(cRGB colour, int row)
     }
 }
 
-void LEDMatrix::fillColumn(cRGB colour, int column)
+void LEDMatrix::fillColumn(cHSV colour, int column)
 {
     for (uint32_t i = 0; i < m_Rows; i++)
     {
@@ -67,7 +70,7 @@ void LEDMatrix::fillRainbow(cHSV hsv, uint8_t deltaHue)
                 y = j;
 
             if (j == 0)
-                m_LEDs[getIndex(x, y)] = cRGB(255, 255, 255);
+                m_LEDs[getIndex(x, y)] = cHSV(0, 0, 255);
 
             uint8_t hue = hsv.h + (deltaHue * (i * m_Rows + j));
             m_LEDs[getIndex(x, y)] = cHSV(hue, hsv.S, hsv.V);
