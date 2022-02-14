@@ -1,5 +1,7 @@
 #include "ColourPalettes.hpp"
 
+#include "Panels/Logger.hpp"
+
 extern ColourPalette defaultPalette =
 {
     { 0, 0 },

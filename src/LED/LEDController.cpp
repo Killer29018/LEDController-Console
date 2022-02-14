@@ -42,9 +42,9 @@ void LEDController::upload(Socket& socket)
             colourHSV.h = hue;
             colour = colourHSV;
 
-            m_DataBuffer[offset + currentByte++] = colour.r / brightness;
-            m_DataBuffer[offset + currentByte++] = colour.g / brightness;
-            m_DataBuffer[offset + currentByte++] = colour.b / brightness;
+            m_DataBuffer[offset + currentByte++] = colour.r * brightness;
+            m_DataBuffer[offset + currentByte++] = colour.g * brightness;
+            m_DataBuffer[offset + currentByte++] = colour.b * brightness;
 
             currentIndex++;
         }
@@ -71,7 +71,7 @@ cRGB LEDController::getLEDWBrightness(int index)
 
 float LEDController::getBrightnessFactor()
 {
-    return (255.0 / m_Brightness);
+    return (m_Brightness / 255.0f);
 }
 
 void LEDController::fillSolid(cRGB colour)

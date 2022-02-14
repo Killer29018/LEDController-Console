@@ -8,6 +8,7 @@
 class Effect_Fire : public Effect
 {
 private:
+    static ColourPalette m_FirePalette;
     float m_OffsetX;
     float m_OffsetY;
 

@@ -6,6 +6,13 @@
 
 #include "glm/gtc/noise.hpp"
 
+ColourPalette Effect_Fire::m_FirePalette = {
+    {   0,   0 },
+    { 130,  16 },
+    { 190,  32 },
+    { 255,  64 }
+};
+
 Effect_Fire::Effect_Fire(LEDMatrix* matrix)
     : Effect(EffectEnum::FIRE, matrix)
 { 
@@ -59,8 +66,9 @@ void Effect_Fire::update()
             cHSV& c = m_Buffer2.at(getIndex(x, y));
             c.v = newValue;
 
+
             uint8_t hue = newValue;
-            c.h = getConvertedHue(hue);
+            c.h = getHueFromPalette(m_FirePalette, hue);
 
             m_Buffer2.at(getIndex(x, y)) = c;
             m_Matrix->setLED(x, y, c);
