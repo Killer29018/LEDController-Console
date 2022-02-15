@@ -19,7 +19,7 @@ protected:
     std::vector<cHSV> m_LEDs;
     uint8_t m_Brightness = 255;
     
-    ColourPalette& m_CurrentColourPalette;
+    Palettes::PaletteEnum m_CurrentPalette;
 public:
     LEDController();
 
@@ -39,8 +39,8 @@ public:
     void fillSolid(cHSV colour, int start, int length);
     void fillRainbow(cHSV initial, uint8_t deltaHue = 5);
 
-    void setColourPalette(ColourPalette& palette);
-    ColourPalette& getColourPalette();
+    void setPalette(Palettes::PaletteEnum palette);
+    Palettes::PaletteEnum getPalette();
 
     uint32_t getLEDCount() { return m_LEDs.size(); }
 

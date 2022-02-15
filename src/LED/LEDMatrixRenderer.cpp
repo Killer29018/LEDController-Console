@@ -109,7 +109,7 @@ void LEDMatrixRenderer::renderMatrix(int width, int height)
 
     cHSV colourHSV;
     cRGB colour;
-    ColourPalette& palette = m_Matrix->getColourPalette();
+    Palettes::PaletteEnum palette = m_Matrix->getPalette();
     float brightness = m_Matrix->getBrightnessFactor();
 
     for (uint32_t y = 0; y < m_Matrix->getRows(); y++)

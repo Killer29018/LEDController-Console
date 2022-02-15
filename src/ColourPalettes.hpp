@@ -26,17 +26,30 @@ struct ColourPaletteItem
 
 typedef std::vector<ColourPaletteItem> ColourPalette;
 
-cHSV getColourFromPalette(const ColourPalette& palette, cHSV colour);
-
-cHSV getColourFromPalette(const ColourPalette& palette, uint8_t currentHue);
-
-uint8_t getHueFromPalette(const ColourPalette& palette, cHSV colour);
-uint8_t getHueFromPalette(const ColourPalette& palette, uint8_t hue);
-
 namespace Palettes
 {
-    extern ColourPalette normal;
-    extern ColourPalette ocean;
+    extern std::vector<const char*> PaletteNames;
+
+    enum PaletteEnum
+    {
+        DEFAULT = 0,
+        OCEAN   = 1,
+        CUSTOM  = 2, // Will be used for users to create their own palette
+    };
+
+    extern std::vector<ColourPalette> AllPalettes;
 }
+
+
+cHSV getColourFromPalette(const ColourPalette& palette, uint8_t colour);
+cHSV getColourFromPalette(const ColourPalette& palette, cHSV colour);
+uint8_t getHueFromPalette(const ColourPalette& palette, uint8_t colour);
+uint8_t getHueFromPalette(const ColourPalette& palette, cHSV colour);
+
+cHSV getColourFromPalette(Palettes::PaletteEnum palette, uint8_t currentHue);
+cHSV getColourFromPalette(Palettes::PaletteEnum palette, cHSV colour);
+uint8_t getHueFromPalette(Palettes::PaletteEnum palette, uint8_t hue);
+uint8_t getHueFromPalette(Palettes::PaletteEnum palette, cHSV colour);
+
 
 #endif

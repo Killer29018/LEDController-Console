@@ -4,7 +4,7 @@
 #include <algorithm>
 
 LEDController::LEDController()
-    : m_CurrentColourPalette(Palettes::normal)
+    : m_CurrentPalette(Palettes::DEFAULT)
 {
 }
 
@@ -15,7 +15,7 @@ void LEDController::setup(unsigned int LEDCount)
 
     m_TotalPackets = std::ceil((LEDCount * sizeof(cHSV)) / (MAX_BYTES - 7.0));
 
-    m_CurrentColourPalette = Palettes::normal;
+    m_CurrentPalette = Palettes::DEFAULT;
 
     setDataBounds();
 }
@@ -36,7 +36,7 @@ void LEDController::upload(Socket& socket)
         while (currentByte <= (MAX_BYTES - 7 - 3) || currentIndex == m_LEDs.size())
         {
             colourHSV = m_LEDs[currentIndex];
-            colourHSV.h = getHueFromPalette(m_CurrentColourPalette, m_LEDs[currentIndex]);
+            colourHSV.h = getHueFromPalette(m_CurrentPalette, m_LEDs[currentIndex]);
             colour = colourHSV;
 
             m_DataBuffer[offset + currentByte++] = colour.r * brightness;
@@ -94,14 +94,14 @@ void LEDController::fillRainbow(cHSV hsv, uint8_t deltaHue)
     }
 }
 
-void LEDController::setColourPalette(ColourPalette& palette)
+void LEDController::setPalette(Palettes::PaletteEnum palette)
 {
-    m_CurrentColourPalette = palette;
+    m_CurrentPalette = palette;
 }
 
-ColourPalette& LEDController::getColourPalette()
+Palettes::PaletteEnum LEDController::getPalette()
 {
-    return m_CurrentColourPalette;
+    return m_CurrentPalette;
 }
 
 void LEDController::changeSize(uint32_t size)

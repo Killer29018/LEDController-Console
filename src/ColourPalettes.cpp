@@ -4,24 +4,52 @@
 
 namespace Palettes
 {
-    ColourPalette normal =
-    {
-        { 0, 0 },
-        { 255, 255, }
+    std::vector<const char*> PaletteNames = {
+        "Default",
+        "Ocean",
+        "Custom"
     };
 
-    ColourPalette ocean = 
+    std::vector<ColourPalette> AllPalettes = 
     {
-        {   0, Colours::HUE_AQUA },
-        { 128, Colours::HUE_BLUE },
-        { 255, Colours::HUE_AQUA }
+        { // Default
+            {   0,   0 },
+            { 255, 255 }
+        },
+
+        { // Ocean
+            {   0, Colours::HUE_AQUA },
+            { 128, Colours::HUE_BLUE },
+            { 255, Colours::HUE_AQUA },
+        },
+
+        { // Custom
+            {  0, 255 },
+            {255,   0 }
+        },
+
     };
+
+    // const ColourPalette  =
+    // {
+    //     { 0, 0 },
+    //     { 255, 255, }
+    // };
+
+    // const ColourPalette ocean = 
+    // {
+    //     {   0, Colours::HUE_AQUA },
+    //     { 128, Colours::HUE_BLUE },
+    //     { 255, Colours::HUE_AQUA }
+    // };
+
+    // ColourPalette custom =
+    // {
+    //     {   0,   0 },
+    //     { 255, 255 }
+    // };
 }
 
-cHSV getColourFromPalette(const ColourPalette& palette, cHSV colour)
-{
-    return getColourFromPalette(palette, colour.h);
-}
 
 cHSV getColourFromPalette(const ColourPalette& palette, uint8_t currentHue)
 {
@@ -55,12 +83,38 @@ cHSV getColourFromPalette(const ColourPalette& palette, uint8_t currentHue)
     return cHSV(hue, sat, val);
 }
 
-uint8_t getHueFromPalette(const ColourPalette& palette, cHSV colour)
+cHSV getColourFromPalette(const ColourPalette& palette, cHSV colour)
 {
-    return getColourFromPalette(palette, colour.h).h;
+    return getColourFromPalette(palette, colour.h);
 }
 
 uint8_t getHueFromPalette(const ColourPalette& palette, uint8_t hue)
 {
     return getColourFromPalette(palette, hue).h;
+}
+
+uint8_t getHueFromPalette(const ColourPalette& palette, cHSV colour)
+{
+    return getColourFromPalette(palette, colour.h).h;
+}
+
+
+cHSV getColourFromPalette(Palettes::PaletteEnum palette, uint8_t colour)
+{
+    return getColourFromPalette(Palettes::AllPalettes.at(palette), colour);
+}
+
+cHSV getColourFromPalette(Palettes::PaletteEnum palette, cHSV colour)
+{
+    return getColourFromPalette(Palettes::AllPalettes.at(palette), colour.h);
+}
+
+uint8_t getHueFromPalette(Palettes::PaletteEnum palette, uint8_t hue)
+{
+    return getColourFromPalette(Palettes::AllPalettes.at(palette), hue).h;
+}
+
+uint8_t getHueFromPalette(Palettes::PaletteEnum palette, cHSV colour)
+{
+    return getColourFromPalette(Palettes::AllPalettes.at(palette), colour.h).h;
 }
