@@ -2,11 +2,21 @@
 
 #include "Panels/Logger.hpp"
 
-ColourPalette defaultPalette =
+namespace Palettes
 {
-    { 0, 0 },
-    { 255, 255, }
-};
+    ColourPalette normal =
+    {
+        { 0, 0 },
+        { 255, 255, }
+    };
+
+    ColourPalette ocean = 
+    {
+        {   0, Colours::HUE_AQUA },
+        { 128, Colours::HUE_BLUE },
+        { 255, Colours::HUE_AQUA }
+    };
+}
 
 cHSV getColourFromPalette(const ColourPalette& palette, cHSV colour)
 {

@@ -33,6 +33,10 @@ cHSV getColourFromPalette(const ColourPalette& palette, uint8_t currentHue);
 uint8_t getHueFromPalette(const ColourPalette& palette, cHSV colour);
 uint8_t getHueFromPalette(const ColourPalette& palette, uint8_t hue);
 
-extern ColourPalette defaultPalette;
+namespace Palettes
+{
+    extern ColourPalette normal;
+    extern ColourPalette ocean;
+}
 
 #endif

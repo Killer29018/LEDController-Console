@@ -18,7 +18,7 @@ namespace Colours
     const uint8_t HUE_ORANGE    =  32;
     const uint8_t HUE_YELLOW    =  64;
     const uint8_t HUE_GREEN     =  96;
-    const uint8_t HUE_AQUA      = 128;
+    const uint8_t HUE_AQUA      = 140;
     const uint8_t HUE_BLUE      = 160;
     const uint8_t HUE_PURPLE    = 192;
     const uint8_t HUE_PINK      = 224;

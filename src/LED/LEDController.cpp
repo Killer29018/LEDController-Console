@@ -4,7 +4,7 @@
 #include <algorithm>
 
 LEDController::LEDController()
-    : m_CurrentColourPalette(defaultPalette)
+    : m_CurrentColourPalette(Palettes::normal)
 {
 }
 
@@ -15,7 +15,7 @@ void LEDController::setup(unsigned int LEDCount)
 
     m_TotalPackets = std::ceil((LEDCount * sizeof(cHSV)) / (MAX_BYTES - 7.0));
 
-    m_CurrentColourPalette = defaultPalette;
+    m_CurrentColourPalette = Palettes::normal;
 
     setDataBounds();
 }
