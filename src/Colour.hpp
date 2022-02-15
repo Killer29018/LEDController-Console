@@ -77,7 +77,6 @@ struct cHSV
         result += hue;
         return result;
     }
-
 };
 
 struct cRGB
@@ -177,6 +176,27 @@ inline cRGB operator/(cRGB& rgb, float div)
     rgb2.g = rgb.g / div;
     rgb2.b = rgb.b / div;
     return rgb2;
+}
+
+namespace Colours
+{
+    extern const cRGB RGB_RED;
+    extern const cRGB RGB_ORANGE;
+    extern const cRGB RGB_YELLOW;
+    extern const cRGB RGB_GREEN;
+    extern const cRGB RGB_AQUA;
+    extern const cRGB RGB_BLUE;
+    extern const cRGB RGB_PURPLE;
+    extern const cRGB RGB_PINK;
+
+    extern const uint8_t HUE_RED;
+    extern const uint8_t HUE_ORANGE;
+    extern const uint8_t HUE_YELLOW;
+    extern const uint8_t HUE_GREEN;
+    extern const uint8_t HUE_AQUA;
+    extern const uint8_t HUE_BLUE;
+    extern const uint8_t HUE_PURPLE;
+    extern const uint8_t HUE_PINK;
 }
 
 #endif

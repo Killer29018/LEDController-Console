@@ -3,6 +3,27 @@
 #include <sstream>
 #include <cmath>
 
+namespace Colours
+{
+    const cRGB RGB_RED       = { 255,   0,   0 };
+    const cRGB RGB_ORANGE    = { 171,  85,   0 };
+    const cRGB RGB_YELLOW    = { 171, 177,   0 };
+    const cRGB RGB_GREEN     = {   0, 255,   0 };
+    const cRGB RGB_AQUA      = {   0, 171,  85 };
+    const cRGB RGB_BLUE      = {   0,   0, 255 };
+    const cRGB RGB_PURPLE    = {  85,   0,  85 };
+    const cRGB RGB_PINK      = { 170,   0,  85 };
+
+    const uint8_t HUE_RED       =   0;
+    const uint8_t HUE_ORANGE    =  32;
+    const uint8_t HUE_YELLOW    =  64;
+    const uint8_t HUE_GREEN     =  96;
+    const uint8_t HUE_AQUA      = 128;
+    const uint8_t HUE_BLUE      = 160;
+    const uint8_t HUE_PURPLE    = 192;
+    const uint8_t HUE_PINK      = 224;
+}
+
 void RGB2HSV(const cRGB& rgb, cHSV& hsv)
 {
      float Rp = rgb.r / 255.0;

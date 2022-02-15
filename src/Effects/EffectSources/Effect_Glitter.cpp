@@ -13,10 +13,10 @@ void Effect_Glitter::update()
 {
     uint8_t hue = m_PrimaryColour.getHue();
 
-    cRGB colour;
+    cHSV newHue;
     for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
-        cHSV newHue = cHSV(hue + (i * m_DeltaHue) + m_HueOffset, 255, 255);
+        newHue = cHSV(hue + (i * m_DeltaHue) + m_HueOffset, 255, 255);
 
         m_Matrix->fillColumn(newHue, i);
     }

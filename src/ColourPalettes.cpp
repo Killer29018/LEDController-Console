@@ -2,7 +2,7 @@
 
 #include "Panels/Logger.hpp"
 
-extern ColourPalette defaultPalette =
+ColourPalette defaultPalette =
 {
     { 0, 0 },
     { 255, 255, }
