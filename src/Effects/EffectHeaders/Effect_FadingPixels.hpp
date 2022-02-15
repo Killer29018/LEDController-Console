@@ -9,10 +9,6 @@ private:
     uint16_t m_RandomPixels;
     uint16_t m_DecaySpeed;
 
-    uint32_t m_ValuesCols;
-    uint32_t m_ValuesRows;
-    cHSV* m_Colours;
-
     bool m_AnimateHue;
     bool m_RandomColour;
 
@@ -29,12 +25,6 @@ public:
 private:
     void setRandomPixels();
     void decayPixels();
-
-    void checkValuesSize();
-
-    uint32_t getIndex(int x, int y);
-    void setValue(int x, int y, cHSV value);
-    cHSV getValue(int x, int y);
 };
 
 #endif
