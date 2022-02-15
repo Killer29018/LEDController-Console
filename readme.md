@@ -9,7 +9,7 @@
 - [x] Fireworks
 - [x] Falling Rain
 - [ ] Puddles
-- [ ] Fire effects
+- [x] Fire effects
 - [x] Fading Pixels
 - [ ] Scrolling Text
 - [ ] Sound Reactive
