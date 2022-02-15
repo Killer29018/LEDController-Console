@@ -15,7 +15,7 @@ Effect_FallingRain::Effect_FallingRain(LEDMatrix* matrix)
     m_CurrentRaindrops = 20;
     m_RainbowColours = false;
 
-    m_AnimateHue = true;
+    m_AnimateHue = false;
     m_DeltaHue = 1;
     m_HueOffset = 0;
 
@@ -47,9 +47,6 @@ void Effect_FallingRain::render(const char* panelName)
     {
         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("Rainbow Colours");
-        ImGui::Checkbox("##Rainbow", &m_RainbowColours);
-
         ImGui::Text("Raindrop Count");
         uint32_t min = 1, max = MAX_RAINDROPS;
         ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
@@ -69,6 +66,12 @@ void Effect_FallingRain::render(const char* panelName)
             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
             m_MaxCount = max - value;
         }
+        else
+        {
+            ImGui::Text("Rainbow Colours");
+            ImGui::Checkbox("##Rainbow", &m_RainbowColours);
+        }
+
 
         ImGui::Text("Speed");
         float minF = 0.01f, maxF = 1.0f;

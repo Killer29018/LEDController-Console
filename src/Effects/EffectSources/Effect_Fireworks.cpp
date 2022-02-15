@@ -32,8 +32,6 @@ Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix)
     {
         addNewFirework();
     }
-
-    // createFireworks();
 }
 
 Effect_Fireworks::~Effect_Fireworks() {}
@@ -81,9 +79,6 @@ void Effect_Fireworks::render(const char* panelName)
         ImGui::Text("Trail Intensity");
         ImGui::SliderScalar("##TrailIntensity", ImGuiDataType_U32, &s_TrailIntensity, &min, &max, "%u");
 
-        ImGui::Text("Random Colours");
-        ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
-
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
 
@@ -99,6 +94,12 @@ void Effect_Fireworks::render(const char* panelName)
             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
             m_MaxCount = max - value;
         }
+        else
+        {
+            ImGui::Text("Random Colours");
+            ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
+        }
+
 
         ImGui::Text("\nParticles");
 

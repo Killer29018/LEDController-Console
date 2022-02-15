@@ -71,9 +71,12 @@ void Effect_FadingPixels::render(const char* panelName)
             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
             m_MaxCount = max - value;
         }
+        else
+        {
+            ImGui::Text("Random Colours");
+            ImGui::Checkbox("##RandomColours", &m_RandomColour);
+        }
 
-        ImGui::Text("Random Colours");
-        ImGui::Checkbox("##RandomColours", &m_RandomColour);
     }
     ImGui::End();
 }

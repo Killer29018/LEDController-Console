@@ -22,7 +22,6 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     m_Settings_Panel.setIpAndPort(ip, port);
 
     m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT, StartDirection::SNAKE_ROW);
-    m_Controller.setPalette(Palettes::OCEAN);
 
     m_Controller.setBrightness(255);
 
