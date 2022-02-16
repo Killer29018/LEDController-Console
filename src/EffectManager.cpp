@@ -105,18 +105,26 @@ void EffectManager::renderImGui()
 
         { // Colour
             ImGui::Text("Primary Colour");
-            cHSV colour = m_CurrentEffect->getPrimaryColour();
-            ImVec4 imColour = ImVec4(colour.h / 255.0f, colour.s / 255.0f, colour.v / 255.0f, 0.0f);
+            cHSV primaryColour = m_CurrentEffect->getPrimaryColour();
+            uint8_t paletteHue = getHueFromPalette(m_Matrix->getPalette(), primaryColour.h);
+            cRGB paletteColour = cHSV(paletteHue, primaryColour.s, primaryColour.v);
 
-            static ImGuiColorEditFlags colourFlags = ImGuiColorEditFlags_NoAlpha | 
-                ImGuiColorEditFlags_PickerHueBar | ImGuiColorEditFlags_InputHSV;
+            ImVec4 imHSVColour = ImVec4(primaryColour.h / 255.0f, primaryColour.s / 255.0f, primaryColour.v / 255.0f, 0.0f);
+            ImVec4 imPaletteColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
 
-            ImGui::ColorPicker3("##PrimaryColourPicker", (float*)&imColour, colourFlags);
-            // colour = cRGB(imColour.x * 255.0f, imColour.y * 255.0f, imColour.z * 255.0f);
-            colour.h = imColour.x * 255.0f;
-            colour.s = imColour.y * 255.0f;
-            colour.v = imColour.z * 255.0f;
-            m_CurrentEffect->setPrimaryColour(colour);
+            ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
+
+            float width = ImGui::GetContentRegionAvail().x;
+            width = std::min(80.0f, width);
+            ImGui::ColorButton("##ColourDisplay", imPaletteColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip, ImVec2(width, width));
+
+            ImGui::ColorEdit3("##HSVPicker", (float*)&imHSVColour, flags | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV);
+
+            primaryColour.h = imHSVColour.x * 255;
+            primaryColour.s = imHSVColour.y * 255;
+            primaryColour.v = imHSVColour.z * 255;
+
+            m_CurrentEffect->setPrimaryColour(primaryColour);
         }
 
         ImGui::PopItemWidth();
