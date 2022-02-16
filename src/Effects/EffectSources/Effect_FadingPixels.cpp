@@ -83,7 +83,7 @@ void Effect_FadingPixels::render(const char* panelName)
 
 void Effect_FadingPixels::setRandomPixels()
 {
-    uint8_t hue;
+    cHSV hue;
     for (uint32_t i = 0; i < m_RandomPixels; i++)
     {
         int x = (rand() % m_Matrix->getColumns());
@@ -93,11 +93,13 @@ void Effect_FadingPixels::setRandomPixels()
             continue;
 
         if (m_RandomColour)
-            hue = random() * 255;
+            hue = cHSV((uint8_t)(random() * 255));
         else
-            hue = m_PrimaryColour.getHue();
+            hue = m_PrimaryColour;
 
-        m_Matrix->setLED(x, y, { hue + m_HueOffset, 255, 255 });
+        hue.h += m_HueOffset;
+
+        m_Matrix->setLED(x, y, hue);
     }
 }
 

@@ -13,7 +13,7 @@ Effect_Rainbow::~Effect_Rainbow() {}
 
 void Effect_Rainbow::update()
 {
-    uint8_t hue = m_PrimaryColour.getHue();
+    uint8_t hue = m_PrimaryColour.h;
 
     m_Matrix->fillRainbow(cHSV(hue + m_HueOffset, 255, 255), m_DeltaHue);
 

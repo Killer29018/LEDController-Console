@@ -19,7 +19,7 @@ Effect_Metaballs::~Effect_Metaballs() {}
 
 void Effect_Metaballs::update()
 {
-    uint8_t hue = m_PrimaryColour.getHue();
+    uint8_t hue = m_PrimaryColour.h;
 
     m_Matrix->fillSolid({ 0, 0, 0 });
     for (uint32_t x = 0; x < m_Matrix->getColumns(); x++)

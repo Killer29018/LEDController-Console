@@ -12,11 +12,11 @@ public:
     EffectEnum effectEnum;
 protected:
     uint8_t m_FPS;
-    cRGB m_PrimaryColour;
+    cHSV m_PrimaryColour;
     LEDMatrix* m_Matrix;
 public:
     Effect(EffectEnum effectEnum, LEDMatrix* matrix)
-        : effectEnum(effectEnum), m_FPS(40), m_PrimaryColour(cHSV(0, 0xFF, 0xFF)),
+        : effectEnum(effectEnum), m_FPS(40), m_PrimaryColour(0, 255, 255),
           m_Matrix(matrix) {}
 
     virtual ~Effect() {}
@@ -27,8 +27,8 @@ public:
     uint8_t& getFPS() { return m_FPS; }
     void setFPS(uint8_t fps) { m_FPS = fps; }
 
-    cRGB getPrimaryColour() { return m_PrimaryColour; }
-    void setPrimaryColour(cRGB colour) { m_PrimaryColour = colour; }
+    cHSV getPrimaryColour() { return m_PrimaryColour; }
+    void setPrimaryColour(cHSV colour) { m_PrimaryColour = colour; }
 };
 
 #endif

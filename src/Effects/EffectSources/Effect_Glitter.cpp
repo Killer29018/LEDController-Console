@@ -11,7 +11,7 @@ Effect_Glitter::~Effect_Glitter() {}
 
 void Effect_Glitter::update()
 {
-    uint8_t hue = m_PrimaryColour.getHue();
+    uint8_t hue = m_PrimaryColour.h;
 
     cHSV newHue;
     for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)

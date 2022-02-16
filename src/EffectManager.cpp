@@ -105,14 +105,17 @@ void EffectManager::renderImGui()
 
         { // Colour
             ImGui::Text("Primary Colour");
-            cRGB colour = m_CurrentEffect->getPrimaryColour();
-            ImVec4 imColour = ImVec4(colour.r / 255.0f, colour.g / 255.0f, colour.b / 255.0f, 0.0f);
+            cHSV colour = m_CurrentEffect->getPrimaryColour();
+            ImVec4 imColour = ImVec4(colour.h / 255.0f, colour.s / 255.0f, colour.v / 255.0f, 0.0f);
 
             static ImGuiColorEditFlags colourFlags = ImGuiColorEditFlags_NoAlpha | 
-                ImGuiColorEditFlags_PickerHueBar;
+                ImGuiColorEditFlags_PickerHueBar | ImGuiColorEditFlags_InputHSV;
 
             ImGui::ColorPicker3("##PrimaryColourPicker", (float*)&imColour, colourFlags);
-            colour = cRGB(imColour.x * 255.0f, imColour.y * 255.0f, imColour.z * 255.0f);
+            // colour = cRGB(imColour.x * 255.0f, imColour.y * 255.0f, imColour.z * 255.0f);
+            colour.h = imColour.x * 255.0f;
+            colour.s = imColour.y * 255.0f;
+            colour.v = imColour.z * 255.0f;
             m_CurrentEffect->setPrimaryColour(colour);
         }
 
