@@ -49,12 +49,37 @@ void EffectManager::renderImGui()
     {
         ImGui::PushItemWidth(-1);
 
-        { // Selectable
-            size_t intEnum = static_cast<int>(m_CurrentEnum);
+        { // Colour Palette Combo
+            uint32_t currentPaletteEnum = m_Matrix->getPalette();
+            const char* currentPalette = Palettes::PaletteNames.at(currentPaletteEnum);
+
+            ImGui::Text("Current Palette:");
+            if (ImGui::BeginCombo("##Colour Palette", currentPalette, ImGuiComboFlags_HeightLarge))
+            {
+                for (uint32_t n = 0; n < Palettes::PaletteNames.size(); n++)
+                {
+                    const bool isSelected = (currentPaletteEnum == n);
+                    if (ImGui::Selectable(Palettes::PaletteNames.at(n), isSelected))
+                    {
+                        m_Matrix->setPalette((Palettes::PaletteEnum)n);
+                        Logger::log(LoggerType::LOG_INFO, "Changed Palette to %s", Palettes::PaletteNames.at(n));
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+        }
+
+        { // Effect Combo
+            uint32_t intEnum = static_cast<int>(m_CurrentEnum);
             const char* currentItem = EffectName.at(intEnum);
+
+            ImGui::Text("Current Effect:");
             if (ImGui::BeginCombo("##EffectCombo", currentItem, ImGuiComboFlags_HeightLarge))
             {
-                for (size_t n = 0; n < EffectName.size(); n++)
+                for (uint32_t n = 0; n < EffectName.size(); n++)
                 {
                     const bool isSelected = (intEnum == n);
                     if (ImGui::Selectable(EffectName.at(n), isSelected))
@@ -70,14 +95,16 @@ void EffectManager::renderImGui()
             }
         }
 
+
+        // Effect Speed
         ImGui::Text("Speed");
         uint8_t fps = m_CurrentEffect->getFPS();
         int min = 0, max = 100;
         ImGui::SliderScalar("##EFFECT_FPS", ImGuiDataType_U8, &fps, &min, &max, "%u");
         m_CurrentEffect->setFPS(fps);
 
-        ImGui::Text("Primary Colour");
         { // Colour
+            ImGui::Text("Primary Colour");
             cRGB colour = m_CurrentEffect->getPrimaryColour();
             ImVec4 imColour = ImVec4(colour.r / 255.0f, colour.g / 255.0f, colour.b / 255.0f, 0.0f);
 
