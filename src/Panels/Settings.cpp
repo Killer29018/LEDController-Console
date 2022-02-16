@@ -21,6 +21,7 @@ void Settings::renderImGui()
             renderSettingsMenu();
             ImGui::EndMenu();
         }
+
         ImGui::PopItemWidth();
         ImGui::EndMainMenuBar();
     }
@@ -112,7 +113,76 @@ void Settings::renderSettingsMenu()
             }
             ImGui::EndCombo();
         }
-
         ImGui::EndMenu();
     }
+
+    if (ImGui::Button("Palette Settings", ImVec2(-1.0f, 0.0f))) ImGui::OpenPopup("PaletteModal");
+
+    ImGui::SetNextWindowSize(ImVec2(300, 300));
+    if (ImGui::BeginPopupModal("PaletteModal", NULL, ImGuiWindowFlags_Modal | ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        renderPaletteMenu();
+        ImGui::EndPopup();
+    }
+}
+
+void Settings::renderPaletteMenu()
+{
+    // ColourPalette& palette = Palettes::AllPalettes[Application::m_Controller.getPalette()];
+    ColourPalette& palette = Palettes::AllPalettes[Palettes::CUSTOM];
+    // cHSV& inputHSV = palette[0].colour;
+    uint8_t paletteHue;
+    cRGB paletteColour;
+    ImVec4 imHSVColour;
+    ImVec4 imRGBColour;
+
+    ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_NoClip | ImGuiTableFlags_SizingStretchProp;
+    if (ImGui::BeginTable("Palette", 2, flags))
+    {
+        ImGui::TableSetupColumn("Input Hue");
+        ImGui::TableSetupColumn("Output HSV", 0, -1);
+        ImGui::TableHeadersRow();
+        for (size_t row = 0; row < palette.size(); row++)
+        {
+            ImGui::PushItemWidth(-1);
+
+            ImGui::TableNextRow();
+
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%u", palette[row].targetHue);
+
+            ImGui::TableSetColumnIndex(1);
+            cHSV inputHSV = palette[row].colour;
+            // paletteHue = getHueFromPalette(palette, inputHSV);
+            // paletteColour = cHSV(input, inputHSV.s, inputHSV.v);
+            paletteColour = inputHSV;
+
+            imHSVColour = ImVec4(inputHSV.h / 255.0f, inputHSV.s / 255.0f, inputHSV.v / 255.0f, 0.0f);
+            imRGBColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
+
+            const ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
+
+            ImGui::PushID(row * 10);
+            ImGui::ColorButton("##PColourDisplay", imRGBColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip | flags);
+            ImGui::PopID();
+
+            ImGui::SameLine();
+
+            ImGui::PushID(row * 10 + 1);
+            ImGui::ColorEdit3("##PHSVInput", (float*)&imHSVColour, ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV | flags);
+            ImGui::PopID();
+
+            inputHSV.h = imHSVColour.x * 255.0f;
+            inputHSV.s = imHSVColour.y * 255.0f;
+            inputHSV.v = imHSVColour.z * 255.0f;
+
+            palette[row].colour = inputHSV;
+
+            ImGui::PopItemWidth();
+        }
+
+        ImGui::EndTable();
+    }
+
+    if (ImGui::Button("Close", ImVec2(-1.0f, 0.0f))) { ImGui::CloseCurrentPopup(); }
 }

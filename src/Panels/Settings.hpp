@@ -20,6 +20,7 @@ public:
     void renderImGui();
 private:
     void renderSettingsMenu();
+    void renderPaletteMenu();
 };
 
 #endif
