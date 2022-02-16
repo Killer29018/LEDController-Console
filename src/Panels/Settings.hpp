@@ -18,6 +18,8 @@ public:
     void setIpAndPort(const char* ip, int port);
 
     void renderImGui();
+private:
+    void renderSettingsMenu();
 };
 
 #endif
