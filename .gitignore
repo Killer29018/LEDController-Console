@@ -1,5 +1,4 @@
-.git/**
 bin/**
 build/**
 **.bat
-**.txt
+**.sh
