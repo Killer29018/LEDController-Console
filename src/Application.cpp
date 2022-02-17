@@ -52,7 +52,7 @@ void Application::start()
         glfwSwapBuffers(m_Window.window);
         glfwPollEvents();
 
-        if (deltaTotal >= (1/updateFPS))
+        if (deltaTotal >= (1/(float)updateFPS))
         {
             if (m_Output) m_Controller.upload(m_Socket);
 
