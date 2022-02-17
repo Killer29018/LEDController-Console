@@ -20,7 +20,7 @@ void LEDController::setup(unsigned int LEDCount)
     setDataBounds();
 }
 
-void LEDController::upload(Socket& socket)
+void LEDController::upload(SocketBase& socket)
 {
     int currentByte = 0;
     uint32_t currentIndex = 0;
