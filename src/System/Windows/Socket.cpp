@@ -1,3 +1,4 @@
+#if defined(_WIN32)
 #include "Socket.hpp"
 
 #include "../../Panels/Logger.hpp"
@@ -54,3 +55,5 @@ void Socket::setupWSA()
         exit(-1);
     }
 }
+
+#endif

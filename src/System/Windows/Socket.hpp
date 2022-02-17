@@ -1,3 +1,4 @@
+#if defined(_WIN32)
 #ifndef WINDOWS_SOCKET_HPP
 #define WINDOWS_SOCKET_HPP
 
@@ -29,4 +30,5 @@ private:
     void setupWSA();
 };
 
+#endif
 #endif

@@ -48,7 +48,7 @@ void Effect_Fire::update()
 
     for (uint32_t i = 0; i < m_Matrix->getColumns(); i++)
     {
-        uint8_t value = (255-60) + random() * 60;
+        uint8_t value = (255-60) + randomValue() * 60;
         m_Buffer1.at(getIndex(i, m_Matrix->getRows() - 1)) = cHSV(0, 255, value);
         m_Buffer2.at(getIndex(i, m_Matrix->getRows() - 1)) = cHSV(0, 255, value);
     }
@@ -77,7 +77,7 @@ void Effect_Fire::update()
 
     m_Buffer1 = m_Buffer2;
 
-    m_OffsetY += random() * m_Speed;
+    m_OffsetY += randomValue() * m_Speed;
     m_OffsetX += m_Speed * glm::perlin(glm::vec2(1.0f, m_OffsetY));
 }
 

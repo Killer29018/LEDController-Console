@@ -3,9 +3,9 @@
 
 #include "SocketBase.hpp"
 
-#ifdef _WIN32
+#if defined(_WIN32)
     #include "Windows/Socket.hpp"
-#elif __linux__
+#elif defined(__linux__)
     #include "Linux/Socket.hpp"
 #endif
 

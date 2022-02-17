@@ -10,7 +10,7 @@ find_package(OpenGL REQUIRED)
 # Add Platform Specific Linker Options
 set (linker "")
 if (WIN32)
-    set (linker "-lopengl32 -luser32 -limm32")
+    set (linker "-lopengl32 -luser32 -limm32 -lws2_32")
 elseif(UNIX)
     set (linker "-ldl")
 endif()
@@ -48,7 +48,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${linker} PUBLIC
     glm::glm
     glfw
     Imgui
-    ws2_32
+    # ws2_32
 
     KRE
 )

@@ -100,8 +100,8 @@ void Effect_FallingRain::createRaindrops()
 
 void Effect_FallingRain::resetRaindrop(Raindrop& raindrop)
 {
-    float x = random() * m_Matrix->getColumns();
-    float y = -(random() * m_Matrix->getRows());
+    float x = randomValue() * m_Matrix->getColumns();
+    float y = -(randomValue() * m_Matrix->getRows());
     raindrop = Raindrop(x, y, &m_RainbowColours);
 }
 
@@ -135,11 +135,11 @@ Raindrop::Raindrop(float x, float y, bool* useRandom)
     : posX(x), posY(y)
 {
     m_RandomColour = useRandom;
-    colour = cHSV(random() * 255, 255, 255);
+    colour = cHSV(randomValue() * 255, 255, 255);
 
-    velY = (random() * (s_RaindropMaxSpeed - s_RaindropMaxSpeed)) + s_RaindropMinSpeed;
+    velY = (randomValue() * (s_RaindropMaxSpeed - s_RaindropMaxSpeed)) + s_RaindropMinSpeed;
 
-    accY = random() * (s_RaindropMaxAcceleration);
+    accY = randomValue() * (s_RaindropMaxAcceleration);
 }
 
 void Raindrop::update()

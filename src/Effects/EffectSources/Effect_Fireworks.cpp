@@ -149,7 +149,7 @@ void Effect_Fireworks::updateFirework(int i)
         m_Fireworks[i].alive = false;
         m_ActiveFireworks--;
 
-        if (random() > 0.5)
+        if (randomValue() > 0.5)
             addNewFirework();
     }
 
@@ -165,8 +165,8 @@ void Effect_Fireworks::resetFirework(Firework& firework)
         return;
     }
 
-    int rX = random() * m_Matrix->getColumns();
-    int rY = (m_Matrix->getRows() * 2) + (random() * (m_Matrix->getRows() * 2));
+    int rX = randomValue() * m_Matrix->getColumns();
+    int rY = (m_Matrix->getRows() * 2) + (randomValue() * (m_Matrix->getRows() * 2));
     
     float minY = std::sqrt(2 * s_FireworkDeceleration * (rY - m_Matrix->getRows() + s_FireworkMinDistance));
     float maxY = std::sqrt(2 * s_FireworkDeceleration * (rY - 2));
@@ -198,14 +198,14 @@ void Effect_Fireworks::addNewFirework()
 
 Particle::Particle(float x, float y)
 {
-    lifetime = (random() * 255);
+    lifetime = (randomValue() * 255);
     posX = x;
     posY = y;
 
-    pColour = cHSV(random() * 255, 255, 255);
+    pColour = cHSV(randomValue() * 255, 255, 255);
 
-    float t = 2*3.14159*random();
-    float u = random()+random();
+    float t = 2*3.14159*randomValue();
+    float u = randomValue()+randomValue();
     float r = u < 1 ? 2 - u : u;
     velX = r * cos(t) * s_ParticleMaxSpeed;
     velY = r * sin(t) * s_ParticleMaxSpeed;
@@ -228,10 +228,10 @@ Firework::Firework(float x, float y, float minY, float maxY)
     posX = x;
     posY = y;
 
-    velY = -((random() * (maxY - minY)) + minY);
+    velY = -((randomValue() * (maxY - minY)) + minY);
     accY = s_FireworkDeceleration;
 
-    uint8_t hue = random() * 255;
+    uint8_t hue = randomValue() * 255;
     fColour = cHSV(hue, 255, 255);
 }
 

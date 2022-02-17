@@ -1,3 +1,4 @@
+#if defined(__linux__)
 #ifndef LINUX_SOCKET_HPP
 #define LINUX_SOCKET_HPP
 
@@ -12,6 +13,7 @@ public:
 
     void resetIp(const char* ip, int port) override;
     void sendData(uint8_t* buffer, int size) override;
-}
+};
 
+#endif
 #endif

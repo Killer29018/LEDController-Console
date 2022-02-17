@@ -4,8 +4,9 @@
 
 Window::~Window()
 {
-    glfwDestroyWindow(window);
-    glfwTerminate();
+    // INFO: Segfault on Linux
+    // glfwDestroyWindow(window);
+    // glfwTerminate();
 }
 
 void Window::setup(const char* name, glm::vec2 windowSize)

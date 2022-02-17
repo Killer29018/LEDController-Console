@@ -1,7 +1,7 @@
 #ifndef UTIL_HELPER_HPP
 #define UTIL_HELPER_HPP
 
-inline float random() { return (rand() / (float)RAND_MAX); }
+inline float randomValue() { return (float)(rand() / (float)RAND_MAX); }
 
 inline float mapValue(float initial, float iS, float iE, float oS, float oE)
 {

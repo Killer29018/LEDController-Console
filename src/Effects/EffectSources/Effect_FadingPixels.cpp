@@ -93,7 +93,7 @@ void Effect_FadingPixels::setRandomPixels()
             continue;
 
         if (m_RandomColour)
-            hue = cHSV((uint8_t)(random() * 255));
+            hue = cHSV((uint8_t)(randomValue() * 255));
         else
             hue = m_PrimaryColour;
 
@@ -113,7 +113,7 @@ void Effect_FadingPixels::decayPixels()
 
             int value = colour.v;
             if (value > 0)
-                value -= random() * m_DecaySpeed;
+                value -= randomValue() * m_DecaySpeed;
 
             value = std::min(255, std::max(0, value));
             colour.v = value;
