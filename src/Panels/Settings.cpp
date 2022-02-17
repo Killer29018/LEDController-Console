@@ -4,6 +4,10 @@
 
 #include "../Panels/Logger.hpp"
 
+#include <algorithm>
+
+#include "imgui_internal.h"
+
 void Settings::setIpAndPort(const char* ip, int port)
 {
     strcpy(m_IpBuf, ip);
@@ -50,7 +54,7 @@ void Settings::renderSettingsMenu()
         }
 
         ImGui::Text("Port");
-        if (ImGui::InputScalar("##PORT", ImGuiDataType_U16, &m_Port, NULL, NULL, "%u", ImGuiInputTextFlags_EnterReturnsTrue))
+        if (ImGui::InputScalar("##PORT", ImGuiDataType_U16, &m_Port, NULL, NULL, "%u", ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
         {
             Logger::log(LoggerType::LOG_INFO, "Changed target Port to: %u\n", m_Port);
             Application::m_Socket.resetIp(m_IpBuf, m_Port);
@@ -128,13 +132,36 @@ void Settings::renderSettingsMenu()
 
 void Settings::renderPaletteMenu()
 {
+    const ImGuiColorEditFlags colorEditFlags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
+
     // ColourPalette& palette = Palettes::AllPalettes[Application::m_Controller.getPalette()];
     ColourPalette& palette = Palettes::AllPalettes[Palettes::CUSTOM];
     // cHSV& inputHSV = palette[0].colour;
-    uint8_t paletteHue;
     cRGB paletteColour;
     ImVec4 imHSVColour;
     ImVec4 imRGBColour;
+
+    bool sortArray = false;
+    int32_t deleteIndex = -1;
+
+    static uint8_t inputHue = 0;
+    static ImVec4 inputHSV = ImVec4(0.0f, 1.0f, 1.0f, 0.0f);
+
+    uint32_t width = ImGui::GetContentRegionAvail().x / 2 - ImGui::GetStyle().ItemSpacing.x;
+    ImGui::PushItemWidth(width);
+    uint8_t min = 0, max = 255;
+    ImGui::DragScalar("##InputHue", ImGuiDataType_U8, &inputHue, 1.0f, &min, &max, "Hue: %u", ImGuiInputTextFlags_CharsDecimal);
+    ImGui::SameLine();
+    ImGui::ColorEdit3("##InputHSV", (float*)&inputHSV, ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV | colorEditFlags);
+    ImGui::PopItemWidth();
+
+    ImGui::PushItemWidth(-1);
+    if (ImGui::Button("Add Hue", ImVec2(-1, 0)))
+    {
+        palette.emplace_back(inputHue, cHSV(inputHSV.x * 255, inputHSV.y * 255, inputHSV.y * 255));
+        sortArray = true;
+    }
+    ImGui::PopItemWidth();
 
     ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_NoClip | ImGuiTableFlags_SizingStretchProp;
     if (ImGui::BeginTable("Palette", 2, flags))
@@ -144,42 +171,63 @@ void Settings::renderPaletteMenu()
         ImGui::TableHeadersRow();
         for (size_t row = 0; row < palette.size(); row++)
         {
+            ImGui::PushID(row * 10);
             ImGui::PushItemWidth(-1);
 
             ImGui::TableNextRow();
 
             ImGui::TableSetColumnIndex(0);
-            ImGui::Text("%u", palette[row].targetHue);
+            ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal;
 
-            ImGui::TableSetColumnIndex(1);
-            cHSV inputHSV = palette[row].colour;
-            // paletteHue = getHueFromPalette(palette, inputHSV);
-            // paletteColour = cHSV(input, inputHSV.s, inputHSV.v);
-            paletteColour = inputHSV;
+            if (row == 0 || row == palette.size() - 1)
+                flags |= ImGuiInputTextFlags_ReadOnly;
 
-            imHSVColour = ImVec4(inputHSV.h / 255.0f, inputHSV.s / 255.0f, inputHSV.v / 255.0f, 0.0f);
-            imRGBColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
-
-            const ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
-
-            ImGui::PushID(row * 10);
-            ImGui::ColorButton("##PColourDisplay", imRGBColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip | flags);
-            ImGui::PopID();
+            if (ImGui::InputScalar("##HUE", ImGuiDataType_U8, &palette[row].targetHue, NULL, NULL, "%u", inputFlags))
+            {
+                sortArray = true;
+            }
 
             ImGui::SameLine();
+            if (row == 0 || row == palette.size() - 1)
+            {
+                ImGui::BeginDisabled();
+            }
+            if (ImGui::Button("X"))
+            {
+                deleteIndex = row;
+            }
+            if (row == 0 || row == palette.size() - 1)
+            {
+                ImGui::EndDisabled();
+            }
 
-            ImGui::PushID(row * 10 + 1);
-            ImGui::ColorEdit3("##PHSVInput", (float*)&imHSVColour, ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV | flags);
-            ImGui::PopID();
+            {
+                ImGui::TableSetColumnIndex(1);
+                cHSV inputHSV = palette[row].colour;
+                paletteColour = inputHSV;
 
-            inputHSV.h = imHSVColour.x * 255.0f;
-            inputHSV.s = imHSVColour.y * 255.0f;
-            inputHSV.v = imHSVColour.z * 255.0f;
+                imHSVColour = ImVec4(inputHSV.h / 255.0f, inputHSV.s / 255.0f, inputHSV.v / 255.0f, 0.0f);
+                imRGBColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
 
-            palette[row].colour = inputHSV;
+                ImGui::ColorButton("##PColourDisplay", imRGBColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip | colorEditFlags);
+
+                ImGui::SameLine();
+
+                ImGui::ColorEdit3("##PHSVInput", (float*)&imHSVColour, ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV | colorEditFlags);
+
+                inputHSV.h = imHSVColour.x * 255.0f;
+                inputHSV.s = imHSVColour.y * 255.0f;
+                inputHSV.v = imHSVColour.z * 255.0f;
+
+                palette[row].colour = inputHSV;
+            }
 
             ImGui::PopItemWidth();
+            ImGui::PopID();
         }
+
+        if (deleteIndex >= 0) palette.erase(palette.begin() + deleteIndex);
+        if (sortArray) std::sort(palette.begin(), palette.end(), [](ColourPaletteItem a, ColourPaletteItem b){ return a.targetHue < b.targetHue; });
 
         ImGui::EndTable();
     }
