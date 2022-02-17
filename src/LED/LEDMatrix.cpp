@@ -38,7 +38,6 @@ cHSV LEDMatrix::getLEDWBrightness(int x, int y)
     cHSV c = m_LEDs[getIndex(x, y)];
     c.v *= getBrightnessFactor();
     return c;
-    // return m_LEDs[getIndex(x, y)] / (255.0 / m_Brightness);
 }
 
 void LEDMatrix::fillRow(cHSV colour, int row)
@@ -223,6 +222,6 @@ void LEDMatrix::printIndexArr()
         {
             printf("%.*u ", characters, m_IndexArr[x][y]);
         }
-        std::cout << "\n";
+        printf("\n");
     }
 }

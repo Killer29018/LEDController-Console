@@ -25,7 +25,7 @@ public:
 
     virtual void setup(unsigned int LEDCount);
 
-    void upload(Socket& socket);
+    void upload(SocketBase& socket);
 
     void setBrightness(uint8_t brightness) { m_Brightness = brightness; }
     uint8_t& getBrightness() { return m_Brightness; }
