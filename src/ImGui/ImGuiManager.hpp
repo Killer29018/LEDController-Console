@@ -15,6 +15,7 @@ class ImGuiManager
 {
 public:
     static ImGuiIO* io;
+    static ImFont* font;
 private:
     static std::vector<ImGuiPanel*> m_Windows;
     static GLFWwindow* m_Window;

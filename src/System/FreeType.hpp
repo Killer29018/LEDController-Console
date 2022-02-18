@@ -36,14 +36,24 @@ class FreeType
 {
 public:
 private:
+    static FT_Library m_Library;
+    static FT_Face m_Face;
     static std::unordered_map<char, Character*> m_Characters;
+    static uint32_t m_FontSize;
 public:
+    static void init();
     static void loadFont(const char* filePath, uint32_t pixelSize = 8);
 
+    static void setFontSize(uint32_t fontSize);
+    static uint32_t getFontSize() { return m_FontSize; }
+
     static Character* getCharacter(char c) { return m_Characters[c]; };
+
 private:
-    FreeType() = default;
-    ~FreeType() = default;
+    FreeType();
+    ~FreeType();
+
+    static void loadCharacters();
 };
 
 #endif

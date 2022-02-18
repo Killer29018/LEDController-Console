@@ -11,7 +11,7 @@
 - [ ] Puddles
 - [x] Fire effects
 - [x] Fading Pixels
-- [ ] Scrolling Text
+- [x] Scrolling Text
 - [ ] Sound Reactive
 - [ ] Display Screen
 - [ ] Display specific Images
@@ -20,3 +20,6 @@
 
 # Other Libraries
 [FreeType](https://freetype.org/index.html)
+
+# Fonts
+[Cascadia Code](https://github.com/microsoft/cascadia-code/)

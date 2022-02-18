@@ -1,6 +1,7 @@
 #include "ImGuiManager.hpp"
 
 ImGuiIO* ImGuiManager::io;
+ImFont* ImGuiManager::font;
 
 std::vector<ImGuiPanel*> ImGuiManager::m_Windows;
 GLFWwindow* ImGuiManager::m_Window;
@@ -22,6 +23,8 @@ void ImGuiManager::preRender()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    ImGui::PushFont(font);
 }
 
 void ImGuiManager::render()
@@ -39,6 +42,7 @@ void ImGuiManager::render()
 
 void ImGuiManager::postRender()
 {
+    ImGui::PopFont();
     ImGui::Render();
     int displayW, displayH;
 
@@ -64,6 +68,8 @@ void ImGuiManager::initImGui()
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    font = io->Fonts->AddFontFromFileTTF("res/fonts/CascadiaMonoPL.ttf", 14.0f);
 
     ImGui::StyleColorsDark();
 
