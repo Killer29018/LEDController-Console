@@ -40,6 +40,7 @@ add_subdirectory(vendor)
 target_include_directories(${PROJECT_NAME} PUBLIC
     KRE
     vendor/glad/include
+    vendor/FreeType/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${linker} PUBLIC
@@ -48,6 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${linker} PUBLIC
     glm::glm
     glfw
     Imgui
+    freetype
     # ws2_32
 
     KRE
