@@ -40,12 +40,17 @@ private:
     static FT_Face m_Face;
     static std::unordered_map<char, Character*> m_Characters;
     static uint32_t m_FontSize;
+    static uint32_t m_MaxAbove;
+    static uint32_t m_MaxBelow;
 public:
     static void init();
     static void loadFont(const char* filePath, uint32_t pixelSize = 8);
 
     static void setFontSize(uint32_t fontSize);
     static uint32_t getFontSize() { return m_FontSize; }
+
+    static uint32_t getMaxAbove() { return m_MaxAbove; }
+    static uint32_t getMaxBelow() { return m_MaxBelow; }
 
     static Character* getCharacter(char c) { return m_Characters[c]; };
 

@@ -5,6 +5,8 @@
 FT_Library FreeType::m_Library;
 FT_Face FreeType::m_Face;
 uint32_t FreeType::m_FontSize;
+uint32_t FreeType::m_MaxBelow;
+uint32_t FreeType::m_MaxAbove;
 std::unordered_map<char, Character*> FreeType::m_Characters;
 
 FreeType::FreeType() { }
@@ -72,12 +74,15 @@ void FreeType::loadCharacters()
             exit(error);
         }
 
+        m_MaxAbove = std::max(m_MaxAbove, (uint32_t)m_Face->glyph->bitmap_top);
+        m_MaxBelow = std::max(m_MaxBelow, m_Face->glyph->bitmap.rows - m_Face->glyph->bitmap_top);
+
         character = new Character(m_Face->glyph->bitmap.width, m_Face->glyph->bitmap.rows,
                             m_Face->glyph->bitmap_left,  m_Face->glyph->bitmap_top, 
                             m_Face->glyph->advance.x,
                             m_Face->glyph->bitmap);
     
-        // m_Characters[i] = character;
-        m_Characters.insert(std::pair<uint8_t, Character*>(i, character));
+        m_Characters[i] = character;
+        // m_Characters.insert(std::pair<uint8_t, Character*>(i, character));
     }
 }

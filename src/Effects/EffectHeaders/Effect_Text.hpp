@@ -6,8 +6,14 @@
 class Effect_Text : public Effect
 {
 private:
-    int16_t m_OffsetX;
-    int16_t m_OffsetY;
+    int32_t m_OffsetX;
+    int32_t m_OffsetY;
+
+    int32_t m_CurrentScroll;
+
+    bool m_Scroll;
+
+    int32_t m_LengthX;
 
     std::string m_Text;
 public:
