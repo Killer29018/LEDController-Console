@@ -10,11 +10,11 @@
 
 struct Character
 {
-    uint32_t sizeX;
-    uint32_t sizeY;
+    int32_t sizeX;
+    int32_t sizeY;
 
-    uint32_t bearingX;
-    uint32_t bearingY;
+    int32_t bearingX;
+    int32_t bearingY;
     uint32_t advance;
 
     uint8_t* data;

@@ -1,5 +1,7 @@
 #include "Application.hpp"
 
+#include "System/FreeType.hpp"
+
 uint8_t Application::updateFPS = 60;
 
 Window Application::m_Window;
@@ -22,6 +24,8 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     m_Settings_Panel.setIpAndPort(ip, port);
 
     m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT, StartDirection::SNAKE_ROW);
+    
+    FreeType::loadFont("res/fonts/arial.ttf", 10);
 
     m_Controller.setBrightness(255);
 

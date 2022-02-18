@@ -25,12 +25,14 @@ void LEDMatrix::setup(unsigned int width, unsigned int height, StartPosition pos
 
 void LEDMatrix::setLED(int x, int y, const cHSV& led)
 {
-    m_LEDs[getIndex(x, y)] = led;
+    LEDController::setLED(getIndex(x, y), led);
+    // m_LEDs[getIndex(x, y)] = led;
 }
 
 cHSV& LEDMatrix::getLED(int x, int y)
 {
-    return m_LEDs[getIndex(x, y)];
+    return LEDController::getLED(getIndex(x, y));
+    // return m_LEDs[getIndex(x, y)];
 }
 
 cHSV LEDMatrix::getLEDWBrightness(int x, int y)
@@ -115,7 +117,8 @@ void LEDMatrix::setStartDirection(StartDirection direction)
 
 int LEDMatrix::getIndex(int x, int y)
 {
-    return m_IndexArr[x][y];
+    if (x >= 0 && x < m_Columns && y >= 0 && y < m_Rows) return m_IndexArr[x][y];
+    return -1;
 }
 
 void LEDMatrix::createIndexArr()

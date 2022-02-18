@@ -53,12 +53,12 @@ void LEDController::upload(SocketBase& socket)
 
 void LEDController::setLED(int index, const cHSV& led) 
 { 
-    m_LEDs[index] = led; 
+    if (index >= 0 && index < m_LEDs.size()) m_LEDs[index] = led; 
 }
 
 cHSV& LEDController::getLED(int index) 
 { 
-    return m_LEDs[index]; 
+    if (index >= 0 && index < m_LEDs.size()) return m_LEDs[index]; 
 }
 
 cHSV LEDController::getLEDWBrightness(int index)

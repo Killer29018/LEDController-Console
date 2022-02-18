@@ -16,7 +16,7 @@ void FreeType::loadFont(const char* filePath, uint32_t pixelSize)
         exit(error);
     }
 
-    FT_Error error = FT_New_Face(library, filePath, 0, &face);
+    error = FT_New_Face(library, filePath, 0, &face);
 
     if (error)
     {
