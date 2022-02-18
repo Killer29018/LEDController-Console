@@ -24,3 +24,6 @@ add_subdirectory(KRE)
 
 # Imgui
 add_subdirectory(Imgui)
+
+# FreeType
+add_subdirectory(FreeType)

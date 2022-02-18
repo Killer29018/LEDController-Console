@@ -17,3 +17,6 @@
 - [ ] Display specific Images
 - [ ] Display Videos
 - [ ] Display Webcams
+
+# Other Libraries
+[FreeType](https://freetype.org/index.html)

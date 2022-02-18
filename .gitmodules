@@ -11,3 +11,6 @@
 [submodule "vendor/KRE"]
 	path = vendor/KRE
 	url = https://github.com/killer29018/KillerRenderEngine.git
+[submodule "vendor/FreeType"]
+	path = vendor/FreeType
+	url = https://gitlab.freedesktop.org/freetype/freetype
