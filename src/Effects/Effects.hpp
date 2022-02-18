@@ -11,5 +11,6 @@
 #include "EffectHeaders/Effect_FallingRain.hpp"
 #include "EffectHeaders/Effect_FadingPixels.hpp"
 #include "EffectHeaders/Effect_Fire.hpp"
+#include "EffectHeaders/Effect_Text.hpp"
 
 #endif
