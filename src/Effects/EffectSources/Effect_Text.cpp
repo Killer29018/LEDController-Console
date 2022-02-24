@@ -10,6 +10,8 @@ Effect_Text::Effect_Text(LEDMatrix* matrix)
 
     m_LengthX = 0;
 
+    m_CurrentDirection = TextDirection::RIGHT_LEFT;
+
     m_Scroll = true;
     if (m_Scroll)
         m_CurrentScroll = m_Matrix->getColumns() + 1;
@@ -34,7 +36,19 @@ void Effect_Text::update()
     currentX = m_OffsetX;
     currentY = m_OffsetY;
 
-    if (m_Scroll) currentX += m_CurrentScroll;
+    if (m_Scroll) 
+    {
+        switch (m_CurrentDirection)
+        {
+            case TextDirection::RIGHT_LEFT:
+            case TextDirection::LEFT_RIGHT:
+                currentX += m_CurrentScroll; break;
+
+            case TextDirection::BOTTOM_TOP:
+            case TextDirection::TOP_BOTTOM:
+                currentY += m_CurrentScroll; break;
+        }
+    }
 
     int32_t x, y, index;
     uint8_t value;
@@ -52,10 +66,10 @@ void Effect_Text::update()
             for (int32_t c = 0; c < character->sizeX; c++)
             {
                 x = currentX - character->bearingX + c;
-                if (x < 0 || x > m_Matrix->getColumns() - 1) continue;
+                if (x < 0 || x > (int32_t)m_Matrix->getColumns() - 1) continue;
 
                 y = currentY - character->bearingY+ r;
-                if (y < 0 || y > m_Matrix->getRows() - 1) continue;
+                if (y < 0 || y > (int32_t)m_Matrix->getRows() - 1) continue;
 
                 index = (r * character->sizeX) + c;
                 value = character->data[index];
@@ -71,12 +85,44 @@ void Effect_Text::update()
 
     m_LengthX = std::max(currentX, m_LengthX);
 
-    if (!render && currentX < 0)
+    if (!render)
     {
-        m_CurrentScroll = m_Matrix->getColumns() + 1 - m_OffsetX;
+        switch (m_CurrentDirection)
+        {
+            case TextDirection::RIGHT_LEFT:
+                if (currentX < 0)
+                    m_CurrentScroll = m_Matrix->getColumns() + 1 - m_OffsetX;
+                break;
+            case TextDirection::LEFT_RIGHT:
+                if (currentX > (int32_t)m_Matrix->getColumns())
+                    m_CurrentScroll = -m_LengthX - m_OffsetX;
+                break;
+            case TextDirection::TOP_BOTTOM:
+                if (currentY > 0)
+                    m_CurrentScroll = -(FreeType::getMaxBelow()) - m_OffsetY;
+                break;
+            case TextDirection::BOTTOM_TOP:
+                if (currentY < 0)
+                    m_CurrentScroll = (int32_t)m_Matrix->getRows() + FreeType::getMaxAbove() - m_OffsetY;
+                // m_CurrentScroll = m_Matrix->getColumns() + 1 - m_OffsetX;
+                break;
+         }
     }
 
-    if (m_Scroll) m_CurrentScroll -= 1;
+     if (m_Scroll) 
+    {
+        switch  (m_CurrentDirection)
+        {
+            case TextDirection::RIGHT_LEFT:
+            case TextDirection::BOTTOM_TOP:
+                m_CurrentScroll -= 1;
+                break;
+            case TextDirection::LEFT_RIGHT:
+            case TextDirection::TOP_BOTTOM:
+                m_CurrentScroll += 1;
+                break;
+        }
+    }
 }
 
 void Effect_Text::render(const char* panelName)
@@ -93,16 +139,13 @@ void Effect_Text::render(const char* panelName)
         }
 
         int min, max;
-        
-        if (!m_Scroll)
-        {
-            ImGui::Text("Offset X");
-            min = -m_LengthX; max = m_Matrix->getColumns();
-            ImGui::SliderScalar("##OffsetX", ImGuiDataType_S32, &m_OffsetX, &min, &max, "%d");
-        }
+
+        ImGui::Text("Offset X");
+        min = -m_LengthX; max = m_Matrix->getColumns();
+        ImGui::SliderScalar("##OffsetX", ImGuiDataType_S32, &m_OffsetX, &min, &max, "%d");
 
         ImGui::Text("Offset Y");
-        min = 0; max = m_Matrix->getRows() + FreeType::getMaxAbove();
+        min = -FreeType::getMaxBelow(); max = m_Matrix->getRows() + FreeType::getMaxAbove();
         ImGui::SliderScalar("##OffsetY", ImGuiDataType_S32, &m_OffsetY, &min, &max, "%d");
 
         ImGui::Text("Scroll");
@@ -112,6 +155,30 @@ void Effect_Text::render(const char* panelName)
                 m_CurrentScroll = 0;
             else
                 m_OffsetX += m_CurrentScroll;
+        }
+        
+        if (m_Scroll)
+        {
+            uint32_t currentDirection = static_cast<uint32_t>(m_CurrentDirection);
+            const char* currentDirectionString = TextDirectionString.at(currentDirection);
+
+            ImGui::Text("Current Direction");
+            if (ImGui::BeginCombo("##Current Direction", currentDirectionString, ImGuiComboFlags_HeightLarge))
+            {
+                for (uint32_t n = 0; n < TextDirectionString.size(); n++)
+                {
+                    const bool isSelected = (currentDirection == n);
+                    if (ImGui::Selectable(TextDirectionString.at(n), isSelected))
+                    {
+                        m_CurrentDirection = static_cast<TextDirection>(n);
+                        Logger::log(LoggerType::LOG_INFO, "Changed Text direction %s", TextDirectionString.at(n));
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
         }
 
         ImGui::Text("Font Size");

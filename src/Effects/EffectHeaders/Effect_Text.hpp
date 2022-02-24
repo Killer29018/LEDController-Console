@@ -3,6 +3,21 @@
 
 #include "Effect.hpp"
 
+enum class TextDirection
+{
+    RIGHT_LEFT,
+    LEFT_RIGHT,
+    TOP_BOTTOM,
+    BOTTOM_TOP,
+};
+
+const std::vector<const char*> TextDirectionString = {
+    "Right -> Left",
+    "Left -> Right",
+    "Top -> Bottom",
+    "Bottom -> Top",
+};
+
 class Effect_Text : public Effect
 {
 private:
@@ -16,6 +31,8 @@ private:
     int32_t m_LengthX;
 
     std::string m_Text;
+
+    TextDirection m_CurrentDirection;
 public:
     Effect_Text(LEDMatrix* matrix);
     ~Effect_Text() override;
