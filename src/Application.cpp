@@ -26,7 +26,7 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
     m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT, StartDirection::SNAKE_ROW);
     
     FreeType::init();
-    FreeType::loadFont("res/fonts/CascadiaMonoPL.ttf", 10);
+    FreeType::loadFont("res/fonts/CascadiaMonoPL.ttf", m_Controller.getRows() / 2);
 
     m_Controller.setBrightness(255);
 

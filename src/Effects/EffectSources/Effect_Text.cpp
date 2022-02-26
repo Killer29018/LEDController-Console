@@ -17,6 +17,11 @@ Effect_Text::Effect_Text(LEDMatrix* matrix)
         m_CurrentScroll = m_Matrix->getColumns() + 1;
     else
         m_CurrentScroll = 0;
+
+    m_AnimateHue = false;
+    m_DeltaHue = 1;
+    m_HueOffset = 0;
+    m_MaxCount = 10;
 }
 
 Effect_Text::~Effect_Text()
@@ -28,6 +33,8 @@ void Effect_Text::update()
 {
     m_Matrix->fillSolid({ 0, 0, 0 });
     cHSV colour = m_PrimaryColour;
+
+    if (m_AnimateHue) colour.h += m_HueOffset;
 
     static Character* character;
 
@@ -108,8 +115,17 @@ void Effect_Text::update()
                 break;
          }
     }
+    else if (m_AnimateHue)
+    {
+        m_CurrentCount++;
+        if (m_CurrentCount >= m_MaxCount)
+        {
+            m_HueOffset += m_DeltaHue;
+            m_CurrentCount = 0;
+        }
+    }
 
-     if (m_Scroll) 
+    if (m_Scroll) 
     {
         switch  (m_CurrentDirection)
         {
@@ -129,6 +145,7 @@ void Effect_Text::render(const char* panelName)
 {
     if (ImGui::Begin(panelName))
     {
+        int min, max;
         ImGui::PushItemWidth(-1);
 
         ImGui::Text("Text: ");
@@ -138,7 +155,25 @@ void Effect_Text::render(const char* panelName)
             m_Text = std::string(text);
         }
 
-        int min, max;
+        static char fontpath[500];
+        static bool initial = true;
+        if (initial)
+        {
+            strcpy(fontpath, FreeType::getCurrentFilePath());
+            initial = false;
+        }
+
+        if (ImGui::InputText("##Font", fontpath, 500, ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            strcpy(fontpath, FreeType::getCurrentFilePath());
+        }
+
+        ImGui::Text("Font Size");
+        uint32_t fontSize = FreeType::getFontSize();
+        min = 5;
+        max = 40;
+        if (ImGui::SliderScalar("##FontSize", ImGuiDataType_U32, &fontSize, &min, &max, "%u"))
+            FreeType::setFontSize(fontSize);
 
         ImGui::Text("Offset X");
         min = -m_LengthX; max = m_Matrix->getColumns();
@@ -181,12 +216,21 @@ void Effect_Text::render(const char* panelName)
             }
         }
 
-        ImGui::Text("Font Size");
-        uint32_t fontSize = FreeType::getFontSize();
-        min = 5;
-        max = 40;
-        if (ImGui::SliderScalar("##FontSize", ImGuiDataType_U32, &fontSize, &min, &max, "%u"))
-            FreeType::setFontSize(fontSize);
+        ImGui::Text("Animate Hue");
+        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+
+        if (m_AnimateHue)
+        {
+            ImGui::Text("Delta Hue");
+            min = 0;
+            max = 255;
+            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+
+            ImGui::Text("Hue Update Speed");
+            uint8_t value = max - m_MaxCount;
+            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+            m_MaxCount = max - value;
+        }
 
         ImGui::PopItemWidth();
     }

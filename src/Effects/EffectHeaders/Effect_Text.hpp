@@ -30,6 +30,13 @@ private:
 
     int32_t m_LengthX;
 
+    bool m_AnimateHue;
+    uint8_t m_DeltaHue;
+        uint8_t m_HueOffset;
+
+    uint8_t m_CurrentCount;
+    uint8_t m_MaxCount;
+
     std::string m_Text;
 
     TextDirection m_CurrentDirection;

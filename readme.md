@@ -1,22 +1,18 @@
 ### LEDController
 
-# Current and Planned Effects
-- [x] Rainbow
-- [x] Solid Colour
-- [x] Plasma Effect
-- [x] Metaballs
-- [x] Glitter Effect
-- [x] Fireworks
-- [x] Falling Rain
-- [ ] Puddles
-- [x] Fire effects
-- [x] Fading Pixels
-- [x] Scrolling Text
-- [ ] Sound Reactive
-- [ ] Display Screen
-- [ ] Display specific Images
-- [ ] Display Videos
-- [ ] Display Webcams
+# Current Effects
+```
+Rainbow
+Solid Colour
+Plasma Effect
+Metaballs
+Glitter Effect
+Fireworks
+Falling Rain
+Fire effects
+Fading Pixels
+Scrolling Text
+```
 
 # Other Libraries
 [FreeType](https://freetype.org/index.html)
