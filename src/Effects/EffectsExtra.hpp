@@ -16,6 +16,7 @@ enum class EffectEnum
     FADING_PIXELS,
     FIRE,
     TEXT,
+    PONG,
 };
 
 const std::vector<const char*> EffectName = {
@@ -30,6 +31,7 @@ const std::vector<const char*> EffectName = {
     "Fading Pixels",
     "Fire",
     "Text",
+    "Pong",
 };
 
 #endif
