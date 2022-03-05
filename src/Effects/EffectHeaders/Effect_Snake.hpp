@@ -72,6 +72,9 @@ public:
 
     void update() override;
     void render(const char* panelName) override;
+private:
+    void checkReset();
+    void reset();
 };
 
 #endif

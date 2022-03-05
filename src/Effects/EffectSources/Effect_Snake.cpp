@@ -4,8 +4,7 @@ Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     : Effect(EffectEnum::SNAKE, matrix)
 {
     // m_Body = SnakeBody(m_Matrix->getColumns() / 2, m_Matrix->getRows() / 2);
-    m_Body = SnakeBody(0, m_Matrix->getRows() / 2);
-    m_Apple.resetPosition(m_Matrix, m_Body);
+    reset();
 
     m_SnakeCurrentCount = 0;
     m_SnakeMaxCount = 10;
@@ -28,6 +27,8 @@ void Effect_Snake::update()
         m_Apple.resetPosition(m_Matrix, m_Body);
     }
 
+    checkReset();
+
     m_SnakeCurrentCount++;
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
     {
@@ -41,14 +42,9 @@ void Effect_Snake::update()
 
 void Effect_Snake::render(const char* panelName)
 {
+    int min, max;
     if (ImGui::Begin(panelName))
     {
-        if (ImGui::Button("Increase Size"))
-            m_Body.increaseSize();
-
-        if (ImGui::Button("Change Apple"))
-            m_Apple.resetPosition(m_Matrix, m_Body);
-
         if (ImGui::Button("Up"))
             m_Body.changeDir(SnakeDir::UP);
 
@@ -60,10 +56,47 @@ void Effect_Snake::render(const char* panelName)
 
         if (ImGui::Button("Right"))
             m_Body.changeDir(SnakeDir::RIGHT);
+        
+        ImGui::Text("Snake Update Speed");
+        min = 0;
+        max = 255;
+        int value = max - m_SnakeMaxCount;
+        ImGui::SliderScalar("##SnakeUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+        m_SnakeMaxCount = max - value;
     }
     ImGui::End();
 }
 
+void Effect_Snake::checkReset()
+{
+    Pos& head = m_Body.body[0];
+    if (m_Body.body.size() >= 5)
+    {
+        for (int i = 4; i < m_Body.body.size(); i++)
+        {
+            if (m_Body.body[i].x == head.x && 
+                m_Body.body[i].y == head.y)
+            {
+                reset();
+                return;
+            }
+        }
+    }
+
+    if (head.x >= m_Matrix->getColumns() || head.y >= m_Matrix->getRows())
+    {
+        reset();
+        return;
+    }
+}
+
+void Effect_Snake::reset()
+{
+    m_Body = SnakeBody(m_Matrix->getColumns() / 2, m_Matrix->getRows() / 2);
+    m_Apple.resetPosition(m_Matrix, m_Body);
+
+    m_SnakeCurrentCount = 0;
+}
 
 SnakeBody::SnakeBody(uint32_t x, uint32_t y)
 {
