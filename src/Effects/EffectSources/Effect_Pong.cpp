@@ -14,6 +14,13 @@ float Ball::s_MaxSpeed = 0;
 Effect_Pong::Effect_Pong(LEDMatrix* matrix)
     : Effect(EffectEnum::PONG, matrix)
 {
+    m_CurrentCount = 0;
+    m_MaxCount = 10;
+
+    m_AnimateHue = true;
+    m_DeltaHue = 1;
+    m_HueOffset = 0;
+
     Paddle::s_MaxSpeed = 0.1f;
     Ball::s_MaxSpeed = 0.2f;
 
@@ -39,9 +46,21 @@ void Effect_Pong::update()
 
     m_Matrix->fillSolid({ 0, 0, 0 });
 
-    m_Paddle1.render(m_PrimaryColour, m_Matrix);
-    m_Paddle2.render(m_PrimaryColour, m_Matrix);
-    m_Ball.render(m_PrimaryColour, m_Matrix);
+    cHSV colour = m_PrimaryColour;
+    if (m_AnimateHue)
+    {
+        m_CurrentCount++;
+        if (m_CurrentCount >= m_MaxCount)
+        {
+            m_HueOffset += m_DeltaHue;
+            m_CurrentCount = 0;
+        }
+        colour.H += m_HueOffset;
+    }
+
+    m_Paddle1.render(colour, m_Matrix);
+    m_Paddle2.render(colour, m_Matrix);
+    m_Ball.render(colour, m_Matrix);
 
     m_Paddle1.update();
     m_Paddle2.update();
@@ -61,47 +80,78 @@ void Effect_Pong::update()
 
 void Effect_Pong::render(const char* panelName)
 {
+    int min, max, v;
+    float minF, maxF, vF;
     if (ImGui::Begin(panelName))
     {
-        ImGui::Text("Paddles:");
+        ImGui::PushItemWidth(-1);
 
-        int min = 1;
-        int max = m_Matrix->getColumns() / 2.0f - 1;
+        ImGui::Text("Animate Hue");
+        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+        int min, max;
 
-        ImGui::Text("Width: ");
-        int v = m_Paddle1.w;
-        ImGui::SliderScalar("##PaddleW", ImGuiDataType_U32, &v, &min, &max, "%i");
-        m_Paddle1.setWidth(v); m_Paddle2.setWidth(v);
+        if (m_AnimateHue)
+        {
+            ImGui::Text("Delta Hue");
+            min = 0;
+            max = 255;
+            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-        min = 1;
-        max = m_Matrix->getRows();
-        v = m_Paddle1.h;
-        ImGui::SliderScalar("##PaddleH", ImGuiDataType_U32, &v, &min, &max, "%i");
-        m_Paddle1.setHeight(v); m_Paddle2.setHeight(v);
+            ImGui::Text("Hue Update Speed");
+            uint8_t value = max - m_MaxCount;
+            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+            m_MaxCount = max - value;
+        }
 
-        ImGui::Text("Speed");
-        float minF = 0.01f;
-        float maxF = 1.0f;
-        float vF = Paddle::s_MaxSpeed;
-        ImGui::SliderScalar("##PaddleSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
-        Paddle::s_MaxSpeed = vF;
+        if (ImGui::TreeNode("Paddle"))
+        {
+            min = 1;
+            max = m_Matrix->getColumns() / 2.0f - 1;
+
+            ImGui::Text("Width: ");
+            v = m_Paddle1.w;
+            ImGui::SliderScalar("##PaddleW", ImGuiDataType_U32, &v, &min, &max, "%i");
+            m_Paddle1.setWidth(v); m_Paddle2.setWidth(v);
+
+            min = 1;
+            max = m_Matrix->getRows();
+            v = m_Paddle1.h;
+            ImGui::SliderScalar("##PaddleH", ImGuiDataType_U32, &v, &min, &max, "%i");
+            m_Paddle1.setHeight(v); m_Paddle2.setHeight(v);
+
+            ImGui::Text("Speed");
+            minF = 0.01f;
+            maxF = 1.0f;
+            vF = Paddle::s_MaxSpeed;
+            ImGui::SliderScalar("##PaddleSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
+            Paddle::s_MaxSpeed = vF;
+
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
 
 
-        ImGui::Text("Ball:");
+        if (ImGui::TreeNode("Ball"))
+        {
+            min = 1;
+            max = 10;
+            v = m_Ball.r;
+            ImGui::Text("Radius");
+            ImGui::SliderScalar("##BallR", ImGuiDataType_U32, &v, &min, &max, "%i");
+            m_Ball.setRadius(v);
 
-        min = 1;
-        max = 10;
-        v = m_Ball.r;
-        ImGui::Text("Radius");
-        ImGui::SliderScalar("##BallR", ImGuiDataType_U32, &v, &min, &max, "%i");
-        m_Ball.setRadius(v);
+            ImGui::Text("Speed");
+            minF = 0.01f;
+            maxF = 1.0f;
+            vF = Ball::s_MaxSpeed;
+            ImGui::SliderScalar("##BallSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
+            Ball::s_MaxSpeed = vF;
 
-        ImGui::Text("Speed");
-        minF = 0.01f;
-        maxF = 1.0f;
-        vF = Ball::s_MaxSpeed;
-        ImGui::SliderScalar("##BallSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
-        Ball::s_MaxSpeed = vF;
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
+
+        ImGui::PopItemWidth();
     }
     ImGui::End();
 }

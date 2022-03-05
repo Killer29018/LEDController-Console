@@ -59,6 +59,13 @@ private:
     Paddle m_Paddle2;
 
     Ball m_Ball;
+
+    uint8_t m_CurrentCount;
+    uint8_t m_MaxCount;
+
+    bool m_AnimateHue;
+    uint8_t m_DeltaHue;
+    uint8_t m_HueOffset;
 public:
     Effect_Pong(LEDMatrix* matrix);
     ~Effect_Pong();
