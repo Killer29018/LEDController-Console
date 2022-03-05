@@ -43,13 +43,11 @@ void Effect_FallingRain::update()
 
 void Effect_FallingRain::render(const char* panelName)
 {
+    uint32_t min, max;
+    float minF, maxF;
     if (ImGui::Begin(panelName))
     {
         ImGui::PushItemWidth(-1);
-
-        ImGui::Text("Raindrop Count");
-        uint32_t min = 1, max = MAX_RAINDROPS;
-        ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
 
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
@@ -65,6 +63,8 @@ void Effect_FallingRain::render(const char* panelName)
             uint8_t value = max - m_MaxCount;
             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
             m_MaxCount = max - value;
+
+            m_RainbowColours = false;
         }
         else
         {
@@ -72,18 +72,29 @@ void Effect_FallingRain::render(const char* panelName)
             ImGui::Checkbox("##Rainbow", &m_RainbowColours);
         }
 
+        if (ImGui::TreeNode("Raindrops"))
+        {
+            ImGui::Text("Raindrop Count");
+            min = 1;
+            max = MAX_RAINDROPS;
+            ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
 
-        ImGui::Text("Speed");
-        float minF = 0.01f, maxF = 1.0f;
-        ImGui::DragFloatRange2("##Speed", &s_RaindropMinSpeed, &s_RaindropMaxSpeed, 0.01f, minF, maxF, "%.3f", "%.3f");
+            ImGui::Text("Speed");
+            minF = 0.01f;
+            maxF = 1.0f;
+            ImGui::DragFloatRange2("##Speed", &s_RaindropMinSpeed, &s_RaindropMaxSpeed, 0.01f, minF, maxF, "%.3f", "%.3f");
 
-        ImGui::Text("Max Acceleration");
-        ImGui::SliderScalar("##MaxAcceleration", ImGuiDataType_Float, &s_RaindropMaxAcceleration, &minF, &maxF, "%.3ff");
+            ImGui::Text("Max Acceleration");
+            ImGui::SliderScalar("##MaxAcceleration", ImGuiDataType_Float, &s_RaindropMaxAcceleration, &minF, &maxF, "%.3ff");
 
-        min = 0;
-        max = m_Matrix->getRows();
-        ImGui::Text("Trail Length");
-        ImGui::SliderScalar("##TrailLength", ImGuiDataType_U32, &s_TrailLength, &min, &max, "%u");
+            min = 0;
+            max = m_Matrix->getRows();
+            ImGui::Text("Trail Length");
+            ImGui::SliderScalar("##TrailLength", ImGuiDataType_U32, &s_TrailLength, &min, &max, "%u");
+
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
 
         ImGui::PopItemWidth();
     }
