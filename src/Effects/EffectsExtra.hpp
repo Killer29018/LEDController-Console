@@ -17,6 +17,7 @@ enum class EffectEnum
     FIRE,
     TEXT,
     PONG,
+    SNAKE,
 };
 
 const std::vector<const char*> EffectName = {
@@ -32,6 +33,7 @@ const std::vector<const char*> EffectName = {
     "Fire",
     "Text",
     "Pong",
+    "Snake",
 };
 
 #endif

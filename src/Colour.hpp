@@ -49,7 +49,7 @@ struct cHSV
     inline cHSV(uint8_t hue, uint8_t sat, uint8_t val)
         : h(hue), s(sat), v(val) {}
     inline cHSV(uint8_t hue)
-        : h(hue), s(sat), v(val) {}
+        : h(hue), s(0x00), v(0x00) {}
 
     // Copy Constructors
     inline cHSV(const cHSV& rhs) = default;

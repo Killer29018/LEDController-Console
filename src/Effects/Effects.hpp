@@ -13,5 +13,6 @@
 #include "EffectHeaders/Effect_Fire.hpp"
 #include "EffectHeaders/Effect_Text.hpp"
 #include "EffectHeaders/Effect_Pong.hpp"
+#include "EffectHeaders/Effect_Snake.hpp"
 
 #endif

@@ -37,6 +37,7 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::FIRE:              m_CurrentEffect = new Effect_Fire(m_Matrix); break;
     case EffectEnum::TEXT:              m_CurrentEffect = new Effect_Text(m_Matrix); break;
     case EffectEnum::PONG:              m_CurrentEffect = new Effect_Pong(m_Matrix); break;
+    case EffectEnum::SNAKE:             m_CurrentEffect = new Effect_Snake(m_Matrix); break;
 
     default:
         Logger::log(LoggerType::LOG_WARN, "Unreachable, Effect Enum added but not new Effect");
