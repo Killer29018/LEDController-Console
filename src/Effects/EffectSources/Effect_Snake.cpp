@@ -1,23 +1,55 @@
 #include "../EffectHeaders/Effect_Snake.hpp"
 
+#include <fstream>
+#include <sstream>
+
 Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     : Effect(EffectEnum::SNAKE, matrix)
 {
-    // m_Body = SnakeBody(m_Matrix->getColumns() / 2, m_Matrix->getRows() / 2);
     reset();
 
     m_SnakeCurrentCount = 0;
     m_SnakeMaxCount = 10;
+
+    if ((m_Matrix->getRows() & 1) == 1 && (m_Matrix->getColumns() & 1) == 1)
+    {
+        Logger::log(LoggerType::LOG_ERROR, "Unsupported size. One dimension must be even");
+        possibleSolve = false;
+    }
+
+    m_MazeW = m_Matrix->getColumns() / 2;
+    m_MazeH = m_Matrix->getRows() / 2;
+    m_Maze = new Cell*[m_MazeH];
+
+    for (uint32_t i = 0; i < m_MazeH; i++)
+    {
+        m_Maze[i] = new Cell[m_MazeW];
+
+        for (uint32_t j = 0; j < m_MazeW; j++)
+        {
+            m_Maze[i][j] = Cell({j, i});
+        }
+    }
+
+    generateMaze();
+    possibleSolve = true;
 }
 
 Effect_Snake::~Effect_Snake()
 {
-
+    for (uint32_t i = 0; i < m_Matrix->getRows(); i++)
+    {
+        delete[] m_Maze[i];
+    }
+    delete[] m_Maze;
 }
 
 void Effect_Snake::update()
 {
     m_Matrix->fillSolid({ 0, 0, 0 });
+
+    if (!possibleSolve)
+        return;
 
     m_Apple.render(m_PrimaryColour, m_Matrix);
     m_Body.render(m_PrimaryColour, m_Matrix);
@@ -33,8 +65,6 @@ void Effect_Snake::update()
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
     {
         m_Body.update();
-
-        // Logger::log(LoggerType::LOG_INFO, "%d:%d", m_Body.xDir, m_Body.yDir);
 
         m_SnakeCurrentCount = 0;
     }
@@ -72,7 +102,7 @@ void Effect_Snake::checkReset()
     Pos& head = m_Body.body[0];
     if (m_Body.body.size() >= 5)
     {
-        for (int i = 4; i < m_Body.body.size(); i++)
+        for (size_t i = 4; i < m_Body.body.size(); i++)
         {
             if (m_Body.body[i].x == head.x && 
                 m_Body.body[i].y == head.y)
@@ -97,6 +127,175 @@ void Effect_Snake::reset()
 
     m_SnakeCurrentCount = 0;
 }
+
+void Effect_Snake::generateMaze()
+{
+    uint32_t x = randomValue() * m_MazeW;
+    uint32_t y = randomValue() * m_MazeH;
+
+    m_Maze[y][x].visited = true;
+    addNeighbours(m_Maze[y][x]);
+
+    while (m_NeighbourCells.size() != 0)
+    {
+        size_t index = randomValue() * (m_NeighbourCells.size() - 1);
+
+        Cell* currentCell = m_NeighbourCells[index];
+        m_NeighbourCells.erase(m_NeighbourCells.begin() + index);
+
+        assert(!currentCell->visited && "Not possible");
+
+        currentCell->visited = true;
+
+        addNeighbours(*currentCell);
+
+        std::vector<Cell*> neighbours = getActiveNeighbours(*currentCell);
+
+        assert(neighbours.size() != 0 && "Not possible");
+
+        size_t randomN = randomValue() * (neighbours.size() - 1);
+        carvePath(*currentCell, *neighbours[randomN]);
+    }
+    printMaze("Maze.txt");
+    printMaze2("Maze2.txt");
+}
+
+void Effect_Snake::addNeighbours(Cell& c)
+{
+    Cell* n;
+    if (c.pos.x > 0)
+    {
+        n = &m_Maze[c.pos.y][c.pos.x - 1];
+        if (!n->visited && !n->neighbour)
+        {
+            n->neighbour = true;
+            m_NeighbourCells.push_back(n);
+        }
+    }
+
+    if (c.pos.x < (m_MazeW - 1))
+    {
+        n = &m_Maze[c.pos.y][c.pos.x + 1];
+        if (!n->visited && !n->neighbour)
+        {
+            n->neighbour = true;
+            m_NeighbourCells.push_back(n);
+        }
+    }
+
+    if (c.pos.y > 0)
+    {
+        n = &m_Maze[c.pos.y - 1][c.pos.x];
+        if (!n->visited && !n->neighbour)
+        {
+            n->neighbour = true;
+            m_NeighbourCells.push_back(n);
+        }
+    }
+
+    if (c.pos.y < (m_MazeH - 1))
+    {
+        n = &m_Maze[c.pos.y + 1][c.pos.x];
+        if (!n->visited && !n->neighbour)
+        {
+            n->neighbour = true;
+            m_NeighbourCells.push_back(n);
+        }
+    }
+}
+
+std::vector<Cell*> Effect_Snake::getActiveNeighbours(Cell& c)
+{
+    std::vector<Cell*> neighbours;
+    if (c.pos.x > 0 && m_Maze[c.pos.y][c.pos.x - 1].visited)
+        neighbours.push_back(&m_Maze[c.pos.y][c.pos.x - 1]);
+
+    if (c.pos.x < (m_MazeW - 1) && m_Maze[c.pos.y][c.pos.x + 1].visited)
+        neighbours.push_back(&m_Maze[c.pos.y][c.pos.x + 1]);
+
+    if (c.pos.y > 0 && m_Maze[c.pos.y - 1][c.pos.x].visited)
+        neighbours.push_back(&m_Maze[c.pos.y - 1][c.pos.x]);
+
+    if (c.pos.y < (m_MazeH - 1) && m_Maze[c.pos.y + 1][c.pos.x].visited)
+        neighbours.push_back(&m_Maze[c.pos.y + 1][c.pos.x]);
+
+    return neighbours;
+}
+
+void Effect_Snake::carvePath(Cell& current, Cell& next)
+{
+    if (current.pos.x == next.pos.x)
+    {
+        if (next.pos.y > current.pos.y) // Down
+        {
+            current.down = true;
+            next.up = true;
+        }
+        else // Up
+        {
+            current.up = true;
+            next.down = true;
+        }
+    }
+    else
+    {
+        if (next.pos.x > current.pos.x) // Right
+        {
+            current.right = true;
+            next.left = true;
+        }
+        else // Left
+        {
+            current.left = true;
+            next.right = true;
+        }
+    }
+}
+
+void Effect_Snake::printMaze(const char* output)
+{
+    std::ofstream file;
+    file.open(output);
+
+    for (int i = 0; i < m_MazeW * 2 + 1; i++) file.put('#');
+    file.put('\n');
+
+    for (int i = 0; i < m_MazeH; i++)
+    {
+        file.put('#');
+        for (int j = 0; j < m_MazeW; j++)
+        {
+            if (m_Maze[i][j].visited)
+                file.put(' ');
+            else
+                file.put('0');
+            if (m_Maze[i][j].right)
+                file.put(' ');
+            else
+                file.put('#');
+        }
+        file.put('\n');
+
+        file.put('#');
+        for (int j = 0; j < m_MazeW; j++)
+        {
+            if (m_Maze[i][j].down)
+                file.put(' ');
+            else
+                file.put('#');
+            file.put('#');
+        }
+        file.put('\n');
+    }
+    file.put('\n');
+    file.close();
+}
+
+void Effect_Snake::printMaze2(const char* output)
+{
+    // First need to calculate edges that follow walls. For hamiltonian Cycle
+}
+
 
 SnakeBody::SnakeBody(uint32_t x, uint32_t y)
 {
@@ -188,14 +387,14 @@ void Apple::render(cHSV& colour, LEDMatrix* matrix)
 
 void Apple::resetPosition(LEDMatrix* matrix, SnakeBody body)
 {
-    int x, y;
+    uint32_t x, y;
     while (true)
     {
         x = randomValue() * (matrix->getColumns() - 1);
         y = randomValue() * (matrix->getRows() - 1);
 
         bool hit = false;
-        for (int i = 0; i < body.body.size(); i++)
+        for (size_t i = 0; i < body.body.size(); i++)
         {
             if (x == body.body[i].x && y == body.body[i].y)
             {

@@ -18,6 +18,21 @@ struct Pos
         : x(0), y(0) {}
 };
 
+struct Cell
+{
+    Pos pos;
+    bool visited;
+    bool neighbour = false;
+
+    bool up = false;
+    bool down = false;
+    bool left = false;
+    bool right = false;
+
+    Cell() : pos(), visited(false) {}
+    Cell(Pos pos) : pos(pos), visited(false) {}
+};
+
 enum class SnakeDir
 {
     UP,
@@ -66,6 +81,12 @@ private:
 
     uint32_t m_SnakeCurrentCount;
     uint32_t m_SnakeMaxCount;
+
+    Cell** m_Maze;
+    std::vector<Cell*> m_NeighbourCells;
+    uint32_t m_MazeW, m_MazeH;
+
+    bool possibleSolve = false;
 public:
     Effect_Snake(LEDMatrix* matrix);
     ~Effect_Snake();
@@ -75,6 +96,14 @@ public:
 private:
     void checkReset();
     void reset();
+
+    void generateMaze();
+    void addNeighbours(Cell& c);
+    std::vector<Cell*> getActiveNeighbours(Cell& c);
+    void carvePath(Cell& current, Cell& next);
+
+    void printMaze(const char* output);
+    void printMaze2(const char* output);
 };
 
 #endif
