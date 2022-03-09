@@ -152,7 +152,7 @@ void Effect_Snake::resetCells()
 void Effect_Snake::checkReset()
 {
     Pos& head = m_Body.body[0];
-    if (m_Body.body.size() >= 5)
+    if (m_Body.body.size() >= 5 && !(m_Body.body[1].x == head.x && m_Body.body[1].y == head.y))
     {
         for (size_t i = 4; i < m_Body.body.size(); i++)
         {
