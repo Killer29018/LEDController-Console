@@ -33,12 +33,12 @@ struct Cell
     Cell(Pos pos) : pos(pos), visited(false) {}
 };
 
-enum class SnakeDir
+enum class Dir
 {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+    UP      = 1,
+    LEFT    = 2,
+    DOWN    = 3,
+    RIGHT   = 4,
 };
 
 struct Apple;
@@ -46,6 +46,8 @@ struct Apple;
 struct SnakeBody
 {
     std::vector<Pos> body;
+
+    Dir currentDir = Dir::LEFT;
 
     int32_t xDir;
     int32_t yDir;
@@ -56,11 +58,11 @@ struct SnakeBody
     void render(cHSV& colour, LEDMatrix* matrix);
     void update();
 
-    void changeDir(SnakeDir dir);
+    void changeDir(Dir dir);
 
     void increaseSize();
 
-    bool checkCollision(Apple apple); 
+    bool checkCollision(Apple apple, uint8_t growthAmount = 1); 
 };
 
 struct Apple
@@ -68,7 +70,7 @@ struct Apple
     Pos pos;
 
     void render(cHSV& colour, LEDMatrix* matrix);
-    void resetPosition(LEDMatrix* matrix, SnakeBody);
+    void resetPosition(uint32_t limitX, uint32_t limitY, SnakeBody body);
 
     Apple() = default;
 };
@@ -79,12 +81,25 @@ private:
     SnakeBody m_Body;
     Apple m_Apple;
 
+    bool m_AI;
+
+    bool m_AnimateHue;
+    uint8_t m_HueOffset;
+    uint8_t m_DeltaHue;
+
+    uint8_t m_CurrentCount;
+    uint8_t m_MaxCount;
+
+    uint8_t m_AppleGrowthAmount;
+
     uint32_t m_SnakeCurrentCount;
     uint32_t m_SnakeMaxCount;
 
     Cell** m_Maze;
     std::vector<Cell*> m_NeighbourCells;
     uint32_t m_MazeW, m_MazeH;
+
+    std::vector<Dir> m_Path;
 
     bool possibleSolve = false;
 public:
@@ -94,6 +109,8 @@ public:
     void update() override;
     void render(const char* panelName) override;
 private:
+    void resetCells();
+
     void checkReset();
     void reset();
 
@@ -102,8 +119,15 @@ private:
     std::vector<Cell*> getActiveNeighbours(Cell& c);
     void carvePath(Cell& current, Cell& next);
 
-    void printMaze(const char* output);
-    void printMaze2(const char* output);
+    void generatePath();
+    void setNextPathPos();
+
+    size_t getIndex(Pos pos);
+    Pos getMazeIndex(Pos pos);
+
+    void advanceDir(Pos& pos, Dir dir);
+    bool getWallRight(Dir dir, Cell& cell);
+    bool getWallFront(Dir dir, Cell& cell);
 };
 
 #endif

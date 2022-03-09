@@ -11,7 +11,7 @@ class Effect
 public:
     EffectEnum effectEnum;
 protected:
-    uint8_t m_FPS;
+    uint16_t m_FPS;
     cHSV m_PrimaryColour;
     LEDMatrix* m_Matrix;
 public:
@@ -24,8 +24,8 @@ public:
     virtual void update() {}
     virtual void render(const char* panelName) {}
 
-    uint8_t& getFPS() { return m_FPS; }
-    void setFPS(uint8_t fps) { m_FPS = fps; }
+    uint16_t& getFPS() { return m_FPS; }
+    void setFPS(uint16_t fps) { m_FPS = fps; }
 
     cHSV getPrimaryColour() { return m_PrimaryColour; }
     void setPrimaryColour(cHSV colour) { m_PrimaryColour = colour; }

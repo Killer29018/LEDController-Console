@@ -9,7 +9,7 @@ int main()
     ShowWindow( GetConsoleWindow(), SW_HIDE );
 #endif
 
-    srand(1);
+    // srand(1);
 
     Application::init("LED Controller", { SCREEN_WIDTH, SCREEN_HEIGHT }, "192.168.0.99", 65506);
     Application::start();

@@ -6,10 +6,18 @@
 Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     : Effect(EffectEnum::SNAKE, matrix)
 {
-    reset();
-
+    m_AI = true;
+    m_AnimateHue = false;
     m_SnakeCurrentCount = 0;
     m_SnakeMaxCount = 10;
+
+    m_MaxCount = 10;
+    m_CurrentCount = 0;
+
+    m_HueOffset = 0;
+    m_DeltaHue = 1;
+
+    m_AppleGrowthAmount = 1;
 
     if ((m_Matrix->getRows() & 1) == 1 && (m_Matrix->getColumns() & 1) == 1)
     {
@@ -31,13 +39,13 @@ Effect_Snake::Effect_Snake(LEDMatrix* matrix)
         }
     }
 
-    generateMaze();
+    reset();
     possibleSolve = true;
 }
 
 Effect_Snake::~Effect_Snake()
 {
-    for (uint32_t i = 0; i < m_Matrix->getRows(); i++)
+    for (uint32_t i = 0; i < m_MazeH; i++)
     {
         delete[] m_Maze[i];
     }
@@ -51,12 +59,16 @@ void Effect_Snake::update()
     if (!possibleSolve)
         return;
 
-    m_Apple.render(m_PrimaryColour, m_Matrix);
-    m_Body.render(m_PrimaryColour, m_Matrix);
+    cHSV currentColour = m_PrimaryColour;
+    if (m_AnimateHue)
+        currentColour.H += m_HueOffset;
 
-    if (m_Body.checkCollision(m_Apple))
+    m_Apple.render(currentColour, m_Matrix);
+    m_Body.render(currentColour, m_Matrix);
+
+    if (m_Body.checkCollision(m_Apple, m_AppleGrowthAmount))
     {
-        m_Apple.resetPosition(m_Matrix, m_Body);
+        m_Apple.resetPosition(m_MazeW * 2, m_MazeH * 2, m_Body);
     }
 
     checkReset();
@@ -64,9 +76,23 @@ void Effect_Snake::update()
     m_SnakeCurrentCount++;
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
     {
+        if (m_AI)
+        {
+            Dir newDir = m_Path[getIndex(m_Body.body[0])];
+
+            m_Body.changeDir(newDir);
+        }
+
         m_Body.update();
 
         m_SnakeCurrentCount = 0;
+    }
+
+    if (m_AnimateHue) m_CurrentCount++;
+    if (m_CurrentCount > m_MaxCount)
+    {
+        m_HueOffset += m_DeltaHue;
+        m_CurrentCount = 0;
     }
 }
 
@@ -75,17 +101,30 @@ void Effect_Snake::render(const char* panelName)
     int min, max;
     if (ImGui::Begin(panelName))
     {
-        if (ImGui::Button("Up"))
-            m_Body.changeDir(SnakeDir::UP);
+        ImGui::PushItemWidth(-1);
 
-        if (ImGui::Button("Down"))
-            m_Body.changeDir(SnakeDir::DOWN);
+        ImGui::Text("AI");
+        ImGui::Checkbox("##AI", &m_AI);
+        
+        ImGui::Text("Apple Growth Amount");
+        min = 1;
+        max = 10;
+        ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
 
-        if (ImGui::Button("Left"))
-            m_Body.changeDir(SnakeDir::LEFT);
+        ImGui::Text("Animate Hue");
+        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+        if (m_AnimateHue)
+        {
+            ImGui::Text("Delta Hue");
+            min = 0;
+            max = 255;
+            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-        if (ImGui::Button("Right"))
-            m_Body.changeDir(SnakeDir::RIGHT);
+            ImGui::Text("Hue Update Speed");
+            uint8_t value = max - m_MaxCount;
+            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+            m_MaxCount = max - value;
+        }
         
         ImGui::Text("Snake Update Speed");
         min = 0;
@@ -93,8 +132,21 @@ void Effect_Snake::render(const char* panelName)
         int value = max - m_SnakeMaxCount;
         ImGui::SliderScalar("##SnakeUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
         m_SnakeMaxCount = max - value;
+
+        ImGui::PopItemWidth();
     }
     ImGui::End();
+}
+
+void Effect_Snake::resetCells()
+{
+    for (uint32_t i = 0; i < m_MazeH; i++)
+    {
+        for (uint32_t j = 0; j < m_MazeW; j++)
+        {
+            m_Maze[i][j] = Cell({j, i});
+        }
+    }
 }
 
 void Effect_Snake::checkReset()
@@ -123,9 +175,13 @@ void Effect_Snake::checkReset()
 void Effect_Snake::reset()
 {
     m_Body = SnakeBody(m_Matrix->getColumns() / 2, m_Matrix->getRows() / 2);
-    m_Apple.resetPosition(m_Matrix, m_Body);
+    m_Apple.resetPosition(m_MazeW * 2, m_MazeH * 2, m_Body);
 
     m_SnakeCurrentCount = 0;
+
+    resetCells();
+
+    generateMaze();
 }
 
 void Effect_Snake::generateMaze()
@@ -156,8 +212,8 @@ void Effect_Snake::generateMaze()
         size_t randomN = randomValue() * (neighbours.size() - 1);
         carvePath(*currentCell, *neighbours[randomN]);
     }
-    printMaze("Maze.txt");
-    printMaze2("Maze2.txt");
+
+    generatePath();
 }
 
 void Effect_Snake::addNeighbours(Cell& c)
@@ -252,64 +308,165 @@ void Effect_Snake::carvePath(Cell& current, Cell& next)
     }
 }
 
-void Effect_Snake::printMaze(const char* output)
+void Effect_Snake::generatePath()
 {
-    std::ofstream file;
-    file.open(output);
+    Pos pos = Pos(0, 0);
+    Pos initialPos = pos;
+    Pos mazePos;
+    Dir dir = Dir::LEFT;
 
-    for (int i = 0; i < m_MazeW * 2 + 1; i++) file.put('#');
-    file.put('\n');
+    m_Path.resize(m_MazeW * m_MazeH * 4);
 
-    for (int i = 0; i < m_MazeH; i++)
+    // for (int i = 0; i < m_Path.size(); i++)
+    do
     {
-        file.put('#');
-        for (int j = 0; j < m_MazeW; j++)
-        {
-            if (m_Maze[i][j].visited)
-                file.put(' ');
-            else
-                file.put('0');
-            if (m_Maze[i][j].right)
-                file.put(' ');
-            else
-                file.put('#');
-        }
-        file.put('\n');
+        mazePos = getMazeIndex(pos);
+        size_t index = getIndex(pos);
 
-        file.put('#');
-        for (int j = 0; j < m_MazeW; j++)
+        Cell& cell = m_Maze[mazePos.y][mazePos.x];
+        bool right = getWallRight(dir, cell);
+        bool front = getWallFront(dir, cell);
+
+        if (right) // Turn Right
         {
-            if (m_Maze[i][j].down)
-                file.put(' ');
-            else
-                file.put('#');
-            file.put('#');
+            switch(dir)
+            {
+                case Dir::LEFT:
+                    if ((pos.x + 1) % 2 == 0)
+                        dir = Dir::UP;
+                    break;
+                case Dir::DOWN:
+                    if ((pos.y + 1) % 2 == 1)
+                        dir = Dir::LEFT;
+                    break;
+                case Dir::RIGHT:
+                    if ((pos.x + 1) % 2 == 1)
+                        dir = Dir::DOWN;
+                    break;
+                case Dir::UP:
+                    if ((pos.y + 1) % 2 == 0)
+                        dir = Dir::RIGHT;
+                    break;
+            }
         }
-        file.put('\n');
+        else if (!front) // Turn Left
+        {
+            switch(dir)
+            {
+                case Dir::LEFT:
+                    if ((pos.x + 1) % 2 == 1)
+                        dir = Dir::DOWN;
+                    break;
+                case Dir::DOWN:
+                    if ((pos.y + 1) % 2 == 0)
+                        dir = Dir::RIGHT;
+                    break;
+                case Dir::RIGHT:
+                    if ((pos.x + 1) % 2 == 0)
+                        dir = Dir::UP;
+                    break;
+                case Dir::UP:
+                    if ((pos.y + 1) % 2 == 1)
+                        dir = Dir::LEFT;
+                    break;
+            }
+        }
+
+        advanceDir(pos, dir);
+
+        if (pos.x >= m_MazeW * 2 || pos.y >= m_MazeH * 2)
+            assert(false && "Not possible");
+
+        m_Path[index] = dir;
     }
-    file.put('\n');
-    file.close();
+    while (pos.x != initialPos.x || pos.y != initialPos.y);
+
+    assert(pos.x == initialPos.x && pos.y == initialPos.y && "Not Possible");
 }
 
-void Effect_Snake::printMaze2(const char* output)
+void Effect_Snake::setNextPathPos()
 {
-    // First need to calculate edges that follow walls. For hamiltonian Cycle
+
 }
 
+size_t Effect_Snake::getIndex(Pos pos)
+{
+    return (pos.x + (m_Matrix->getColumns() * pos.y));
+}
+
+Pos Effect_Snake::getMazeIndex(Pos pos)
+{
+    Pos returnPos;
+    returnPos.x = pos.x / 2;
+    returnPos.y = pos.y / 2;
+    return returnPos;
+}
+
+void Effect_Snake::advanceDir(Pos& pos, Dir dir)
+{
+    switch (dir)
+    {
+    case Dir::UP:
+        pos.y -= 1; break;
+    case Dir::LEFT:
+        pos.x -= 1; break;
+    case Dir::DOWN:
+        pos.y += 1; break;
+    case Dir::RIGHT:
+        pos.x += 1; break;
+    }
+}
+
+bool Effect_Snake::getWallRight(Dir dir, Cell& cell)
+{
+    switch (dir)
+    {
+    case Dir::UP:
+        return cell.right;
+    case Dir::LEFT:
+        return cell.up;
+    case Dir::DOWN:
+        return cell.left;
+    case Dir::RIGHT:
+        return cell.down;
+    }
+
+    assert(false && "Not possible");
+}
+
+bool Effect_Snake::getWallFront(Dir dir, Cell& cell)
+{
+    switch (dir)
+    {
+    case Dir::UP:
+        return cell.up;
+    case Dir::LEFT:
+        return cell.left;
+    case Dir::DOWN:
+        return cell.down;
+    case Dir::RIGHT:
+        return cell.right;
+    }
+
+    assert(false && "Not possible");
+}
 
 SnakeBody::SnakeBody(uint32_t x, uint32_t y)
 {
     body.push_back({ x    , y });
-    body.push_back({ x - 1, y });
-    body.push_back({ x - 2, y });
 
     xDir = 1;
     yDir = 0;
+
+    changeDir(currentDir);
 }
 
 void SnakeBody::render(cHSV& colour, LEDMatrix* matrix)
 {
-    for (size_t i = 0; i < body.size(); i++)
+    cHSV headColour = colour;
+    headColour.h += 5;
+    matrix->setLED(body[0].x, body[0].y, headColour);
+    for (size_t i = 1; i < body.size(); i++)
     {
         matrix->setLED(body[i].x, body[i].y, colour);
     }
@@ -327,32 +484,33 @@ void SnakeBody::update()
     head.y += yDir;
 }
 
-void SnakeBody::changeDir(SnakeDir dir)
+void SnakeBody::changeDir(Dir dir)
 {
+    currentDir = dir;
     switch (dir)
     {
-    case SnakeDir::UP:
+    case Dir::UP:
         if (yDir != 1)
         {
             yDir = -1;
             xDir = 0;
         }
         break;
-    case SnakeDir::DOWN:
+    case Dir::DOWN:
         if (yDir != -1)
         {
             yDir = 1;
             xDir = 0;
         }
         break;
-    case SnakeDir::LEFT:
+    case Dir::LEFT:
         if (xDir != 1)
         {
             xDir = -1;
             yDir = 0;
         }
         break;
-    case SnakeDir::RIGHT:
+    case Dir::RIGHT:
         if (xDir != -1)
         {
             xDir = 1;
@@ -367,12 +525,13 @@ void SnakeBody::increaseSize()
     body.push_back(body[body.size() - 1]);
 }
 
-bool SnakeBody::checkCollision(Apple apple)
+bool SnakeBody::checkCollision(Apple apple, uint8_t growthAmount)
 {
     Pos& head = body[0];
     if (apple.pos.x == head.x && apple.pos.y == head.y)
     {
-        increaseSize();
+        for (int i = 0; i < growthAmount; i++) increaseSize();
+
         return true;
     }
     return false;
@@ -385,13 +544,13 @@ void Apple::render(cHSV& colour, LEDMatrix* matrix)
     matrix->setLED(pos.x, pos.y, newColour);
 }
 
-void Apple::resetPosition(LEDMatrix* matrix, SnakeBody body)
+void Apple::resetPosition(uint32_t limitX, uint32_t limitY, SnakeBody body)
 {
     uint32_t x, y;
     while (true)
     {
-        x = randomValue() * (matrix->getColumns() - 1);
-        y = randomValue() * (matrix->getRows() - 1);
+        x = randomValue() * limitX;
+        y = randomValue() * limitY;
 
         bool hit = false;
         for (size_t i = 0; i < body.body.size(); i++)
