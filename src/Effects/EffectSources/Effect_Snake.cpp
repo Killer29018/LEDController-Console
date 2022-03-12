@@ -29,11 +29,11 @@ Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     m_MazeH = m_Matrix->getRows() / 2;
     m_Maze = new Cell*[m_MazeH];
 
-    for (uint32_t i = 0; i < m_MazeH; i++)
+    for (int32_t i = 0; i < m_MazeH; i++)
     {
         m_Maze[i] = new Cell[m_MazeW];
 
-        for (uint32_t j = 0; j < m_MazeW; j++)
+        for (int32_t j = 0; j < m_MazeW; j++)
         {
             m_Maze[i][j] = Cell({j, i});
         }
@@ -45,7 +45,7 @@ Effect_Snake::Effect_Snake(LEDMatrix* matrix)
 
 Effect_Snake::~Effect_Snake()
 {
-    for (uint32_t i = 0; i < m_MazeH; i++)
+    for (int32_t i = 0; i < m_MazeH; i++)
     {
         delete[] m_Maze[i];
     }
@@ -76,12 +76,7 @@ void Effect_Snake::update()
     m_SnakeCurrentCount++;
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
     {
-        if (m_AI)
-        {
-            Dir newDir = m_Path[getIndex(m_Body.body[0])];
-
-            m_Body.changeDir(newDir);
-        }
+        m_Body.changeDir(getNextSnakeDirection());
 
         m_Body.update();
 
@@ -110,6 +105,18 @@ void Effect_Snake::render(const char* panelName)
         min = 1;
         max = 10;
         ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
+        // ImGui::SameLine();
+        // {
+        //     ImGui::TextDisabled("(?)");
+        //     if (ImGui::IsItemHovered())
+        //     {
+        //         ImGui::BeginTooltip();
+        //         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        //         ImGui::TextUnformated("Sizes above 1 may cause snake to collide with itself");
+        //         ImGui::PopTextWrapPos();
+        //         ImGui::EndTooltip();
+        //     }
+        // }
 
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
@@ -140,9 +147,9 @@ void Effect_Snake::render(const char* panelName)
 
 void Effect_Snake::resetCells()
 {
-    for (uint32_t i = 0; i < m_MazeH; i++)
+    for (int32_t i = 0; i < m_MazeH; i++)
     {
-        for (uint32_t j = 0; j < m_MazeW; j++)
+        for (int32_t j = 0; j < m_MazeW; j++)
         {
             m_Maze[i][j] = Cell({j, i});
         }
@@ -165,7 +172,7 @@ void Effect_Snake::checkReset()
         }
     }
 
-    if (head.x >= m_Matrix->getColumns() || head.y >= m_Matrix->getRows())
+    if ((uint32_t)head.x >= m_Matrix->getColumns() || (uint32_t)head.y >= m_Matrix->getRows())
     {
         reset();
         return;
@@ -182,6 +189,133 @@ void Effect_Snake::reset()
     resetCells();
 
     generateMaze();
+}
+
+Dir Effect_Snake::getNextSnakeDirection()
+{
+    if (!m_AI)
+    {
+        // User Input
+        return Dir::NONE;
+    }
+    else
+    {
+        // Dir newDir = m_Path[getIndex(m_Body.body[0])];
+
+        // return newDir;
+
+        /*
+         * Modified From
+         * https://github.com/johnflux/snake_game/blob/master/snake.cpp
+         * aigetNewSnakeDirection()
+        */
+
+        const int totalSize = m_MazeW * m_MazeH * 4;
+
+        Pos pos = m_Body.body[0];
+        int x = pos.x;
+        int y = pos.y;
+
+        int pathNumber = getPathIndex(pos);
+
+        int distanceToFood = pathDistance(pathNumber, getPathIndex(m_Apple.pos));
+        int distanceToTail = pathDistance(pathNumber, getPathIndex(m_Body.body[m_Body.body.size() - 1]));
+
+        int cuttingAmountAvail = distanceToTail - m_Body.growthAmount - 3;
+        int emptySquares = totalSize - m_Body.body.size() - m_AppleGrowthAmount;
+
+        if (emptySquares < totalSize / 2)
+            cuttingAmountAvail = 0;
+        else if (distanceToFood < distanceToTail)
+        {
+            cuttingAmountAvail -= m_AppleGrowthAmount;
+            if ((distanceToTail - distanceToFood) * 4 > emptySquares)
+            {
+                cuttingAmountAvail -= 10;
+            }
+        }
+
+        int cuttingDesired = distanceToFood;
+        if (cuttingDesired < cuttingAmountAvail)
+            cuttingAmountAvail = cuttingDesired;
+
+        if (cuttingAmountAvail < 0)
+            cuttingAmountAvail = 0;
+
+        bool canGoRight = !checkCollision({ x + 1, y });
+        bool canGoLeft = !checkCollision({ x - 1, y });
+        bool canGoDown = !checkCollision({ x, y + 1 });
+        bool canGoUp = !checkCollision({ x, y - 1 });
+
+        Dir bestDir;
+        int bestDist = -1;
+
+        if (canGoRight)
+        {
+            int dist = pathDistance(pathNumber, getPathIndex({ x + 1, y }));
+            if (dist <= cuttingAmountAvail && dist > bestDist)
+            {
+                bestDir = Dir::RIGHT;
+                bestDist = dist;
+            }
+        }
+        if (canGoLeft)
+        {
+            int dist = pathDistance(pathNumber, getPathIndex({ x - 1, y }));
+            if (dist <= cuttingAmountAvail && dist > bestDist)
+            {
+                bestDir = Dir::LEFT;
+                bestDist = dist;
+            }
+        }
+        if (canGoDown)
+        {
+            int dist = pathDistance(pathNumber, getPathIndex({ x, y + 1 }));
+            if (dist <= cuttingAmountAvail && dist > bestDist)
+            {
+                bestDir = Dir::DOWN;
+                bestDist = dist;
+            }
+        }
+        if (canGoUp)
+        {
+            int dist = pathDistance(pathNumber, getPathIndex({ x, y - 1 }));
+            if (dist <= cuttingAmountAvail && dist > bestDist)
+            {
+                bestDir = Dir::UP;
+                bestDist = dist;
+            }
+        }
+
+        if (bestDist >= 0)
+            return bestDir;
+
+        if (canGoUp)
+            return Dir::UP;
+        if (canGoLeft)
+            return Dir::LEFT;
+        if (canGoDown)
+            return Dir::DOWN;
+        if (canGoUp)
+            return Dir::UP;
+
+        return Dir::NONE;
+    }
+}
+
+int Effect_Snake::pathDistance(int a, int b)
+{
+    if (a < b)
+        return (b - a - 1);
+    return (b - a - 1) + (m_MazeW * m_MazeH * 4);
+}
+
+bool Effect_Snake::checkCollision(Pos pos)
+{
+    if (pos.x < 0 || pos.x >= (m_MazeW * 2) || pos.y < 0 || pos.y >= (m_MazeH * 2))
+        return true;
+
+    return m_Body.checkCollisionBody(pos);
 }
 
 void Effect_Snake::generateMaze()
@@ -316,8 +450,10 @@ void Effect_Snake::generatePath()
     Dir dir = Dir::LEFT;
 
     m_Path.resize(m_MazeW * m_MazeH * 4);
+    m_PathValues.resize(m_MazeW * m_MazeH * 4);
 
     // for (int i = 0; i < m_Path.size(); i++)
+    int currentIndex = 0;
     do
     {
         mazePos = getMazeIndex(pos);
@@ -347,6 +483,8 @@ void Effect_Snake::generatePath()
                     if ((pos.y + 1) % 2 == 0)
                         dir = Dir::RIGHT;
                     break;
+                case Dir::NONE:
+                    break;
             }
         }
         else if (!front) // Turn Left
@@ -369,6 +507,8 @@ void Effect_Snake::generatePath()
                     if ((pos.y + 1) % 2 == 1)
                         dir = Dir::LEFT;
                     break;
+                case Dir::NONE:
+                    break;
             }
         }
 
@@ -378,6 +518,7 @@ void Effect_Snake::generatePath()
             assert(false && "Not possible");
 
         m_Path[index] = dir;
+        m_PathValues[index] = currentIndex++;
     }
     while (pos.x != initialPos.x || pos.y != initialPos.y);
 
@@ -391,7 +532,18 @@ void Effect_Snake::setNextPathPos()
 
 size_t Effect_Snake::getIndex(Pos pos)
 {
-    return (pos.x + (m_Matrix->getColumns() * pos.y));
+    if (pos.x > (m_MazeW * 2) || pos.y > (m_MazeH * 2))
+        return (m_MazeW * m_MazeH * 10);
+        // assert(false && "Not possible");
+    return (pos.x + (m_MazeW * 2 * pos.y));
+}
+
+size_t Effect_Snake::getPathIndex(Pos pos)
+{
+    if (pos.x > (m_MazeW * 2) || pos.y > (m_MazeH * 2))
+        return (m_MazeW * m_MazeH * 10);
+
+    return m_PathValues[getIndex(pos)];
 }
 
 Pos Effect_Snake::getMazeIndex(Pos pos)
@@ -414,6 +566,8 @@ void Effect_Snake::advanceDir(Pos& pos, Dir dir)
         pos.y += 1; break;
     case Dir::RIGHT:
         pos.x += 1; break;
+    case Dir::NONE:
+        break;
     }
 }
 
@@ -429,9 +583,10 @@ bool Effect_Snake::getWallRight(Dir dir, Cell& cell)
         return cell.left;
     case Dir::RIGHT:
         return cell.down;
-    }
 
-    assert(false && "Not possible");
+    default:
+        return false;
+    }
 }
 
 bool Effect_Snake::getWallFront(Dir dir, Cell& cell)
@@ -446,14 +601,16 @@ bool Effect_Snake::getWallFront(Dir dir, Cell& cell)
         return cell.down;
     case Dir::RIGHT:
         return cell.right;
-    }
 
-    assert(false && "Not possible");
+    default:
+        return false;
+    }
 }
 
-SnakeBody::SnakeBody(uint32_t x, uint32_t y)
+SnakeBody::SnakeBody(int32_t x, int32_t y)
 {
     body.push_back({ x    , y });
+    // body.push_back({ x - 1, y });
 
     xDir = 1;
     yDir = 0;
@@ -482,6 +639,9 @@ void SnakeBody::update()
     Pos& head = body[0];
     head.x += xDir;
     head.y += yDir;
+
+    if (growthAmount > 0)
+        growthAmount--;
 }
 
 void SnakeBody::changeDir(Dir dir)
@@ -517,6 +677,8 @@ void SnakeBody::changeDir(Dir dir)
             yDir = 0;
         }
         break;
+    case Dir::NONE:
+        break;
     }
 }
 
@@ -530,9 +692,23 @@ bool SnakeBody::checkCollision(Apple apple, uint8_t growthAmount)
     Pos& head = body[0];
     if (apple.pos.x == head.x && apple.pos.y == head.y)
     {
-        for (int i = 0; i < growthAmount; i++) increaseSize();
+        for (int i = 0; i < growthAmount; i++) 
+        {
+            increaseSize();
+            this->growthAmount++;
+        }
 
         return true;
+    }
+    return false;
+}
+
+bool SnakeBody::checkCollisionBody(Pos pos)
+{
+    for (size_t i = 0; i < body.size(); i++)
+    {
+        if (pos.x == body[i].x && pos.y == body[i].y)
+            return true;
     }
     return false;
 }
@@ -546,7 +722,7 @@ void Apple::render(cHSV& colour, LEDMatrix* matrix)
 
 void Apple::resetPosition(uint32_t limitX, uint32_t limitY, SnakeBody body)
 {
-    uint32_t x, y;
+    int32_t x, y;
     while (true)
     {
         x = randomValue() * limitX;

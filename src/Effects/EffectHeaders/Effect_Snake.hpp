@@ -9,10 +9,10 @@
 
 struct Pos
 {
-    uint32_t x;
-    uint32_t y;
+    int32_t x;
+    int32_t y;
 
-    Pos(uint32_t x, uint32_t y)
+    Pos(int32_t x, int32_t y)
         : x(x), y(y) {}
     Pos()
         : x(0), y(0) {}
@@ -35,6 +35,7 @@ struct Cell
 
 enum class Dir
 {
+    NONE    = 0,
     UP      = 1,
     LEFT    = 2,
     DOWN    = 3,
@@ -46,6 +47,7 @@ struct Apple;
 struct SnakeBody
 {
     std::vector<Pos> body;
+    uint32_t growthAmount = 0;
 
     Dir currentDir = Dir::LEFT;
 
@@ -53,7 +55,7 @@ struct SnakeBody
     int32_t yDir;
 
     SnakeBody() = default;
-    SnakeBody(uint32_t x, uint32_t y);
+    SnakeBody(int32_t x, int32_t y);
 
     void render(cHSV& colour, LEDMatrix* matrix);
     void update();
@@ -63,6 +65,7 @@ struct SnakeBody
     void increaseSize();
 
     bool checkCollision(Apple apple, uint8_t growthAmount = 1); 
+    bool checkCollisionBody(Pos pos);
 };
 
 struct Apple
@@ -97,9 +100,10 @@ private:
 
     Cell** m_Maze;
     std::vector<Cell*> m_NeighbourCells;
-    uint32_t m_MazeW, m_MazeH;
+    int32_t m_MazeW, m_MazeH;
 
     std::vector<Dir> m_Path;
+    std::vector<int> m_PathValues;
 
     bool possibleSolve = false;
 public:
@@ -114,6 +118,10 @@ private:
     void checkReset();
     void reset();
 
+    Dir getNextSnakeDirection();
+    int pathDistance(int a, int b);
+    bool checkCollision(Pos pos);
+
     void generateMaze();
     void addNeighbours(Cell& c);
     std::vector<Cell*> getActiveNeighbours(Cell& c);
@@ -123,6 +131,7 @@ private:
     void setNextPathPos();
 
     size_t getIndex(Pos pos);
+    size_t getPathIndex(Pos pos);
     Pos getMazeIndex(Pos pos);
 
     void advanceDir(Pos& pos, Dir dir);
