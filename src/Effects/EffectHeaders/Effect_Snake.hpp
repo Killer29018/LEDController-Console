@@ -4,6 +4,8 @@
 #include "Effect.hpp"
 
 #include <vector>
+#include <queue>
+#include <unordered_map>
 
 #include "../../Utils/Helper.hpp"
 
@@ -106,6 +108,9 @@ private:
     std::vector<int> m_PathValues;
 
     bool possibleSolve = false;
+
+    std::queue<Dir> m_PressedKeys;
+    std::unordered_map<Dir, bool> m_ProcessedKeys;
 public:
     Effect_Snake(LEDMatrix* matrix);
     ~Effect_Snake();
@@ -118,7 +123,10 @@ private:
     void checkReset();
     void reset();
 
+    void addKeys();
+
     Dir getNextSnakeDirection();
+
     int pathDistance(int a, int b);
     bool checkCollision(Pos pos);
 

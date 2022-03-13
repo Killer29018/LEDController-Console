@@ -3,6 +3,9 @@
 #include <fstream>
 #include <sstream>
 
+#include "KRE/System/Keyboard.hpp"
+#include "GLFW/glfw3.h"
+
 Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     : Effect(EffectEnum::SNAKE, matrix)
 {
@@ -73,6 +76,8 @@ void Effect_Snake::update()
 
     checkReset();
 
+    addKeys();
+
     m_SnakeCurrentCount++;
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
     {
@@ -100,23 +105,14 @@ void Effect_Snake::render(const char* panelName)
 
         ImGui::Text("AI");
         ImGui::Checkbox("##AI", &m_AI);
-        
-        ImGui::Text("Apple Growth Amount");
-        min = 1;
-        max = 10;
-        ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
-        // ImGui::SameLine();
-        // {
-        //     ImGui::TextDisabled("(?)");
-        //     if (ImGui::IsItemHovered())
-        //     {
-        //         ImGui::BeginTooltip();
-        //         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        //         ImGui::TextUnformated("Sizes above 1 may cause snake to collide with itself");
-        //         ImGui::PopTextWrapPos();
-        //         ImGui::EndTooltip();
-        //     }
-        // }
+
+        if (!m_AI)
+        {
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted("Use either arrow keys or wasd for moveing the snake");
+
+            ImGui::PopTextWrapPos();
+        }
 
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
@@ -132,6 +128,11 @@ void Effect_Snake::render(const char* panelName)
             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
             m_MaxCount = max - value;
         }
+
+        ImGui::Text("Apple Growth Amount");
+        min = 1;
+        max = 10;
+        ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
         
         ImGui::Text("Snake Update Speed");
         min = 0;
@@ -191,19 +192,76 @@ void Effect_Snake::reset()
     generateMaze();
 }
 
+void Effect_Snake::addKeys()
+{
+    if (KRE::Keyboard::getKey(GLFW_KEY_W) || KRE::Keyboard::getKey(GLFW_KEY_UP))
+    {
+        if (!m_ProcessedKeys[Dir::UP])
+        {
+            m_PressedKeys.push(Dir::UP);
+            m_ProcessedKeys[Dir::UP] = true;
+        }
+    }
+    else
+    {
+        m_ProcessedKeys[Dir::UP] = false;
+    }
+
+    if (KRE::Keyboard::getKey(GLFW_KEY_A) || KRE::Keyboard::getKey(GLFW_KEY_LEFT))
+    {
+        if (!m_ProcessedKeys[Dir::LEFT])
+        {
+            m_PressedKeys.push(Dir::LEFT);
+            m_ProcessedKeys[Dir::LEFT] = true;
+        }
+    }
+    else
+    {
+        m_ProcessedKeys[Dir::LEFT] = false;
+    }
+
+    if (KRE::Keyboard::getKey(GLFW_KEY_S) || KRE::Keyboard::getKey(GLFW_KEY_DOWN))
+    {
+        if (!m_ProcessedKeys[Dir::DOWN])
+        {
+            m_PressedKeys.push(Dir::DOWN);
+            m_ProcessedKeys[Dir::DOWN] = true;
+        }
+    }
+    else
+    {
+        m_ProcessedKeys[Dir::DOWN] = false;
+    }
+
+    if (KRE::Keyboard::getKey(GLFW_KEY_D) || KRE::Keyboard::getKey(GLFW_KEY_RIGHT))
+    {
+        if (!m_ProcessedKeys[Dir::RIGHT])
+        {
+            m_PressedKeys.push(Dir::RIGHT);
+            m_ProcessedKeys[Dir::RIGHT] = true;
+        }
+    }
+    else
+    {
+        m_ProcessedKeys[Dir::RIGHT] = false;
+    }
+}
+
 Dir Effect_Snake::getNextSnakeDirection()
 {
     if (!m_AI)
     {
-        // User Input
+        if (m_PressedKeys.size() > 0)
+        {
+            Dir dir = m_PressedKeys.front();
+            m_PressedKeys.pop();
+            return dir;
+        }
+
         return Dir::NONE;
     }
     else
     {
-        // Dir newDir = m_Path[getIndex(m_Body.body[0])];
-
-        // return newDir;
-
         /*
          * Modified From
          * https://github.com/johnflux/snake_game/blob/master/snake.cpp
@@ -610,7 +668,8 @@ bool Effect_Snake::getWallFront(Dir dir, Cell& cell)
 SnakeBody::SnakeBody(int32_t x, int32_t y)
 {
     body.push_back({ x    , y });
-    // body.push_back({ x - 1, y });
+
+    increaseSize(); increaseSize();
 
     xDir = 1;
     yDir = 0;
