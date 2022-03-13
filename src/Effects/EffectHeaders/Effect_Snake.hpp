@@ -35,7 +35,7 @@ struct Cell
     Cell(Pos pos) : pos(pos), visited(false) {}
 };
 
-enum class Dir
+enum class SnakeDir 
 {
     NONE    = 0,
     UP      = 1,
@@ -51,7 +51,7 @@ struct SnakeBody
     std::vector<Pos> body;
     uint32_t growthAmount = 0;
 
-    Dir currentDir = Dir::LEFT;
+    SnakeDir currentDir = SnakeDir::LEFT;
 
     int32_t xDir;
     int32_t yDir;
@@ -62,7 +62,7 @@ struct SnakeBody
     void render(cHSV& colour, LEDMatrix* matrix);
     void update();
 
-    void changeDir(Dir dir);
+    void changeDir(SnakeDir dir);
 
     void increaseSize();
 
@@ -104,13 +104,13 @@ private:
     std::vector<Cell*> m_NeighbourCells;
     int32_t m_MazeW, m_MazeH;
 
-    std::vector<Dir> m_Path;
+    std::vector<SnakeDir> m_Path;
     std::vector<int> m_PathValues;
 
     bool possibleSolve = false;
 
-    std::queue<Dir> m_PressedKeys;
-    std::unordered_map<Dir, bool> m_ProcessedKeys;
+    std::queue<SnakeDir> m_PressedKeys;
+    std::unordered_map<SnakeDir, bool> m_ProcessedKeys;
 public:
     Effect_Snake(LEDMatrix* matrix);
     ~Effect_Snake();
@@ -125,7 +125,7 @@ private:
 
     void addKeys();
 
-    Dir getNextSnakeDirection();
+    SnakeDir getNextSnakeDirection();
 
     int pathDistance(int a, int b);
     bool checkCollision(Pos pos);
@@ -142,9 +142,9 @@ private:
     size_t getPathIndex(Pos pos);
     Pos getMazeIndex(Pos pos);
 
-    void advanceDir(Pos& pos, Dir dir);
-    bool getWallRight(Dir dir, Cell& cell);
-    bool getWallFront(Dir dir, Cell& cell);
+    void advanceDir(Pos& pos, SnakeDir dir);
+    bool getWallRight(SnakeDir dir, Cell& cell);
+    bool getWallFront(SnakeDir dir, Cell& cell);
 };
 
 #endif

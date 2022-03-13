@@ -3,6 +3,16 @@
 
 #include "Effect.hpp"
 
+#include <queue>
+#include <unordered_map>
+
+enum class PaddleDir
+{
+    NONE,
+    UP,
+    DOWN,
+};
+
 struct Paddle
 {
     float x;
@@ -25,6 +35,8 @@ struct Paddle
     void update();
     void target(float targetY);
 
+    void move(PaddleDir dir);
+
     void setWidth(float width) { w = width; }
     void setHeight(float height) { h = height; }
 };
@@ -35,10 +47,11 @@ struct Ball
     float y;
     float r;
 
+    float initialX, initialY;
+
     static float s_LimitY;
     static float s_LimitX;
     static float s_MaxSpeed;
-
 
     float velX;
     float velY;
@@ -48,6 +61,7 @@ struct Ball
 
     void render(cHSV colour, LEDMatrix* matrix);
     void update();
+    void reset();
 
     void setRadius(float radius) { r = radius; };
 };
@@ -60,12 +74,20 @@ private:
 
     Ball m_Ball;
 
+    bool m_AI;
+
     uint8_t m_CurrentCount;
     uint8_t m_MaxCount;
 
     bool m_AnimateHue;
     uint8_t m_DeltaHue;
     uint8_t m_HueOffset;
+
+    std::queue<PaddleDir> m_PaddleL;
+    std::queue<PaddleDir> m_PaddleR;
+
+    bool m_MovingL = false;
+    bool m_MovingR = false;
 public:
     Effect_Pong(LEDMatrix* matrix);
     ~Effect_Pong();
@@ -74,6 +96,9 @@ public:
     void render(const char* panelName) override;
 private:
     void setTargetX(Paddle& paddle);
+
+    void addKeys();
+    void updatePaddles();
 
     bool checkCollide(Paddle& paddle);
 };

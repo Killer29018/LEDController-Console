@@ -3,6 +3,9 @@
 #include <cmath>
 #include "../../Utils/Helper.hpp"
 
+#include "KRE/System/Keyboard.hpp"
+#include "GLFW/glfw3.h"
+
 float Paddle::s_LimitY = 0;
 float Paddle::s_MaxSpeed = 0;
 int Paddle::s_XOffset = 1;
@@ -14,6 +17,8 @@ float Ball::s_MaxSpeed = 0;
 Effect_Pong::Effect_Pong(LEDMatrix* matrix)
     : Effect(EffectEnum::PONG, matrix)
 {
+    m_AI = true;
+
     m_CurrentCount = 0;
     m_MaxCount = 10;
 
@@ -66,10 +71,8 @@ void Effect_Pong::update()
     m_Paddle2.update();
     m_Ball.update();
 
-    // m_Paddle1.target(m_Ball.y);
-    // m_Paddle2.target(m_Ball.y);
-    setTargetX(m_Paddle1);
-    setTargetX(m_Paddle2);
+    addKeys();
+    updatePaddles();
 
     // m_Ball.checkCollide(m_Paddle1);
     if (checkCollide(m_Paddle1))
@@ -85,6 +88,18 @@ void Effect_Pong::render(const char* panelName)
     if (ImGui::Begin(panelName))
     {
         ImGui::PushItemWidth(-1);
+
+        ImGui::Text("AI");
+        ImGui::Checkbox("##AI", &m_AI);
+
+        if (!m_AI)
+        {
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
+            ImGui::TextUnformatted("Use wasd for left paddle");
+            ImGui::TextUnformatted("Use arrow keys for right paddle\n");
+
+            ImGui::PopTextWrapPos();
+        }
 
         ImGui::Text("Animate Hue");
         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
@@ -165,10 +180,6 @@ void Effect_Pong::setTargetX(Paddle& paddle)
     float velY = m_Ball.velY;
     float r = m_Ball.r;
 
-    // while (x - r >= paddle.x && 
-    //        x - r >= paddle.x + paddle.w && 
-    //        x + r <= paddle.x &&
-    //        x + r <= paddle.x + paddle.w)
     while (true)
     {
         x += velX;
@@ -198,6 +209,67 @@ void Effect_Pong::setTargetX(Paddle& paddle)
     }
 
     paddle.target(y - paddle.h / 2.0f);
+}
+
+void Effect_Pong::addKeys()
+{
+    if (m_AI)
+        return;
+
+    if (KRE::Keyboard::getKey(GLFW_KEY_W))
+    {
+        m_PaddleL.push(PaddleDir::UP);
+        m_MovingL = true;
+    }
+    else if (KRE::Keyboard::getKey(GLFW_KEY_S))
+    {
+        m_PaddleL.push(PaddleDir::DOWN);
+        m_MovingL = true;
+    }
+    else if (m_MovingL)
+    {
+        m_PaddleL.push(PaddleDir::NONE);
+        m_MovingL = false;
+    }
+
+    if (KRE::Keyboard::getKey(GLFW_KEY_UP))
+    {
+        m_PaddleR.push(PaddleDir::UP);
+        m_MovingR = true;
+    }
+    else if (KRE::Keyboard::getKey(GLFW_KEY_DOWN))
+    {
+        m_PaddleR.push(PaddleDir::DOWN);
+        m_MovingR = true;
+    }
+    else if (m_MovingR)
+    {
+        m_PaddleR.push(PaddleDir::NONE);
+        m_MovingR = false;
+    }
+}
+
+void Effect_Pong::updatePaddles()
+{
+    if (m_AI)
+    {
+        setTargetX(m_Paddle1);
+        setTargetX(m_Paddle2);
+    }
+    else
+    {
+        if (m_PaddleL.size() > 0)
+        {
+            m_Paddle1.move(m_PaddleL.front());
+            m_PaddleL.pop();
+        }
+
+        if (m_PaddleR.size() > 0)
+        {
+            m_Paddle2.move(m_PaddleR.front());
+            m_PaddleR.pop();
+        }
+    }
 }
 
 bool Effect_Pong::checkCollide(Paddle& paddle)
@@ -262,11 +334,27 @@ void Paddle::target(float targetY)
         velY = s_MaxSpeed;
 }
 
-Ball::Ball(float x, float y, float r)
-    : x(x), y(y), r(r)
+void Paddle::move(PaddleDir dir)
 {
-    velX = s_MaxSpeed;
-    velY = s_MaxSpeed;
+    switch (dir)
+    {
+    case PaddleDir::UP:
+        velY = -s_MaxSpeed;
+        break;
+    case PaddleDir::DOWN:
+        velY = s_MaxSpeed;
+        break;
+    case PaddleDir::NONE:
+        velY = 0;
+        break;
+    }
+}
+
+Ball::Ball(float x, float y, float r)
+    : x(x), y(y), r(r), initialX(x), initialY(y)
+{
+    velX = mapValue(randomValue(), 0.0f, 1.0f, 0.5f, 1.0f) * s_MaxSpeed;
+    velY = mapValue(randomValue(), 0.0f, 1.0f, 0.5f, 1.0f) * s_MaxSpeed;
 }
 
 void Ball::render(cHSV colour, LEDMatrix* matrix)
@@ -297,7 +385,7 @@ void Ball::update()
     x += velX;
 
     if (x <= r || x >= s_LimitX - r - 1)
-        velX *= -1;
+        reset();
     x = std::max(r, std::min(s_LimitX - r - 1, x));
 
     y += velY;
@@ -305,4 +393,13 @@ void Ball::update()
     if (y <= r || y >= s_LimitY - r - 1)
         velY *= -1;
     y = std::max(r, std::min(s_LimitY - r - 1, y));
+}
+
+void Ball::reset()
+{
+    x = initialX;
+    y = initialY;
+
+    velX = mapValue(randomValue(), 0.0f, 1.0f, 0.5f, 1.0f) * s_MaxSpeed;
+    velY = mapValue(randomValue(), 0.0f, 1.0f, 0.5f, 1.0f) * s_MaxSpeed;
 }

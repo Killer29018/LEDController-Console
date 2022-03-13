@@ -108,8 +108,8 @@ void Effect_Snake::render(const char* panelName)
 
         if (!m_AI)
         {
-            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-            ImGui::TextUnformatted("Use either arrow keys or wasd for moveing the snake");
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
+            ImGui::TextUnformatted("Use either arrow keys or wasd for moving the snake\n");
 
             ImGui::PopTextWrapPos();
         }
@@ -196,69 +196,69 @@ void Effect_Snake::addKeys()
 {
     if (KRE::Keyboard::getKey(GLFW_KEY_W) || KRE::Keyboard::getKey(GLFW_KEY_UP))
     {
-        if (!m_ProcessedKeys[Dir::UP])
+        if (!m_ProcessedKeys[SnakeDir::UP])
         {
-            m_PressedKeys.push(Dir::UP);
-            m_ProcessedKeys[Dir::UP] = true;
+            m_PressedKeys.push(SnakeDir::UP);
+            m_ProcessedKeys[SnakeDir::UP] = true;
         }
     }
     else
     {
-        m_ProcessedKeys[Dir::UP] = false;
+        m_ProcessedKeys[SnakeDir::UP] = false;
     }
 
     if (KRE::Keyboard::getKey(GLFW_KEY_A) || KRE::Keyboard::getKey(GLFW_KEY_LEFT))
     {
-        if (!m_ProcessedKeys[Dir::LEFT])
+        if (!m_ProcessedKeys[SnakeDir::LEFT])
         {
-            m_PressedKeys.push(Dir::LEFT);
-            m_ProcessedKeys[Dir::LEFT] = true;
+            m_PressedKeys.push(SnakeDir::LEFT);
+            m_ProcessedKeys[SnakeDir::LEFT] = true;
         }
     }
     else
     {
-        m_ProcessedKeys[Dir::LEFT] = false;
+        m_ProcessedKeys[SnakeDir::LEFT] = false;
     }
 
     if (KRE::Keyboard::getKey(GLFW_KEY_S) || KRE::Keyboard::getKey(GLFW_KEY_DOWN))
     {
-        if (!m_ProcessedKeys[Dir::DOWN])
+        if (!m_ProcessedKeys[SnakeDir::DOWN])
         {
-            m_PressedKeys.push(Dir::DOWN);
-            m_ProcessedKeys[Dir::DOWN] = true;
+            m_PressedKeys.push(SnakeDir::DOWN);
+            m_ProcessedKeys[SnakeDir::DOWN] = true;
         }
     }
     else
     {
-        m_ProcessedKeys[Dir::DOWN] = false;
+        m_ProcessedKeys[SnakeDir::DOWN] = false;
     }
 
     if (KRE::Keyboard::getKey(GLFW_KEY_D) || KRE::Keyboard::getKey(GLFW_KEY_RIGHT))
     {
-        if (!m_ProcessedKeys[Dir::RIGHT])
+        if (!m_ProcessedKeys[SnakeDir::RIGHT])
         {
-            m_PressedKeys.push(Dir::RIGHT);
-            m_ProcessedKeys[Dir::RIGHT] = true;
+            m_PressedKeys.push(SnakeDir::RIGHT);
+            m_ProcessedKeys[SnakeDir::RIGHT] = true;
         }
     }
     else
     {
-        m_ProcessedKeys[Dir::RIGHT] = false;
+        m_ProcessedKeys[SnakeDir::RIGHT] = false;
     }
 }
 
-Dir Effect_Snake::getNextSnakeDirection()
+SnakeDir Effect_Snake::getNextSnakeDirection()
 {
     if (!m_AI)
     {
         if (m_PressedKeys.size() > 0)
         {
-            Dir dir = m_PressedKeys.front();
+            SnakeDir dir = m_PressedKeys.front();
             m_PressedKeys.pop();
             return dir;
         }
 
-        return Dir::NONE;
+        return SnakeDir::NONE;
     }
     else
     {
@@ -305,7 +305,7 @@ Dir Effect_Snake::getNextSnakeDirection()
         bool canGoDown = !checkCollision({ x, y + 1 });
         bool canGoUp = !checkCollision({ x, y - 1 });
 
-        Dir bestDir;
+        SnakeDir bestDir;
         int bestDist = -1;
 
         if (canGoRight)
@@ -313,7 +313,7 @@ Dir Effect_Snake::getNextSnakeDirection()
             int dist = pathDistance(pathNumber, getPathIndex({ x + 1, y }));
             if (dist <= cuttingAmountAvail && dist > bestDist)
             {
-                bestDir = Dir::RIGHT;
+                bestDir = SnakeDir::RIGHT;
                 bestDist = dist;
             }
         }
@@ -322,7 +322,7 @@ Dir Effect_Snake::getNextSnakeDirection()
             int dist = pathDistance(pathNumber, getPathIndex({ x - 1, y }));
             if (dist <= cuttingAmountAvail && dist > bestDist)
             {
-                bestDir = Dir::LEFT;
+                bestDir = SnakeDir::LEFT;
                 bestDist = dist;
             }
         }
@@ -331,7 +331,7 @@ Dir Effect_Snake::getNextSnakeDirection()
             int dist = pathDistance(pathNumber, getPathIndex({ x, y + 1 }));
             if (dist <= cuttingAmountAvail && dist > bestDist)
             {
-                bestDir = Dir::DOWN;
+                bestDir = SnakeDir::DOWN;
                 bestDist = dist;
             }
         }
@@ -340,7 +340,7 @@ Dir Effect_Snake::getNextSnakeDirection()
             int dist = pathDistance(pathNumber, getPathIndex({ x, y - 1 }));
             if (dist <= cuttingAmountAvail && dist > bestDist)
             {
-                bestDir = Dir::UP;
+                bestDir = SnakeDir::UP;
                 bestDist = dist;
             }
         }
@@ -349,15 +349,15 @@ Dir Effect_Snake::getNextSnakeDirection()
             return bestDir;
 
         if (canGoUp)
-            return Dir::UP;
+            return SnakeDir::UP;
         if (canGoLeft)
-            return Dir::LEFT;
+            return SnakeDir::LEFT;
         if (canGoDown)
-            return Dir::DOWN;
+            return SnakeDir::DOWN;
         if (canGoUp)
-            return Dir::UP;
+            return SnakeDir::UP;
 
-        return Dir::NONE;
+        return SnakeDir::NONE;
     }
 }
 
@@ -505,7 +505,7 @@ void Effect_Snake::generatePath()
     Pos pos = Pos(0, 0);
     Pos initialPos = pos;
     Pos mazePos;
-    Dir dir = Dir::LEFT;
+    SnakeDir dir = SnakeDir::LEFT;
 
     m_Path.resize(m_MazeW * m_MazeH * 4);
     m_PathValues.resize(m_MazeW * m_MazeH * 4);
@@ -525,23 +525,23 @@ void Effect_Snake::generatePath()
         {
             switch(dir)
             {
-                case Dir::LEFT:
+                case SnakeDir::LEFT:
                     if ((pos.x + 1) % 2 == 0)
-                        dir = Dir::UP;
+                        dir = SnakeDir::UP;
                     break;
-                case Dir::DOWN:
+                case SnakeDir::DOWN:
                     if ((pos.y + 1) % 2 == 1)
-                        dir = Dir::LEFT;
+                        dir = SnakeDir::LEFT;
                     break;
-                case Dir::RIGHT:
+                case SnakeDir::RIGHT:
                     if ((pos.x + 1) % 2 == 1)
-                        dir = Dir::DOWN;
+                        dir = SnakeDir::DOWN;
                     break;
-                case Dir::UP:
+                case SnakeDir::UP:
                     if ((pos.y + 1) % 2 == 0)
-                        dir = Dir::RIGHT;
+                        dir = SnakeDir::RIGHT;
                     break;
-                case Dir::NONE:
+                case SnakeDir::NONE:
                     break;
             }
         }
@@ -549,23 +549,23 @@ void Effect_Snake::generatePath()
         {
             switch(dir)
             {
-                case Dir::LEFT:
+                case SnakeDir::LEFT:
                     if ((pos.x + 1) % 2 == 1)
-                        dir = Dir::DOWN;
+                        dir = SnakeDir::DOWN;
                     break;
-                case Dir::DOWN:
+                case SnakeDir::DOWN:
                     if ((pos.y + 1) % 2 == 0)
-                        dir = Dir::RIGHT;
+                        dir = SnakeDir::RIGHT;
                     break;
-                case Dir::RIGHT:
+                case SnakeDir::RIGHT:
                     if ((pos.x + 1) % 2 == 0)
-                        dir = Dir::UP;
+                        dir = SnakeDir::UP;
                     break;
-                case Dir::UP:
+                case SnakeDir::UP:
                     if ((pos.y + 1) % 2 == 1)
-                        dir = Dir::LEFT;
+                        dir = SnakeDir::LEFT;
                     break;
-                case Dir::NONE:
+                case SnakeDir::NONE:
                     break;
             }
         }
@@ -612,34 +612,34 @@ Pos Effect_Snake::getMazeIndex(Pos pos)
     return returnPos;
 }
 
-void Effect_Snake::advanceDir(Pos& pos, Dir dir)
+void Effect_Snake::advanceDir(Pos& pos, SnakeDir dir)
 {
     switch (dir)
     {
-    case Dir::UP:
+    case SnakeDir::UP:
         pos.y -= 1; break;
-    case Dir::LEFT:
+    case SnakeDir::LEFT:
         pos.x -= 1; break;
-    case Dir::DOWN:
+    case SnakeDir::DOWN:
         pos.y += 1; break;
-    case Dir::RIGHT:
+    case SnakeDir::RIGHT:
         pos.x += 1; break;
-    case Dir::NONE:
+    case SnakeDir::NONE:
         break;
     }
 }
 
-bool Effect_Snake::getWallRight(Dir dir, Cell& cell)
+bool Effect_Snake::getWallRight(SnakeDir dir, Cell& cell)
 {
     switch (dir)
     {
-    case Dir::UP:
+    case SnakeDir::UP:
         return cell.right;
-    case Dir::LEFT:
+    case SnakeDir::LEFT:
         return cell.up;
-    case Dir::DOWN:
+    case SnakeDir::DOWN:
         return cell.left;
-    case Dir::RIGHT:
+    case SnakeDir::RIGHT:
         return cell.down;
 
     default:
@@ -647,17 +647,17 @@ bool Effect_Snake::getWallRight(Dir dir, Cell& cell)
     }
 }
 
-bool Effect_Snake::getWallFront(Dir dir, Cell& cell)
+bool Effect_Snake::getWallFront(SnakeDir dir, Cell& cell)
 {
     switch (dir)
     {
-    case Dir::UP:
+    case SnakeDir::UP:
         return cell.up;
-    case Dir::LEFT:
+    case SnakeDir::LEFT:
         return cell.left;
-    case Dir::DOWN:
+    case SnakeDir::DOWN:
         return cell.down;
-    case Dir::RIGHT:
+    case SnakeDir::RIGHT:
         return cell.right;
 
     default:
@@ -703,40 +703,40 @@ void SnakeBody::update()
         growthAmount--;
 }
 
-void SnakeBody::changeDir(Dir dir)
+void SnakeBody::changeDir(SnakeDir dir)
 {
     currentDir = dir;
     switch (dir)
     {
-    case Dir::UP:
+    case SnakeDir::UP:
         if (yDir != 1)
         {
             yDir = -1;
             xDir = 0;
         }
         break;
-    case Dir::DOWN:
+    case SnakeDir::DOWN:
         if (yDir != -1)
         {
             yDir = 1;
             xDir = 0;
         }
         break;
-    case Dir::LEFT:
+    case SnakeDir::LEFT:
         if (xDir != 1)
         {
             xDir = -1;
             yDir = 0;
         }
         break;
-    case Dir::RIGHT:
+    case SnakeDir::RIGHT:
         if (xDir != -1)
         {
             xDir = 1;
             yDir = 0;
         }
         break;
-    case Dir::NONE:
+    case SnakeDir::NONE:
         break;
     }
 }
