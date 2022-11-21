@@ -2,7 +2,12 @@
 
 #include "System/FreeType.hpp"
 
+#include <chrono>
+#include <thread>
+#include <iostream>
+
 uint8_t Application::updateFPS = 60;
+bool Application::m_CloseWindow = false;
 
 // Window Application::m_Window;
 Socket Application::m_Socket;
@@ -45,18 +50,15 @@ void Application::init(const char* name, glm::vec2 windowSize, const char* ip, u
 void Application::start()
 {
     static float deltaTotal = 0;
+    static auto previous = std::chrono::high_resolution_clock::now();
 
-    while (true)
-    // while (!glfwWindowShouldClose(m_Window.window))
+    while (!m_CloseWindow)
     {
-        // KRE::Clock::tick();
+        auto current = std::chrono::high_resolution_clock::now();
+        double dt = std::chrono::duration<double, std::milli>(current-previous).count();
+        previous = current;
 
-        // ImGuiManager::preRender();
         // ImGuiManager::render();
-        // ImGuiManager::postRender();
-
-        // glfwSwapBuffers(m_Window.window);
-        // glfwPollEvents();
 
         if (deltaTotal >= (1/(float)updateFPS))
         {
@@ -65,8 +67,9 @@ void Application::start()
             deltaTotal = 0;
         }
 
-        // deltaTotal += KRE::Clock::deltaTime;
-        deltaTotal += 0.1f;
+        std::cout << dt << "\n";
+
+        deltaTotal += (float)dt;
     }
 }
 

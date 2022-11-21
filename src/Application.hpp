@@ -17,6 +17,7 @@
 class Application
 {
 public:
+    static bool m_CloseWindow;
     static uint8_t updateFPS;
 
     // static Window m_Window;
