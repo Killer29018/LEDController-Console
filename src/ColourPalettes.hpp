@@ -1,7 +1,7 @@
 #ifndef COLOUR_PALETTES_HPP
 #define COLOUR_PALETTES_HPP
 
-#include "Panels/Logger.hpp"
+#include "Utils/Logger.hpp"
 #include "Colour.hpp"
 
 #include <cassert>

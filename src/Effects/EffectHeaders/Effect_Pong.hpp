@@ -93,11 +93,11 @@ public:
     ~Effect_Pong();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     void setTargetX(Paddle& paddle);
 
-    void addKeys();
+    // void addKeys();
     void updatePaddles();
 
     bool checkCollide(Paddle& paddle);

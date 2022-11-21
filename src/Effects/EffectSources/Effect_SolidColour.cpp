@@ -10,11 +10,11 @@ void Effect_SolidColour::update()
     m_Matrix->fillSolid(m_PrimaryColour);
 }
 
-void Effect_SolidColour::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-    }
-    ImGui::End();
-}
+// void Effect_SolidColour::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//     }
+//     ImGui::End();
+// }
 

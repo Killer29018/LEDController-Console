@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <algorithm>
+#include <cstring>
+#include <cstring>
 
 LEDController::LEDController()
     : m_CurrentPalette(Palettes::DEFAULT)

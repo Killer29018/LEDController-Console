@@ -27,7 +27,7 @@ public:
     ~Effect_Metaballs();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     void createBlobs();
     void updateBlobs();

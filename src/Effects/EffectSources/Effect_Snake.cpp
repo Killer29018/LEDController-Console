@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "KRE/System/Keyboard.hpp"
+// #include "KRE/System/Keyboard.hpp"
 #include "GLFW/glfw3.h"
 
 Effect_Snake::Effect_Snake(LEDMatrix* matrix)
@@ -76,7 +76,7 @@ void Effect_Snake::update()
 
     checkReset();
 
-    addKeys();
+    // addKeys();
 
     m_SnakeCurrentCount++;
     if (m_SnakeCurrentCount >= m_SnakeMaxCount)
@@ -96,55 +96,55 @@ void Effect_Snake::update()
     }
 }
 
-void Effect_Snake::render(const char* panelName)
-{
-    int min, max;
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_Snake::render(const char* panelName)
+// {
+//     int min, max;
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("AI");
-        ImGui::Checkbox("##AI", &m_AI);
+//         ImGui::Text("AI");
+//         ImGui::Checkbox("##AI", &m_AI);
 
-        if (!m_AI)
-        {
-            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
-            ImGui::TextUnformatted("Use either arrow keys or wasd for moving the snake\n");
+//         if (!m_AI)
+//         {
+//             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
+//             ImGui::TextUnformatted("Use either arrow keys or wasd for moving the snake\n");
 
-            ImGui::PopTextWrapPos();
-        }
+//             ImGui::PopTextWrapPos();
+//         }
 
-        ImGui::Text("Animate Hue");
-        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         ImGui::Text("Animate Hue");
+//         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
-        }
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
+//         }
 
-        ImGui::Text("Apple Growth Amount");
-        min = 1;
-        max = 10;
-        ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
+//         ImGui::Text("Apple Growth Amount");
+//         min = 1;
+//         max = 10;
+//         ImGui::SliderScalar("##Apple", ImGuiDataType_U8, &m_AppleGrowthAmount, &min, &max, "%u");
         
-        ImGui::Text("Snake Update Speed");
-        min = 0;
-        max = 255;
-        int value = max - m_SnakeMaxCount;
-        ImGui::SliderScalar("##SnakeUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-        m_SnakeMaxCount = max - value;
+//         ImGui::Text("Snake Update Speed");
+//         min = 0;
+//         max = 255;
+//         int value = max - m_SnakeMaxCount;
+//         ImGui::SliderScalar("##SnakeUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//         m_SnakeMaxCount = max - value;
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }
 
 void Effect_Snake::resetCells()
 {
@@ -192,60 +192,60 @@ void Effect_Snake::reset()
     generateMaze();
 }
 
-void Effect_Snake::addKeys()
-{
-    if (KRE::Keyboard::getKey(GLFW_KEY_W) || KRE::Keyboard::getKey(GLFW_KEY_UP))
-    {
-        if (!m_ProcessedKeys[SnakeDir::UP])
-        {
-            m_PressedKeys.push(SnakeDir::UP);
-            m_ProcessedKeys[SnakeDir::UP] = true;
-        }
-    }
-    else
-    {
-        m_ProcessedKeys[SnakeDir::UP] = false;
-    }
+// void Effect_Snake::addKeys()
+// {
+//     if (KRE::Keyboard::getKey(GLFW_KEY_W) || KRE::Keyboard::getKey(GLFW_KEY_UP))
+//     {
+//         if (!m_ProcessedKeys[SnakeDir::UP])
+//         {
+//             m_PressedKeys.push(SnakeDir::UP);
+//             m_ProcessedKeys[SnakeDir::UP] = true;
+//         }
+//     }
+//     else
+//     {
+//         m_ProcessedKeys[SnakeDir::UP] = false;
+//     }
 
-    if (KRE::Keyboard::getKey(GLFW_KEY_A) || KRE::Keyboard::getKey(GLFW_KEY_LEFT))
-    {
-        if (!m_ProcessedKeys[SnakeDir::LEFT])
-        {
-            m_PressedKeys.push(SnakeDir::LEFT);
-            m_ProcessedKeys[SnakeDir::LEFT] = true;
-        }
-    }
-    else
-    {
-        m_ProcessedKeys[SnakeDir::LEFT] = false;
-    }
+//     if (KRE::Keyboard::getKey(GLFW_KEY_A) || KRE::Keyboard::getKey(GLFW_KEY_LEFT))
+//     {
+//         if (!m_ProcessedKeys[SnakeDir::LEFT])
+//         {
+//             m_PressedKeys.push(SnakeDir::LEFT);
+//             m_ProcessedKeys[SnakeDir::LEFT] = true;
+//         }
+//     }
+//     else
+//     {
+//         m_ProcessedKeys[SnakeDir::LEFT] = false;
+//     }
 
-    if (KRE::Keyboard::getKey(GLFW_KEY_S) || KRE::Keyboard::getKey(GLFW_KEY_DOWN))
-    {
-        if (!m_ProcessedKeys[SnakeDir::DOWN])
-        {
-            m_PressedKeys.push(SnakeDir::DOWN);
-            m_ProcessedKeys[SnakeDir::DOWN] = true;
-        }
-    }
-    else
-    {
-        m_ProcessedKeys[SnakeDir::DOWN] = false;
-    }
+//     if (KRE::Keyboard::getKey(GLFW_KEY_S) || KRE::Keyboard::getKey(GLFW_KEY_DOWN))
+//     {
+//         if (!m_ProcessedKeys[SnakeDir::DOWN])
+//         {
+//             m_PressedKeys.push(SnakeDir::DOWN);
+//             m_ProcessedKeys[SnakeDir::DOWN] = true;
+//         }
+//     }
+//     else
+//     {
+//         m_ProcessedKeys[SnakeDir::DOWN] = false;
+//     }
 
-    if (KRE::Keyboard::getKey(GLFW_KEY_D) || KRE::Keyboard::getKey(GLFW_KEY_RIGHT))
-    {
-        if (!m_ProcessedKeys[SnakeDir::RIGHT])
-        {
-            m_PressedKeys.push(SnakeDir::RIGHT);
-            m_ProcessedKeys[SnakeDir::RIGHT] = true;
-        }
-    }
-    else
-    {
-        m_ProcessedKeys[SnakeDir::RIGHT] = false;
-    }
-}
+//     if (KRE::Keyboard::getKey(GLFW_KEY_D) || KRE::Keyboard::getKey(GLFW_KEY_RIGHT))
+//     {
+//         if (!m_ProcessedKeys[SnakeDir::RIGHT])
+//         {
+//             m_PressedKeys.push(SnakeDir::RIGHT);
+//             m_ProcessedKeys[SnakeDir::RIGHT] = true;
+//         }
+//     }
+//     else
+//     {
+//         m_ProcessedKeys[SnakeDir::RIGHT] = false;
+//     }
+// }
 
 SnakeDir Effect_Snake::getNextSnakeDirection()
 {

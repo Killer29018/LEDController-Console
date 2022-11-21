@@ -1,6 +1,6 @@
 #include "FreeType.hpp"
 
-#include "../Panels/Logger.hpp"
+#include "../Utils/Logger.hpp"
 
 #include <filesystem>
 

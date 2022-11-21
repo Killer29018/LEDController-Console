@@ -24,7 +24,7 @@ public:
     ~Effect_Fire();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     uint8_t getValue(uint32_t x, uint32_t y);
     uint32_t getIndex(uint32_t x, uint32_t y);

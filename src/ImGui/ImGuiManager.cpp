@@ -1,3 +1,4 @@
+#ifdef FALSE
 #include "ImGuiManager.hpp"
 
 ImGuiIO* ImGuiManager::io;
@@ -186,3 +187,4 @@ void ImGuiManager::setupStyle()
 	style->TabRounding = 0.0f;
 	style->WindowRounding = 4.0f;   // style.Colors[ImGuiCol_ModalWindowDarkening]  = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 }
+#endif

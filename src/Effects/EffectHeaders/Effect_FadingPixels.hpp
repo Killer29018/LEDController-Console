@@ -21,7 +21,7 @@ public:
     ~Effect_FadingPixels();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     void setRandomPixels();
     void decayPixels();

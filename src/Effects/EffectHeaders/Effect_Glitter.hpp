@@ -15,7 +15,7 @@ public:
     ~Effect_Glitter();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 };
 
 #endif

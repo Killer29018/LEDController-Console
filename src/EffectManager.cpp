@@ -1,8 +1,6 @@
 #include "EffectManager.hpp"
 
-#include "Panels/Logger.hpp"
-
-#include "KRE/KRE.hpp"
+#include "Utils/Logger.hpp"
 
 EffectManager::~EffectManager()
 {
@@ -46,107 +44,108 @@ void EffectManager::setEffect(EffectEnum effect)
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s", EffectName[static_cast<int>(effect)]);
 }
 
-void EffectManager::renderImGui()
-{
-    if (ImGui::Begin("Effects"))
-    {
-        ImGui::PushItemWidth(-1);
+// void EffectManager::renderImGui()
+// {
+//     if (ImGui::Begin("Effects"))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        { // Colour Palette Combo
-            uint32_t currentPaletteEnum = m_Matrix->getPalette();
-            const char* currentPalette = Palettes::PaletteNames.at(currentPaletteEnum);
+//         { // Colour Palette Combo
+//             uint32_t currentPaletteEnum = m_Matrix->getPalette();
+//             const char* currentPalette = Palettes::PaletteNames.at(currentPaletteEnum);
 
-            ImGui::Text("Current Palette:");
-            if (ImGui::BeginCombo("##Colour Palette", currentPalette, ImGuiComboFlags_HeightLarge))
-            {
-                for (uint32_t n = 0; n < Palettes::PaletteNames.size(); n++)
-                {
-                    const bool isSelected = (currentPaletteEnum == n);
-                    if (ImGui::Selectable(Palettes::PaletteNames.at(n), isSelected))
-                    {
-                        m_Matrix->setPalette((Palettes::PaletteEnum)n);
-                        Logger::log(LoggerType::LOG_INFO, "Changed Palette to %s", Palettes::PaletteNames.at(n));
-                    }
+//             ImGui::Text("Current Palette:");
+//             if (ImGui::BeginCombo("##Colour Palette", currentPalette, ImGuiComboFlags_HeightLarge))
+//             {
+//                 for (uint32_t n = 0; n < Palettes::PaletteNames.size(); n++)
+//                 {
+//                     const bool isSelected = (currentPaletteEnum == n);
+//                     if (ImGui::Selectable(Palettes::PaletteNames.at(n), isSelected))
+//                     {
+//                         m_Matrix->setPalette((Palettes::PaletteEnum)n);
+//                         Logger::log(LoggerType::LOG_INFO, "Changed Palette to %s", Palettes::PaletteNames.at(n));
+//                     }
 
-                    if (isSelected)
-                        ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
-        }
+//                     if (isSelected)
+//                         ImGui::SetItemDefaultFocus();
+//                 }
+//                 ImGui::EndCombo();
+//             }
+//         }
 
-        { // Effect Combo
-            uint32_t intEnum = static_cast<int>(m_CurrentEnum);
-            const char* currentItem = EffectName.at(intEnum);
+//         { // Effect Combo
+//             uint32_t intEnum = static_cast<int>(m_CurrentEnum);
+//             const char* currentItem = EffectName.at(intEnum);
 
-            ImGui::Text("Current Effect:");
-            if (ImGui::BeginCombo("##EffectCombo", currentItem, ImGuiComboFlags_HeightLarge))
-            {
-                for (uint32_t n = 0; n < EffectName.size(); n++)
-                {
-                    const bool isSelected = (intEnum == n);
-                    if (ImGui::Selectable(EffectName.at(n), isSelected))
-                    {
-                        m_CurrentEnum = static_cast<EffectEnum>(n);
-                        setEffect(m_CurrentEnum);
-                    }
+//             ImGui::Text("Current Effect:");
+//             if (ImGui::BeginCombo("##EffectCombo", currentItem, ImGuiComboFlags_HeightLarge))
+//             {
+//                 for (uint32_t n = 0; n < EffectName.size(); n++)
+//                 {
+//                     const bool isSelected = (intEnum == n);
+//                     if (ImGui::Selectable(EffectName.at(n), isSelected))
+//                     {
+//                         m_CurrentEnum = static_cast<EffectEnum>(n);
+//                         setEffect(m_CurrentEnum);
+//                     }
 
-                    if (isSelected)
-                        ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
-        }
+//                     if (isSelected)
+//                         ImGui::SetItemDefaultFocus();
+//                 }
+//                 ImGui::EndCombo();
+//             }
+//         }
 
 
-        // Effect Speed
-        ImGui::Text("Speed");
-        uint16_t fps = m_CurrentEffect->getFPS();
-        int min = 0, max = 100;
-        ImGui::SliderScalar("##EFFECT_FPS", ImGuiDataType_U16, &fps, &min, &max, "%u");
-        m_CurrentEffect->setFPS(fps);
+//         // Effect Speed
+//         ImGui::Text("Speed");
+//         uint16_t fps = m_CurrentEffect->getFPS();
+//         int min = 0, max = 100;
+//         ImGui::SliderScalar("##EFFECT_FPS", ImGuiDataType_U16, &fps, &min, &max, "%u");
+//         m_CurrentEffect->setFPS(fps);
 
-        { // Colour
-            ImGui::Text("Primary Colour");
-            cHSV primaryColour = m_CurrentEffect->getPrimaryColour();
-            uint8_t paletteHue = getHueFromPalette(m_Matrix->getPalette(), primaryColour.h);
-            cRGB paletteColour = cHSV(paletteHue, primaryColour.s, primaryColour.v);
+//         { // Colour
+//             ImGui::Text("Primary Colour");
+//             cHSV primaryColour = m_CurrentEffect->getPrimaryColour();
+//             uint8_t paletteHue = getHueFromPalette(m_Matrix->getPalette(), primaryColour.h);
+//             cRGB paletteColour = cHSV(paletteHue, primaryColour.s, primaryColour.v);
 
-            ImVec4 imHSVColour = ImVec4(primaryColour.h / 255.0f, primaryColour.s / 255.0f, primaryColour.v / 255.0f, 0.0f);
-            ImVec4 imPaletteColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
+//             ImVec4 imHSVColour = ImVec4(primaryColour.h / 255.0f, primaryColour.s / 255.0f, primaryColour.v / 255.0f, 0.0f);
+//             ImVec4 imPaletteColour = ImVec4(paletteColour.r / 255.0f, paletteColour.g / 255.0f, paletteColour.b / 255.0f, 0.0f);
 
-            ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
+//             ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview;
 
-            float width = ImGui::GetContentRegionAvail().x;
-            width = std::min(80.0f, width);
-            ImGui::ColorButton("##ColourDisplay", imPaletteColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip, ImVec2(width, width));
+//             float width = ImGui::GetContentRegionAvail().x;
+//             width = std::min(80.0f, width);
+//             ImGui::ColorButton("##ColourDisplay", imPaletteColour, ImGuiColorEditFlags_NoBorder | ImGuiColorEditFlags_NoTooltip, ImVec2(width, width));
 
-            ImGui::ColorEdit3("##HSVPicker", (float*)&imHSVColour, flags | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV);
+//             ImGui::ColorEdit3("##HSVPicker", (float*)&imHSVColour, flags | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_DisplayHSV);
 
-            primaryColour.h = imHSVColour.x * 255;
-            primaryColour.s = imHSVColour.y * 255;
-            primaryColour.v = imHSVColour.z * 255;
+//             primaryColour.h = imHSVColour.x * 255;
+//             primaryColour.s = imHSVColour.y * 255;
+//             primaryColour.v = imHSVColour.z * 255;
 
-            m_CurrentEffect->setPrimaryColour(primaryColour);
-        }
+//             m_CurrentEffect->setPrimaryColour(primaryColour);
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
 
-    if (ImGui::Begin(m_EffectSettings))
-    {
-    }
-    ImGui::End();
+//     if (ImGui::Begin(m_EffectSettings))
+//     {
+//     }
+//     ImGui::End();
 
-    updateEffect();
-}
+//     updateEffect();
+// }
 
 void EffectManager::updateEffect()
 {
     if (!m_CurrentEffect) return;
 
-    m_DeltaTotal += KRE::Clock::deltaTime;
+    // m_DeltaTotal += KRE::Clock::deltaTime;
+    m_DeltaTotal += 0.1f;
 
     if (m_DeltaTotal >= (1.0 / (float)m_CurrentEffect->getFPS()))
     {
@@ -154,5 +153,5 @@ void EffectManager::updateEffect()
         m_DeltaTotal = 0.0f;
     }
 
-    m_CurrentEffect->render("Effect Settings");
+    // m_CurrentEffect->render("Effect Settings");
 }

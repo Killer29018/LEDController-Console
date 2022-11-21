@@ -3,7 +3,7 @@
 #include <cmath>
 #include "../../Utils/Helper.hpp"
 
-#include "KRE/System/Keyboard.hpp"
+// #include "KRE/System/Keyboard.hpp"
 #include "GLFW/glfw3.h"
 
 float Paddle::s_LimitY = 0;
@@ -71,7 +71,7 @@ void Effect_Pong::update()
     m_Paddle2.update();
     m_Ball.update();
 
-    addKeys();
+    // addKeys();
     updatePaddles();
 
     // m_Ball.checkCollide(m_Paddle1);
@@ -81,95 +81,95 @@ void Effect_Pong::update()
         m_Ball.velX *= -1;
 }
 
-void Effect_Pong::render(const char* panelName)
-{
-    int min, max, v;
-    float minF, maxF, vF;
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_Pong::render(const char* panelName)
+// {
+//     int min, max, v;
+//     float minF, maxF, vF;
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("AI");
-        ImGui::Checkbox("##AI", &m_AI);
+//         ImGui::Text("AI");
+//         ImGui::Checkbox("##AI", &m_AI);
 
-        if (!m_AI)
-        {
-            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
-            ImGui::TextUnformatted("Use wasd for left paddle");
-            ImGui::TextUnformatted("Use arrow keys for right paddle\n");
+//         if (!m_AI)
+//         {
+//             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 10.0f);
+//             ImGui::TextUnformatted("Use wasd for left paddle");
+//             ImGui::TextUnformatted("Use arrow keys for right paddle\n");
 
-            ImGui::PopTextWrapPos();
-        }
+//             ImGui::PopTextWrapPos();
+//         }
 
-        ImGui::Text("Animate Hue");
-        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
-        int min, max;
+//         ImGui::Text("Animate Hue");
+//         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+//         int min, max;
 
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
-        }
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
+//         }
 
-        if (ImGui::TreeNode("Paddle"))
-        {
-            min = 1;
-            max = m_Matrix->getColumns() / 2.0f - 1;
+//         if (ImGui::TreeNode("Paddle"))
+//         {
+//             min = 1;
+//             max = m_Matrix->getColumns() / 2.0f - 1;
 
-            ImGui::Text("Width: ");
-            v = m_Paddle1.w;
-            ImGui::SliderScalar("##PaddleW", ImGuiDataType_U32, &v, &min, &max, "%i");
-            m_Paddle1.setWidth(v); m_Paddle2.setWidth(v);
+//             ImGui::Text("Width: ");
+//             v = m_Paddle1.w;
+//             ImGui::SliderScalar("##PaddleW", ImGuiDataType_U32, &v, &min, &max, "%i");
+//             m_Paddle1.setWidth(v); m_Paddle2.setWidth(v);
 
-            min = 1;
-            max = m_Matrix->getRows();
-            v = m_Paddle1.h;
-            ImGui::SliderScalar("##PaddleH", ImGuiDataType_U32, &v, &min, &max, "%i");
-            m_Paddle1.setHeight(v); m_Paddle2.setHeight(v);
+//             min = 1;
+//             max = m_Matrix->getRows();
+//             v = m_Paddle1.h;
+//             ImGui::SliderScalar("##PaddleH", ImGuiDataType_U32, &v, &min, &max, "%i");
+//             m_Paddle1.setHeight(v); m_Paddle2.setHeight(v);
 
-            ImGui::Text("Speed");
-            minF = 0.01f;
-            maxF = 1.0f;
-            vF = Paddle::s_MaxSpeed;
-            ImGui::SliderScalar("##PaddleSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
-            Paddle::s_MaxSpeed = vF;
+//             ImGui::Text("Speed");
+//             minF = 0.01f;
+//             maxF = 1.0f;
+//             vF = Paddle::s_MaxSpeed;
+//             ImGui::SliderScalar("##PaddleSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
+//             Paddle::s_MaxSpeed = vF;
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
 
-        if (ImGui::TreeNode("Ball"))
-        {
-            min = 1;
-            max = 10;
-            v = m_Ball.r;
-            ImGui::Text("Radius");
-            ImGui::SliderScalar("##BallR", ImGuiDataType_U32, &v, &min, &max, "%i");
-            m_Ball.setRadius(v);
+//         if (ImGui::TreeNode("Ball"))
+//         {
+//             min = 1;
+//             max = 10;
+//             v = m_Ball.r;
+//             ImGui::Text("Radius");
+//             ImGui::SliderScalar("##BallR", ImGuiDataType_U32, &v, &min, &max, "%i");
+//             m_Ball.setRadius(v);
 
-            ImGui::Text("Speed");
-            minF = 0.01f;
-            maxF = 1.0f;
-            vF = Ball::s_MaxSpeed;
-            ImGui::SliderScalar("##BallSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
-            Ball::s_MaxSpeed = vF;
+//             ImGui::Text("Speed");
+//             minF = 0.01f;
+//             maxF = 1.0f;
+//             vF = Ball::s_MaxSpeed;
+//             ImGui::SliderScalar("##BallSpeed", ImGuiDataType_Float, &vF, &minF, &maxF, "%.3f");
+//             Ball::s_MaxSpeed = vF;
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }
 
 void Effect_Pong::setTargetX(Paddle& paddle)
 {
@@ -211,43 +211,43 @@ void Effect_Pong::setTargetX(Paddle& paddle)
     paddle.target(y - paddle.h / 2.0f);
 }
 
-void Effect_Pong::addKeys()
-{
-    if (m_AI)
-        return;
+// void Effect_Pong::addKeys()
+// {
+//     if (m_AI)
+//         return;
 
-    if (KRE::Keyboard::getKey(GLFW_KEY_W))
-    {
-        m_PaddleL.push(PaddleDir::UP);
-        m_MovingL = true;
-    }
-    else if (KRE::Keyboard::getKey(GLFW_KEY_S))
-    {
-        m_PaddleL.push(PaddleDir::DOWN);
-        m_MovingL = true;
-    }
-    else if (m_MovingL)
-    {
-        m_PaddleL.push(PaddleDir::NONE);
-        m_MovingL = false;
-    }
+//     if (KRE::Keyboard::getKey(GLFW_KEY_W))
+//     {
+//         m_PaddleL.push(PaddleDir::UP);
+//         m_MovingL = true;
+//     }
+//     else if (KRE::Keyboard::getKey(GLFW_KEY_S))
+//     {
+//         m_PaddleL.push(PaddleDir::DOWN);
+//         m_MovingL = true;
+//     }
+//     else if (m_MovingL)
+//     {
+//         m_PaddleL.push(PaddleDir::NONE);
+//         m_MovingL = false;
+//     }
 
-    if (KRE::Keyboard::getKey(GLFW_KEY_UP))
-    {
-        m_PaddleR.push(PaddleDir::UP);
-        m_MovingR = true;
-    }
-    else if (KRE::Keyboard::getKey(GLFW_KEY_DOWN))
-    {
-        m_PaddleR.push(PaddleDir::DOWN);
-        m_MovingR = true;
-    }
-    else if (m_MovingR)
-    {
-        m_PaddleR.push(PaddleDir::NONE);
-        m_MovingR = false;
-    }
-}
+//     if (KRE::Keyboard::getKey(GLFW_KEY_UP))
+//     {
+//         m_PaddleR.push(PaddleDir::UP);
+//         m_MovingR = true;
+//     }
+//     else if (KRE::Keyboard::getKey(GLFW_KEY_DOWN))
+//     {
+//         m_PaddleR.push(PaddleDir::DOWN);
+//         m_MovingR = true;
+//     }
+//     else if (m_MovingR)
+//     {
+//         m_PaddleR.push(PaddleDir::NONE);
+//         m_MovingR = false;
+//     }
+// }
 
 void Effect_Pong::updatePaddles()
 {

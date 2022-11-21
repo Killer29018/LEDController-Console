@@ -11,7 +11,7 @@ public:
     ~Effect_SolidColour();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 };
 
 #endif

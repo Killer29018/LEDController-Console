@@ -1,6 +1,6 @@
 #include "../EffectHeaders/Effect_Fire.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 #include "../../Utils/Helper.hpp"
 
@@ -81,25 +81,25 @@ void Effect_Fire::update()
     m_OffsetX += m_Speed * glm::perlin(glm::vec2(1.0f, m_OffsetY));
 }
 
-void Effect_Fire::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        uint8_t min = 0, max = 100;
+// void Effect_Fire::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//         uint8_t min = 0, max = 100;
 
-        ImGui::Text("Movement Speed");
-        uint8_t value = 100 * m_Speed;
-        ImGui::SliderScalar("##MovementSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
-        m_Speed = value / 100.0f;
+//         ImGui::Text("Movement Speed");
+//         uint8_t value = 100 * m_Speed;
+//         ImGui::SliderScalar("##MovementSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
+//         m_Speed = value / 100.0f;
 
-        ImGui::Text("Cooling Speed");
-        value = m_CoolingFactor;
-        max = 255.0f;
-        ImGui::SliderScalar("##CoolingSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
-        m_CoolingFactor = value;
-    }
-    ImGui::End();
-}
+//         ImGui::Text("Cooling Speed");
+//         value = m_CoolingFactor;
+//         max = 255.0f;
+//         ImGui::SliderScalar("##CoolingSpeed", ImGuiDataType_U8, &value, &min, &max, "%u");
+//         m_CoolingFactor = value;
+//     }
+//     ImGui::End();
+// }
 
 uint8_t Effect_Fire::getValue(uint32_t x, uint32_t y)
 {

@@ -10,10 +10,10 @@ void Effect_None::update()
     m_Matrix->fillSolid({ 0, 0, 0 });
 }
 
-void Effect_None::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-    }
-    ImGui::End();
-}
+// void Effect_None::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//     }
+//     ImGui::End();
+// }

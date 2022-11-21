@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 Effect_Metaballs::Effect_Metaballs(LEDMatrix* matrix)
     : Effect(EffectEnum::METABALLS, matrix)
@@ -39,37 +39,37 @@ void Effect_Metaballs::update()
     updateBlobs();
 }
 
-void Effect_Metaballs::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_Metaballs::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
 
-        uint16_t min = 1;
-        uint16_t max = 10;
+//         uint16_t min = 1;
+//         uint16_t max = 10;
 
         
-        ImGui::Text("Count");
-        ImGui::SliderScalar("##Amount", ImGuiDataType_U16, &m_CurrentBlobs, &min, &max, "%u");
+//         ImGui::Text("Count");
+//         ImGui::SliderScalar("##Amount", ImGuiDataType_U16, &m_CurrentBlobs, &min, &max, "%u");
 
-        min = 0;
-        max = 255;
-        ImGui::Text("Threshold");
-        uint8_t value = 255 - m_Threshold;
-        ImGui::SliderScalar("##Threshold", ImGuiDataType_U8, &value, &min, &max, "%u");
-        m_Threshold = 255 - value;
+//         min = 0;
+//         max = 255;
+//         ImGui::Text("Threshold");
+//         uint8_t value = 255 - m_Threshold;
+//         ImGui::SliderScalar("##Threshold", ImGuiDataType_U8, &value, &min, &max, "%u");
+//         m_Threshold = 255 - value;
 
-        min = 1;
-        max = 10;
-        ImGui::Text("Size");
-        ImGui::SliderScalar("##Size", ImGuiDataType_U8, &m_Size, &min, &max, "%u");
+//         min = 1;
+//         max = 10;
+//         ImGui::Text("Size");
+//         ImGui::SliderScalar("##Size", ImGuiDataType_U8, &m_Size, &min, &max, "%u");
 
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }
 
 void Effect_Metaballs::createBlobs()
 {

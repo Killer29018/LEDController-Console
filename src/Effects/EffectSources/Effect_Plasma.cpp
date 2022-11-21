@@ -44,21 +44,21 @@ void Effect_Plasma::update()
     m_HueOffset += m_HueChange;
 }
 
-void Effect_Plasma::render(const char* panelName)
-{
-     if (ImGui::Begin(panelName))
-     {
-         ImGui::PushItemWidth(-1);
+// void Effect_Plasma::render(const char* panelName)
+// {
+//      if (ImGui::Begin(panelName))
+//      {
+//          ImGui::PushItemWidth(-1);
 
-         uint8_t min = 0, max = 16;
-         ImGui::Text("Colour Change Speed");
-         ImGui::SliderScalar("##HueChange", ImGuiDataType_U8, &m_HueChange, &min, &max, "%u");
+//          uint8_t min = 0, max = 16;
+//          ImGui::Text("Colour Change Speed");
+//          ImGui::SliderScalar("##HueChange", ImGuiDataType_U8, &m_HueChange, &min, &max, "%u");
 
-         max = 50;
-         ImGui::Text("Movement Speed");
-         ImGui::SliderScalar("##MoveSpeed", ImGuiDataType_U8, &m_AngleChange, &min, &max, "%u");
+//          max = 50;
+//          ImGui::Text("Movement Speed");
+//          ImGui::SliderScalar("##MoveSpeed", ImGuiDataType_U8, &m_AngleChange, &min, &max, "%u");
 
-         ImGui::PopItemWidth();
-     }
-     ImGui::End();
-}
+//          ImGui::PopItemWidth();
+//      }
+//      ImGui::End();
+// }

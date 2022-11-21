@@ -1,6 +1,8 @@
 #ifndef IMGUI_PANEL_HPP
 #define IMGUI_PANEL_HPP
 
+#if FALSE
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -13,4 +15,5 @@ public:
     virtual void renderImGui() {}
 };
 
+#endif
 #endif

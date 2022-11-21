@@ -1,6 +1,6 @@
 #include "../EffectHeaders/Effect_Fireworks.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 #include "../../Utils/Helper.hpp"
 
@@ -54,76 +54,76 @@ void Effect_Fireworks::update()
     }
 }
 
-void Effect_Fireworks::render(const char* panelName)
-{
-    uint32_t min = 1, max = MAX_FIREWORKS;
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_Fireworks::render(const char* panelName)
+// {
+//     uint32_t min = 1, max = MAX_FIREWORKS;
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("Animate Hue");
-        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         ImGui::Text("Animate Hue");
+//         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
 
-            s_FireworkRandomColour = false;
-        }
-        else
-        {
-            ImGui::Text("Random Colours");
-            ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
-        }
+//             s_FireworkRandomColour = false;
+//         }
+//         else
+//         {
+//             ImGui::Text("Random Colours");
+//             ImGui::Checkbox("##FRandom", &s_FireworkRandomColour);
+//         }
 
-        if (ImGui::TreeNode("Firework"))
-        {
-            ImGui::Text("Count");
-            ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_MaxFireworks, &min, &max, "%u");
+//         if (ImGui::TreeNode("Firework"))
+//         {
+//             ImGui::Text("Count");
+//             ImGui::SliderScalar("##FCount", ImGuiDataType_U32, &m_MaxFireworks, &min, &max, "%u");
 
-            min = 0;
-            max = m_Matrix->getRows() - 1;
-            ImGui::Text("Bottom Distance");
-            ImGui::SliderScalar("##FDistance", ImGuiDataType_U32, &s_FireworkMinDistance, &min, &max, "%u");
+//             min = 0;
+//             max = m_Matrix->getRows() - 1;
+//             ImGui::Text("Bottom Distance");
+//             ImGui::SliderScalar("##FDistance", ImGuiDataType_U32, &s_FireworkMinDistance, &min, &max, "%u");
 
-            ImGui::Text("Deceleration");
-            ImGui::SliderFloat("##FDeceleration", &s_FireworkDeceleration, 0.01f, 1.0f, "%.3f");
+//             ImGui::Text("Deceleration");
+//             ImGui::SliderFloat("##FDeceleration", &s_FireworkDeceleration, 0.01f, 1.0f, "%.3f");
 
-            min = 0;
-            max = m_Matrix->getRows();
-            ImGui::Text("Trail Intensity");
-            ImGui::SliderScalar("##TrailIntensity", ImGuiDataType_U32, &s_TrailIntensity, &min, &max, "%u");
+//             min = 0;
+//             max = m_Matrix->getRows();
+//             ImGui::Text("Trail Intensity");
+//             ImGui::SliderScalar("##TrailIntensity", ImGuiDataType_U32, &s_TrailIntensity, &min, &max, "%u");
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        if (ImGui::TreeNode("Particles"))
-        {
-            ImGui::Text("Random Colours");
-            ImGui::Checkbox("##PRandom", &s_ParticleRandomColour);
+//         if (ImGui::TreeNode("Particles"))
+//         {
+//             ImGui::Text("Random Colours");
+//             ImGui::Checkbox("##PRandom", &s_ParticleRandomColour);
 
-            ImGui::Text("Max Speed");
-            ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 2.0f, "%.3f");
+//             ImGui::Text("Max Speed");
+//             ImGui::SliderFloat("##PMaxSpeed", &s_ParticleMaxSpeed, 0.01f, 2.0f, "%.3f");
 
-            ImGui::Text("Decay Speed");
-            ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 10.0f, "%.3f");
+//             ImGui::Text("Decay Speed");
+//             ImGui::SliderFloat("##PDecay", &s_ParticleDecaySpeed, 0.01f, 10.0f, "%.3f");
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }
 
 void Effect_Fireworks::createFireworks()
 {

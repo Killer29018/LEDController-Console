@@ -5,8 +5,10 @@ static const unsigned int SCREEN_HEIGHT = 720;
 
 int main()
 {
+#ifdef WIN32
 #ifndef DEBUG_MODE
     ShowWindow( GetConsoleWindow(), SW_HIDE );
+#endif
 #endif
 
     // srand(1);

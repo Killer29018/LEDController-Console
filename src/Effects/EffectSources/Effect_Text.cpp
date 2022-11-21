@@ -141,112 +141,112 @@ void Effect_Text::update()
     }
 }
 
-void Effect_Text::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        int min, max;
-        ImGui::PushItemWidth(-1);
+// void Effect_Text::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//         int min, max;
+//         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("Animate Hue");
-        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+//         ImGui::Text("Animate Hue");
+//         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
 
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
-        }
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
+//         }
 
-        static char fontpath[500];
-        static char text[500] = "Hello, World!";
+//         static char fontpath[500];
+//         static char text[500] = "Hello, World!";
 
-        static bool initial = true;
-        if (initial)
-        {
-            strcpy(fontpath, FreeType::getCurrentFilePath());
-            initial = false;
+//         static bool initial = true;
+//         if (initial)
+//         {
+//             strcpy(fontpath, FreeType::getCurrentFilePath());
+//             initial = false;
 
-            m_Text = std::string(text);
-        }
+//             m_Text = std::string(text);
+//         }
 
-        if (ImGui::TreeNode("Text"))
-        {
-            if (ImGui::InputText("##Text", text, 500) || strcmp(text, m_Text.c_str()))
-            {
-                m_Text = std::string(text);
-            }
+//         if (ImGui::TreeNode("Text"))
+//         {
+//             if (ImGui::InputText("##Text", text, 500) || strcmp(text, m_Text.c_str()))
+//             {
+//                 m_Text = std::string(text);
+//             }
 
-            if (ImGui::InputText("##Font", fontpath, 500, ImGuiInputTextFlags_EnterReturnsTrue))
-            {
-                strcpy(fontpath, FreeType::getCurrentFilePath());
-            }
+//             if (ImGui::InputText("##Font", fontpath, 500, ImGuiInputTextFlags_EnterReturnsTrue))
+//             {
+//                 strcpy(fontpath, FreeType::getCurrentFilePath());
+//             }
 
-            ImGui::Text("Font Size");
-            uint32_t fontSize = FreeType::getFontSize();
-            min = 5;
-            max = 40;
-            if (ImGui::SliderScalar("##FontSize", ImGuiDataType_U32, &fontSize, &min, &max, "%u"))
-                FreeType::setFontSize(fontSize);
+//             ImGui::Text("Font Size");
+//             uint32_t fontSize = FreeType::getFontSize();
+//             min = 5;
+//             max = 40;
+//             if (ImGui::SliderScalar("##FontSize", ImGuiDataType_U32, &fontSize, &min, &max, "%u"))
+//                 FreeType::setFontSize(fontSize);
 
-            ImGui::Text("Offset X");
-            min = -m_LengthX; max = m_Matrix->getColumns();
-            ImGui::SliderScalar("##OffsetX", ImGuiDataType_S32, &m_OffsetX, &min, &max, "%d");
+//             ImGui::Text("Offset X");
+//             min = -m_LengthX; max = m_Matrix->getColumns();
+//             ImGui::SliderScalar("##OffsetX", ImGuiDataType_S32, &m_OffsetX, &min, &max, "%d");
 
-            ImGui::Text("Offset Y");
-            min = -FreeType::getMaxBelow(); max = m_Matrix->getRows() + FreeType::getMaxAbove();
-            ImGui::SliderScalar("##OffsetY", ImGuiDataType_S32, &m_OffsetY, &min, &max, "%d");
+//             ImGui::Text("Offset Y");
+//             min = -FreeType::getMaxBelow(); max = m_Matrix->getRows() + FreeType::getMaxAbove();
+//             ImGui::SliderScalar("##OffsetY", ImGuiDataType_S32, &m_OffsetY, &min, &max, "%d");
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        if (ImGui::TreeNode("Scroll"))
-        {
-            ImGui::Text("Scroll");
-            if (ImGui::Checkbox("##Scroll", &m_Scroll))
-            {
-                if (m_Scroll)
-                    m_CurrentScroll = 0;
-                else
-                    m_OffsetX += m_CurrentScroll;
-            }
+//         if (ImGui::TreeNode("Scroll"))
+//         {
+//             ImGui::Text("Scroll");
+//             if (ImGui::Checkbox("##Scroll", &m_Scroll))
+//             {
+//                 if (m_Scroll)
+//                     m_CurrentScroll = 0;
+//                 else
+//                     m_OffsetX += m_CurrentScroll;
+//             }
 
-            if (m_Scroll)
-            {
-                uint32_t currentDirection = static_cast<uint32_t>(m_CurrentDirection);
-                const char* currentDirectionString = TextDirectionString.at(currentDirection);
+//             if (m_Scroll)
+//             {
+//                 uint32_t currentDirection = static_cast<uint32_t>(m_CurrentDirection);
+//                 const char* currentDirectionString = TextDirectionString.at(currentDirection);
 
-                ImGui::Text("Current Direction");
-                if (ImGui::BeginCombo("##Current Direction", currentDirectionString, ImGuiComboFlags_HeightLarge))
-                {
-                    for (uint32_t n = 0; n < TextDirectionString.size(); n++)
-                    {
-                        const bool isSelected = (currentDirection == n);
-                        if (ImGui::Selectable(TextDirectionString.at(n), isSelected))
-                        {
-                            m_CurrentDirection = static_cast<TextDirection>(n);
-                            Logger::log(LoggerType::LOG_INFO, "Changed Text direction %s", TextDirectionString.at(n));
-                        }
+//                 ImGui::Text("Current Direction");
+//                 if (ImGui::BeginCombo("##Current Direction", currentDirectionString, ImGuiComboFlags_HeightLarge))
+//                 {
+//                     for (uint32_t n = 0; n < TextDirectionString.size(); n++)
+//                     {
+//                         const bool isSelected = (currentDirection == n);
+//                         if (ImGui::Selectable(TextDirectionString.at(n), isSelected))
+//                         {
+//                             m_CurrentDirection = static_cast<TextDirection>(n);
+//                             Logger::log(LoggerType::LOG_INFO, "Changed Text direction %s", TextDirectionString.at(n));
+//                         }
 
-                        if (isSelected)
-                            ImGui::SetItemDefaultFocus();
-                    }
-                    ImGui::EndCombo();
-                }
-            }
+//                         if (isSelected)
+//                             ImGui::SetItemDefaultFocus();
+//                     }
+//                     ImGui::EndCombo();
+//                 }
+//             }
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }

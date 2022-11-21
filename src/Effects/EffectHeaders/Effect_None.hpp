@@ -10,7 +10,7 @@ public:
     ~Effect_None();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 };
 
 #endif

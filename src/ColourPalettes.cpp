@@ -1,6 +1,6 @@
 #include "ColourPalettes.hpp"
 
-#include "Panels/Logger.hpp"
+#include "Utils/Logger.hpp"
 
 namespace Palettes
 {

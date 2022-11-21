@@ -2,7 +2,7 @@
 
 #include "../../Utils/Helper.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 #include <cmath>
 
@@ -42,44 +42,44 @@ void Effect_FadingPixels::update()
     }
 }
 
-void Effect_FadingPixels::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::Text("Count");
-        uint16_t min = 1, max = 64;
-        ImGui::SliderScalar("##Count", ImGuiDataType_U16, &m_RandomPixels, &min, &max, "%u");
+// void Effect_FadingPixels::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::Text("Count");
+//         uint16_t min = 1, max = 64;
+//         ImGui::SliderScalar("##Count", ImGuiDataType_U16, &m_RandomPixels, &min, &max, "%u");
 
-        ImGui::Text("Decay Speed");
-        ImGui::SliderScalar("##Decay", ImGuiDataType_U16, &m_DecaySpeed, &min, &max, "%u");
+//         ImGui::Text("Decay Speed");
+//         ImGui::SliderScalar("##Decay", ImGuiDataType_U16, &m_DecaySpeed, &min, &max, "%u");
 
-        ImGui::Text("Animate Hue");
-        if (ImGui::Checkbox("##AnimateHue", &m_AnimateHue))
-        {
-            if (!m_AnimateHue) m_HueOffset = 0;
-        }
+//         ImGui::Text("Animate Hue");
+//         if (ImGui::Checkbox("##AnimateHue", &m_AnimateHue))
+//         {
+//             if (!m_AnimateHue) m_HueOffset = 0;
+//         }
 
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
-        }
-        else
-        {
-            ImGui::Text("Random Colours");
-            ImGui::Checkbox("##RandomColours", &m_RandomColour);
-        }
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
+//         }
+//         else
+//         {
+//             ImGui::Text("Random Colours");
+//             ImGui::Checkbox("##RandomColours", &m_RandomColour);
+//         }
 
-    }
-    ImGui::End();
-}
+//     }
+//     ImGui::End();
+// }
 
 void Effect_FadingPixels::setRandomPixels()
 {

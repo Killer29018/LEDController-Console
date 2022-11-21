@@ -1,6 +1,6 @@
 #include "../EffectHeaders/Effect_FallingRain.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 #include "../../Utils/Helper.hpp"
 
@@ -41,65 +41,65 @@ void Effect_FallingRain::update()
     }
 }
 
-void Effect_FallingRain::render(const char* panelName)
-{
-    uint32_t min, max;
-    float minF, maxF;
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_FallingRain::render(const char* panelName)
+// {
+//     uint32_t min, max;
+//     float minF, maxF;
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        ImGui::Text("Animate Hue");
-        ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
+//         ImGui::Text("Animate Hue");
+//         ImGui::Checkbox("##AnimateHue", &m_AnimateHue);
 
-        if (m_AnimateHue)
-        {
-            ImGui::Text("Delta Hue");
-            min = 0;
-            max = 255;
-            ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         if (m_AnimateHue)
+//         {
+//             ImGui::Text("Delta Hue");
+//             min = 0;
+//             max = 255;
+//             ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
-            ImGui::Text("Hue Update Speed");
-            uint8_t value = max - m_MaxCount;
-            ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
-            m_MaxCount = max - value;
+//             ImGui::Text("Hue Update Speed");
+//             uint8_t value = max - m_MaxCount;
+//             ImGui::SliderScalar("##HueUpdate", ImGuiDataType_U8, &value, &min, &max, "%u");
+//             m_MaxCount = max - value;
 
-            m_RainbowColours = false;
-        }
-        else
-        {
-            ImGui::Text("Rainbow Colours");
-            ImGui::Checkbox("##Rainbow", &m_RainbowColours);
-        }
+//             m_RainbowColours = false;
+//         }
+//         else
+//         {
+//             ImGui::Text("Rainbow Colours");
+//             ImGui::Checkbox("##Rainbow", &m_RainbowColours);
+//         }
 
-        if (ImGui::TreeNode("Raindrops"))
-        {
-            ImGui::Text("Raindrop Count");
-            min = 1;
-            max = MAX_RAINDROPS;
-            ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
+//         if (ImGui::TreeNode("Raindrops"))
+//         {
+//             ImGui::Text("Raindrop Count");
+//             min = 1;
+//             max = MAX_RAINDROPS;
+//             ImGui::SliderScalar("##Raindrops", ImGuiDataType_U32, &m_CurrentRaindrops, &min, &max, "%u");
 
-            ImGui::Text("Speed");
-            minF = 0.01f;
-            maxF = 1.0f;
-            ImGui::DragFloatRange2("##Speed", &s_RaindropMinSpeed, &s_RaindropMaxSpeed, 0.01f, minF, maxF, "%.3f", "%.3f");
+//             ImGui::Text("Speed");
+//             minF = 0.01f;
+//             maxF = 1.0f;
+//             ImGui::DragFloatRange2("##Speed", &s_RaindropMinSpeed, &s_RaindropMaxSpeed, 0.01f, minF, maxF, "%.3f", "%.3f");
 
-            ImGui::Text("Max Acceleration");
-            ImGui::SliderScalar("##MaxAcceleration", ImGuiDataType_Float, &s_RaindropMaxAcceleration, &minF, &maxF, "%.3ff");
+//             ImGui::Text("Max Acceleration");
+//             ImGui::SliderScalar("##MaxAcceleration", ImGuiDataType_Float, &s_RaindropMaxAcceleration, &minF, &maxF, "%.3ff");
 
-            min = 0;
-            max = m_Matrix->getRows();
-            ImGui::Text("Trail Length");
-            ImGui::SliderScalar("##TrailLength", ImGuiDataType_U32, &s_TrailLength, &min, &max, "%u");
+//             min = 0;
+//             max = m_Matrix->getRows();
+//             ImGui::Text("Trail Length");
+//             ImGui::SliderScalar("##TrailLength", ImGuiDataType_U32, &s_TrailLength, &min, &max, "%u");
 
-            ImGui::TreePop();
-            ImGui::Separator();
-        }
+//             ImGui::TreePop();
+//             ImGui::Separator();
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }
 
 void Effect_FallingRain::createRaindrops()
 {

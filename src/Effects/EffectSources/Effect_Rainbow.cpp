@@ -1,6 +1,6 @@
 #include "../EffectHeaders/Effect_Rainbow.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 Effect_Rainbow::Effect_Rainbow(LEDMatrix* matrix)
     : Effect(EffectEnum::RAINBOW, matrix) 
@@ -23,24 +23,24 @@ void Effect_Rainbow::update()
         m_HueOffset = 0;
 }
 
-void Effect_Rainbow::render(const char* panelName)
-{
-    if (ImGui::Begin(panelName))
-    {
-        ImGui::PushItemWidth(-1);
+// void Effect_Rainbow::render(const char* panelName)
+// {
+//     if (ImGui::Begin(panelName))
+//     {
+//         ImGui::PushItemWidth(-1);
 
-        uint8_t min = 0, max = 16;
-        ImGui::Text("Hue Change");
-        ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
+//         uint8_t min = 0, max = 16;
+//         ImGui::Text("Hue Change");
+//         ImGui::SliderScalar("##DeltaHue", ImGuiDataType_U8, &m_DeltaHue, &min, &max, "%u");
 
 
-        ImGui::Text("Animate the Hue");
-        if (ImGui::Checkbox("##ChangeHue", &m_ChangeHue))
-        {
-            m_HueOffset = 0;
-        }
+//         ImGui::Text("Animate the Hue");
+//         if (ImGui::Checkbox("##ChangeHue", &m_ChangeHue))
+//         {
+//             m_HueOffset = 0;
+//         }
 
-        ImGui::PopItemWidth();
-    }
-    ImGui::End();
-}
+//         ImGui::PopItemWidth();
+//     }
+//     ImGui::End();
+// }

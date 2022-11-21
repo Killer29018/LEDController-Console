@@ -1,3 +1,4 @@
+#if FALSE
 #include "LEDMatrixRenderer.hpp"
 
 #include "glm/glm.hpp"
@@ -155,3 +156,4 @@ void LEDMatrixRenderer::setCellSize(int width, int height)
 
     m_CellSize = (size  - cellSpacing - (cellSpacing * side)) / side;
 }
+#endif

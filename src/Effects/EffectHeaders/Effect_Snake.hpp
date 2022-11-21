@@ -116,14 +116,14 @@ public:
     ~Effect_Snake();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     void resetCells();
 
     void checkReset();
     void reset();
 
-    void addKeys();
+    // void addKeys();
 
     SnakeDir getNextSnakeDirection();
 

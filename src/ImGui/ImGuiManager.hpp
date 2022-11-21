@@ -1,6 +1,8 @@
 #ifndef IMGUI_MANAGER_HPP
 #define IMGUI_MANAGER_HPP
 
+#if FALSE
+
 #include "GLFW/glfw3.h"
 
 #include "imgui.h"
@@ -37,4 +39,5 @@ private:
     static void setupStyle();
 };
 
+#endif
 #endif

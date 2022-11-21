@@ -14,7 +14,7 @@ public:
     ~Effect_Rainbow();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 };
 
 #endif

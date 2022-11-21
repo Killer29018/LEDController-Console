@@ -64,7 +64,7 @@ public:
     ~Effect_Fireworks();
 
     void update() override;
-    void render(const char* panelName) override;
+    // void render(const char* panelName) override;
 private:
     void createFireworks();
     void updateFirework(int i);

@@ -9,11 +9,6 @@ find_package(OpenGL REQUIRED)
 
 # Add Platform Specific Linker Options
 set (linker "")
-if (WIN32)
-    set (linker "-lopengl32 -luser32 -limm32 -lws2_32")
-elseif(UNIX)
-    set (linker "-ldl")
-endif()
 
 # Change Output Directory
 set (CMAKE_BINARY_DIR "/bin")
@@ -38,20 +33,11 @@ add_subdirectory(vendor)
 
 # Add libraries and include directories
 target_include_directories(${PROJECT_NAME} PUBLIC
-    KRE
-    vendor/glad/include
     vendor/FreeType/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${linker} PUBLIC
-    glad
-    OpenGL::GL
     glm::glm
-    glfw
-    Imgui
     freetype
-    # ws2_32
-
-    KRE
 )
 

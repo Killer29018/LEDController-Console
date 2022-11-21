@@ -1,14 +1,14 @@
 #ifndef LEDMATRIX_RENDERER_HPP
 #define LEDMATRIX_RENDERER_HPP
 
-#include "../ImGui/ImGuiPanel.hpp"
+#if FALSE
 
 #include "LEDMatrix.hpp"
 
 #include "glad/gl.h"
 #include "KRE/KRE.hpp"
 
-class LEDMatrixRenderer : public ImGuiPanel
+class LEDMatrixRenderer
 {
 public:
     uint32_t cellSpacing;
@@ -41,4 +41,5 @@ private:
     void setCellSize(int width, int height);
 };
 
+#endif
 #endif

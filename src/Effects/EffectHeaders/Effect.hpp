@@ -4,8 +4,6 @@
 #include "../../LED/LEDMatrix.hpp"
 #include "../EffectsExtra.hpp"
 
-#include "../../ImGui/ImGuiPanel.hpp" // Get Imgui Functions
-
 class Effect
 {
 public:
@@ -22,7 +20,7 @@ public:
     virtual ~Effect() {}
 
     virtual void update() {}
-    virtual void render(const char* panelName) {}
+    // virtual void render(const char* panelName) {}
 
     uint16_t& getFPS() { return m_FPS; }
     void setFPS(uint16_t fps) { m_FPS = fps; }
