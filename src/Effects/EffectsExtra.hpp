@@ -3,7 +3,7 @@
 
 #include <vector>
 
-enum class EffectEnum
+enum class EffectEnum : int
 {
     NONE,
     SOLID_COLOUR,

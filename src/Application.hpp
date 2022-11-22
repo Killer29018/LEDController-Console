@@ -33,14 +33,9 @@ private:
 public:
     static void init(const char* name, const char* ip, uint32_t port);
     static void start();
-
-    // static void GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
-    // static void GLFWResizeCallback(GLFWwindow* window, int width, int height);
 private:
     Application() = default;
     ~Application() = default;
-
-    static void processKeys();
 };
 
 #endif

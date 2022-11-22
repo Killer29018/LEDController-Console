@@ -9,7 +9,6 @@
 uint8_t Application::updateFPS = 60;
 bool Application::m_CloseWindow = false;
 
-// Window Application::m_Window;
 Socket Application::m_Socket;
 LEDMatrix Application::m_Controller;
 // LEDMatrixRenderer Application::m_MatrixRenderer;
@@ -63,31 +62,8 @@ void Application::start()
             deltaTotal = 0;
         }
 
-        std::cout << dt << "\n";
+        // std::cout << dt << "\n";
 
         deltaTotal += (float)dt;
     }
-}
-
-// void Application::GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
-// {
-//     // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-//     //     glfwSetWindowShouldClose(window, true);
-
-//     switch (action)
-//     {
-//     case GLFW_PRESS: KRE::Keyboard::pressKey(key); break;
-//     case GLFW_RELEASE: KRE::Keyboard::unpressKey(key); break;
-//     }
-// }
-
-// void Application::GLFWResizeCallback(GLFWwindow* window, int width, int height)
-// {
-//     glViewport(0, 0, width, height);
-//     m_Window.setWindowSize({ width, height } );
-// }
-
-void Application::processKeys()
-{
-
 }
