@@ -19,12 +19,8 @@ Logger Application::m_Logger;
 
 bool Application::m_Output = false;
 
-void Application::init(const char* name, glm::vec2 windowSize, const char* ip, uint32_t port)
+void Application::init(const char* name, const char* ip, uint32_t port)
 {
-    // m_Window.setup(name, windowSize);
-    // glfwSetKeyCallback(m_Window.window, Application::GLFWKeyCallback);
-    // glfwSetWindowSizeCallback(m_Window.window, Application::GLFWResizeCallback);
-
     m_Socket.resetIp(ip, port);
     // m_Settings_Panel.setIpAndPort(ip, port);
 
