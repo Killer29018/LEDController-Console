@@ -1,7 +1,7 @@
 #if defined(_WIN32)
 #include "Socket.hpp"
 
-#include "../../Panels/Logger.hpp"
+#include "../../Utils/Logger.hpp"
 
 Socket::Socket()
 {

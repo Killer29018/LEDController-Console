@@ -61,6 +61,8 @@ void LEDController::setLED(int index, const cHSV& led)
 cHSV& LEDController::getLED(int index) 
 { 
     if (index >= 0 && index < m_LEDs.size()) return m_LEDs[index]; 
+
+    throw std::runtime_error("Invalid index");
 }
 
 cHSV LEDController::getLEDWBrightness(int index)

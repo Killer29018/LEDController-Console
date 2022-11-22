@@ -28,7 +28,7 @@ void Logger::log(LoggerType type, const char* fmt, ...)
     snprintf(newFmt, length + 1, fmtTemplate, tag.c_str(), fmt);
 
     va_start(args, fmt);
-    printf(newFmt, args);
+    vprintf(newFmt, args);
     // m_Buf.appendfv(newFmt, args);
     va_end(args);
 

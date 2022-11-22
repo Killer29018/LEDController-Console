@@ -4,7 +4,7 @@
 #include "../../Utils/Helper.hpp"
 
 // #include "KRE/System/Keyboard.hpp"
-#include "GLFW/glfw3.h"
+// #include "GLFW/glfw3.h"
 
 float Paddle::s_LimitY = 0;
 float Paddle::s_MaxSpeed = 0;
