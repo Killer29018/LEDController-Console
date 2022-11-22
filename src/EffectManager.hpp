@@ -24,7 +24,7 @@ public:
     void init(LEDMatrix& matrix);
     void setEffect(EffectEnum effect);
 
-    // void renderImGui();
+    void render();
 private:
     void updateEffect();
 };

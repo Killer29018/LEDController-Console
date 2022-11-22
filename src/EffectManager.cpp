@@ -44,8 +44,8 @@ void EffectManager::setEffect(EffectEnum effect)
     Logger::log(LoggerType::LOG_INFO, "Changed effect to %s", EffectName[static_cast<int>(effect)]);
 }
 
-// void EffectManager::renderImGui()
-// {
+void EffectManager::render()
+{
 //     if (ImGui::Begin("Effects"))
 //     {
 //         ImGui::PushItemWidth(-1);
@@ -137,8 +137,8 @@ void EffectManager::setEffect(EffectEnum effect)
 //     }
 //     ImGui::End();
 
-//     updateEffect();
-// }
+    updateEffect();
+}
 
 void EffectManager::updateEffect()
 {

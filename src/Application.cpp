@@ -6,7 +6,7 @@
 #include <thread>
 #include <iostream>
 
-uint8_t Application::updateFPS = 60;
+uint8_t Application::updateFPS = 20;
 bool Application::m_CloseWindow = false;
 
 Socket Application::m_Socket;
@@ -16,7 +16,7 @@ LEDMatrix Application::m_Controller;
 EffectManager Application::m_EffectManager;
 Logger Application::m_Logger;
 
-bool Application::m_Output = false;
+bool Application::m_Output = true;
 
 void Application::init(const char* name, const char* ip, uint32_t port)
 {
@@ -33,7 +33,7 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     // m_MatrixRenderer.init(&m_Controller, 2);
 
     m_EffectManager.init(m_Controller);
-    m_EffectManager.setEffect(EffectEnum::NONE);
+    m_EffectManager.setEffect(EffectEnum::PLASMA);
 
     // ImGuiManager::init(m_Window.window);
     // ImGuiManager::addWindow(&m_MatrixRenderer);
@@ -50,14 +50,16 @@ void Application::start()
     while (!m_CloseWindow)
     {
         auto current = std::chrono::high_resolution_clock::now();
-        double dt = std::chrono::duration<double, std::milli>(current-previous).count();
+        double dt = std::chrono::duration<double>(current-previous).count();
         previous = current;
 
         // ImGuiManager::render();
 
-        if (deltaTotal >= (1/(float)updateFPS))
+        if (deltaTotal >= (1.0f/(float)updateFPS))
         {
+            m_EffectManager.render();
             if (m_Output) m_Controller.upload(m_Socket);
+            Logger::log(LoggerType::LOG_INFO, "Updated");
 
             deltaTotal = 0;
         }
