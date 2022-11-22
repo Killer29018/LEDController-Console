@@ -3,11 +3,28 @@
 #include <iostream>
 #include <vector>
 
-namespace Console
+#include "EffectManager.hpp"
+
+enum class CommandEnum : uint8_t
 {
-    void printCommands();
+    CHANGE_EFFECT
+};
 
-    void printLine(const std::string& msg);
+class Console
+{
+public:
+    static void init(EffectManager* effectManager);
 
-    size_t printOptions(const std::vector<const char*>& options);
-}
+    static void printCommands();
+    static void runCommand(CommandEnum command);
+
+    static void printLine(const std::string& msg);
+
+    static size_t printOptions(const std::vector<const char*>& options);
+
+private:
+
+    static std::vector<const char*> s_Commands;
+
+    static EffectManager* s_EffectManager;
+};

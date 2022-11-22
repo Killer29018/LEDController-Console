@@ -6,6 +6,8 @@
 #include <thread>
 #include <iostream>
 
+#include "Console.hpp"
+
 uint8_t Application::updateFPS = 20;
 bool Application::m_CloseWindow = false;
 
@@ -34,6 +36,10 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     m_EffectManager.setEffect(EffectEnum::PLASMA);
 
     WindowManager::addWindow(&m_EffectManager);
+
+    Console::init(&m_EffectManager);
+
+    Console::printCommands();
 }
 
 void Application::start()
