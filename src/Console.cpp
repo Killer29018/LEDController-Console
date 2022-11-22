@@ -4,6 +4,11 @@
 
 namespace Console
 {
+    void printCommands()
+    {
+            
+    }
+
     void printLine(const std::string& msg)
     {
         std::cout << msg << "\n";
