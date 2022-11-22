@@ -2,6 +2,8 @@
 
 #include "Utils/Logger.hpp"
 
+float EffectManager::dt = 0.0f;
+
 EffectManager::~EffectManager()
 {
     if (m_CurrentEffect)
@@ -144,8 +146,7 @@ void EffectManager::updateEffect()
 {
     if (!m_CurrentEffect) return;
 
-    // m_DeltaTotal += KRE::Clock::deltaTime;
-    m_DeltaTotal += 0.1f;
+    m_DeltaTotal += dt;
 
     if (m_DeltaTotal >= (1.0 / (float)m_CurrentEffect->getFPS()))
     {
@@ -153,5 +154,5 @@ void EffectManager::updateEffect()
         m_DeltaTotal = 0.0f;
     }
 
-    // m_CurrentEffect->render("Effect Settings");
+    m_CurrentEffect->render();
 }

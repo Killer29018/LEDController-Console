@@ -20,7 +20,7 @@ public:
     virtual ~Effect() {}
 
     virtual void update() {}
-    // virtual void render(const char* panelName) {}
+    virtual void render() {}
 
     uint16_t& getFPS() { return m_FPS; }
     void setFPS(uint16_t fps) { m_FPS = fps; }

@@ -8,9 +8,8 @@
 #include "Colour.hpp"
 #include "LED/LEDMatrix.hpp"
 
-// #include "LED/LEDMatrixRenderer.hpp"
-// #include "Panels/Settings.hpp"
 #include "Utils/Logger.hpp"
+#include "Window/WindowManager.hpp"
 
 #include "EffectManager.hpp"
 

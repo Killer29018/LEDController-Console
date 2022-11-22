@@ -30,16 +30,10 @@ void Application::init(const char* name, const char* ip, uint32_t port)
 
     m_Controller.setBrightness(255);
 
-    // m_MatrixRenderer.init(&m_Controller, 2);
-
     m_EffectManager.init(m_Controller);
     m_EffectManager.setEffect(EffectEnum::PLASMA);
 
-    // ImGuiManager::init(m_Window.window);
-    // ImGuiManager::addWindow(&m_MatrixRenderer);
-    // ImGuiManager::addWindow(&m_Settings_Panel);
-    // ImGuiManager::addWindow(&m_EffectManager);
-    // ImGuiManager::addWindow(&m_Logger);
+    WindowManager::addWindow(&m_EffectManager);
 }
 
 void Application::start()
@@ -53,13 +47,13 @@ void Application::start()
         double dt = std::chrono::duration<double>(current-previous).count();
         previous = current;
 
-        // ImGuiManager::render();
+        EffectManager::dt = (float)dt;
+
+        WindowManager::render();
 
         if (deltaTotal >= (1.0f/(float)updateFPS))
         {
-            m_EffectManager.render();
             if (m_Output) m_Controller.upload(m_Socket);
-            Logger::log(LoggerType::LOG_INFO, "Updated");
 
             deltaTotal = 0;
         }

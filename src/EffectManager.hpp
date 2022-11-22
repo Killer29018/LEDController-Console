@@ -4,10 +4,12 @@
 #include "LED/LEDMatrix.hpp"
 #include "Effects/Effects.hpp"
 #include "Effects/EffectsExtra.hpp"
+#include "Window/WindowPanel.hpp"
 
-class EffectManager
+class EffectManager : public WindowPanel
 {
 public:
+    static float dt;
 private:
     LEDMatrix* m_Matrix;
 
