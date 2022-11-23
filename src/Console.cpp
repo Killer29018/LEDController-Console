@@ -1,6 +1,8 @@
 #include "Console.hpp"
 
 #include <sstream>
+#include <string>
+#include <limits.h>
 
 #include "Effects/EffectsExtra.hpp"
 
@@ -61,10 +63,11 @@ size_t Console::printOptions(const std::vector<const char*>& options)
 
     while (true)
     {
+        std::cin.sync();
         std::cout << "Please enter your option: ";
 
         std::string input;
-        std::cin >> input;
+        std::getline(std::cin, input, '\n');
 
         try {
             int value = std::stoi(input) - 1;
