@@ -20,6 +20,10 @@ void Console::init(EffectManager* effectManager)
 void Console::printCommands()
 {
     size_t option = printOptions(s_Commands);
+    if (option == s_Commands.size())
+    {
+        exit(0);
+    }
 
     CommandEnum command = static_cast<CommandEnum>(option);
 
@@ -33,6 +37,8 @@ void Console::runCommand(CommandEnum command)
     case CommandEnum::CHANGE_EFFECT:
     {
         size_t option = printOptions(EffectName);
+        if (option == EffectName.size()) break;
+
         EffectEnum effect = static_cast<EffectEnum>(option);
 
         s_EffectManager->setEffect(effect);
@@ -55,11 +61,13 @@ size_t Console::printOptions(const std::vector<const char*>& options)
     for (size_t i = 0; i < options.size(); i++)
     {
         std::stringstream ss;
-        ss << (i + 1) << " )" << options[i];
+        ss << (i + 1) << ") " << options[i];
         msg = ss.str();
 
         printLine(msg);
     }
+
+    printLine("Q) Quit");
 
     while (true)
     {
@@ -68,6 +76,10 @@ size_t Console::printOptions(const std::vector<const char*>& options)
 
         std::string input;
         std::getline(std::cin, input, '\n');
+
+        if (std::tolower(input[0]) == 'q')
+            return options.size();
+
 
         try {
             int value = std::stoi(input) - 1;
