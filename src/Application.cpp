@@ -9,7 +9,7 @@
 #include "Console.hpp"
 
 uint8_t Application::updateFPS = 20;
-bool Application::m_CloseWindow = false;
+bool Application::closeWindow = false;
 
 Socket Application::m_Socket;
 LEDMatrix Application::m_Controller;
@@ -38,8 +38,6 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     WindowManager::addWindow(&m_EffectManager);
 
     Console::init(&m_EffectManager);
-
-    Console::printCommands();
 }
 
 void Application::start()
@@ -47,7 +45,9 @@ void Application::start()
     static float deltaTotal = 0;
     static auto previous = std::chrono::high_resolution_clock::now();
 
-    while (!m_CloseWindow)
+    std::thread console(Console::start);
+
+    while (!closeWindow)
     {
         auto current = std::chrono::high_resolution_clock::now();
         double dt = std::chrono::duration<double>(current-previous).count();
@@ -68,4 +68,5 @@ void Application::start()
 
         deltaTotal += (float)dt;
     }
+    console.join();
 }

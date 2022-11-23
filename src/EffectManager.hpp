@@ -6,6 +6,8 @@
 #include "Effects/EffectsExtra.hpp"
 #include "Window/WindowPanel.hpp"
 
+#include <mutex>
+
 class EffectManager : public WindowPanel
 {
 public:
@@ -19,6 +21,8 @@ private:
     const char* m_EffectSettings = "Effect Settings";
 
     float m_DeltaTotal = 0.0f;
+
+    std::mutex m_EffectMutex;
 public:
     EffectManager() = default;
     ~EffectManager();

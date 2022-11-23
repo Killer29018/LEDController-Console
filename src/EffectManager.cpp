@@ -19,6 +19,8 @@ void EffectManager::init(LEDMatrix& matrix)
 
 void EffectManager::setEffect(EffectEnum effect)
 {
+    const std::lock_guard<std::mutex> lock(m_EffectMutex);
+
     m_CurrentEnum = effect;
 
     delete m_CurrentEffect;
@@ -144,6 +146,7 @@ void EffectManager::render()
 
 void EffectManager::updateEffect()
 {
+    const std::lock_guard<std::mutex> lock(m_EffectMutex);
     if (!m_CurrentEffect) return;
 
     m_DeltaTotal += dt;

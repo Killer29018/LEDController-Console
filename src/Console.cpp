@@ -6,6 +6,8 @@
 
 #include "Effects/EffectsExtra.hpp"
 
+#include "Application.hpp"
+
 std::vector<const char*> Console::s_Commands
 {
     "Change Effect"
@@ -17,12 +19,22 @@ void Console::init(EffectManager* effectManager)
     s_EffectManager = effectManager;
 }
 
+void Console::start()
+{
+    while (!Application::closeWindow)
+    {
+        printCommands();
+    }
+}
+
 void Console::printCommands()
 {
     size_t option = printOptions(s_Commands);
     if (option == s_Commands.size())
     {
-        exit(0);
+        // Close
+        Application::closeWindow = true;
+        return;
     }
 
     CommandEnum command = static_cast<CommandEnum>(option);

@@ -15,6 +15,8 @@ class Console
 public:
     static void init(EffectManager* effectManager);
 
+    static void start();
+
     static void printCommands();
     static void runCommand(CommandEnum command);
 

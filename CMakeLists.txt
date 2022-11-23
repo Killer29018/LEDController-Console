@@ -12,7 +12,7 @@ set (linker "")
 if (WIN32)
     set (linker "-lws2_32")
 elseif (UNIX)
-    set (linker "-ldl")
+    set (linker "-ldl -lpthread")
 endif()
 
 # Change Output Directory
