@@ -2,6 +2,7 @@
 
 #include "System/FreeType.hpp"
 
+
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -37,7 +38,7 @@ void Application::init(const char* name, const char* ip, uint32_t port)
 
     WindowManager::addWindow(&m_EffectManager);
 
-    Console::init(&m_EffectManager);
+    Console::init(&m_EffectManager, &m_Socket, ip, port);
 }
 
 void Application::start()
@@ -63,8 +64,6 @@ void Application::start()
 
             deltaTotal = 0;
         }
-
-        // std::cout << dt << "\n";
 
         deltaTotal += (float)dt;
     }

@@ -27,6 +27,8 @@ void Socket::resetIp(const char* ip, int port)
 
 void Socket::sendData(uint8_t* buffer, int size)
 {
+    if (!m_Started) return;
+
     if (send(m_Sockfd, buffer, size, 0) < 0)
     {
         Logger::log(LoggerType::LOG_ERROR, "Failed to write to socket");
@@ -39,7 +41,8 @@ void Socket::createSocket(const char* ip, int port)
     if (m_Sockfd == -1)
     {
         Logger::log(LoggerType::LOG_ERROR, "Failed to create socket");
-        exit(-1);
+        m_Started = false;
+        return;
     }
 
     m_Server.sin_family = AF_INET;
@@ -49,7 +52,8 @@ void Socket::createSocket(const char* ip, int port)
     if (connect(m_Sockfd, (sockaddr*)&m_Server, sizeof(m_Server)) < 0)
     {
         Logger::log(LoggerType::LOG_ERROR, "Failed to connect");
-        exit(-1);
+        m_Started = false;
+        return;
     }
 
     Logger::log(LoggerType::LOG_INFO, "Connected to %s : port %d", ip, port);

@@ -15,6 +15,11 @@
 
 #include <thread>
 
+constexpr int WIDTH = 36;
+constexpr int HEIGHT = 36;
+constexpr StartPosition START = StartPosition::BOTTOM_LEFT;
+constexpr StartDirection DIRECTION = StartDirection::SNAKE_ROW;
+
 class Application
 {
 public:

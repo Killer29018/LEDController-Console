@@ -2,8 +2,6 @@
 
 #include "../Utils/Logger.hpp"
 
-#include <filesystem>
-
 FT_Library FreeType::m_Library;
 FT_Face FreeType::m_Face;
 uint32_t FreeType::m_FontSize;
@@ -31,20 +29,17 @@ void FreeType::init()
 
 bool FreeType::loadFont(const char* filePath, uint32_t fontSize)
 {
-    std::filesystem::path path = std::filesystem::path(filePath);
-    if (path.extension().generic_string() != ".ttf")
+    try
     {
-        Logger::log(LoggerType::LOG_WARN, "Only .ttf are currently supported");
-        return false;
+        m_CurrentFont = (char*)realloc(m_CurrentFont, strlen(filePath) * sizeof(char));
+        strcpy(m_CurrentFont, filePath);
     }
-    if (!std::filesystem::exists(path))
+    catch (std::exception e)
     {
-        Logger::log(LoggerType::LOG_WARN, "File does not exist");
-        return false;
-    }
+        Logger::log(LoggerType::LOG_ERROR, "Failed to find font");
 
-    m_CurrentFont = (char*)realloc(m_CurrentFont, strlen(filePath) * sizeof(char));
-    strcpy(m_CurrentFont, filePath);
+        return false;
+    }
 
     FT_Error error = FT_New_Face(m_Library, filePath, 0, &m_Face);
 

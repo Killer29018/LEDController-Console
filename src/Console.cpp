@@ -10,13 +10,24 @@
 
 std::vector<const char*> Console::s_Commands
 {
-    "Change Effect"
+    "Change Effect",
+    "Change IP",
+    "Change Port",
 };
 EffectManager* Console::s_EffectManager;
+Socket* Console::s_Socket;
 
-void Console::init(EffectManager* effectManager)
+int Console::s_Port;
+std::string Console::s_Ip;
+
+void Console::init(EffectManager* effectManager, Socket* socket, std::string ip,
+        int port)
 {
     s_EffectManager = effectManager;
+    s_Socket = socket;
+
+    s_Ip = ip;
+    s_Port = port;
 }
 
 void Console::start()
@@ -55,6 +66,40 @@ void Console::runCommand(CommandEnum command)
 
         s_EffectManager->setEffect(effect);
 
+        break;
+    }
+    case CommandEnum::CHANGE_IP:
+    {
+        std::cout << "Enter a ip: ";
+        std::string ip;
+        std::getline(std::cin, ip);
+
+        s_Ip = ip;
+
+        s_Socket->resetIp(s_Ip.c_str(), s_Port);
+        break;
+    }
+    case CommandEnum::CHANGE_PORT:
+    {
+        std::cout << "Enter a port: ";
+        std::string portStr;
+        std::getline(std::cin, portStr);
+
+        while (true)
+        {
+            try 
+            {
+                s_Port = std::stoi(portStr);
+                break;
+            }
+            catch (std::exception e)
+            {
+                printLine("Please enter a valid input");
+                continue;
+            }
+        }
+
+        s_Socket->resetIp(s_Ip.c_str(), s_Port);
         break;
     }
     }
