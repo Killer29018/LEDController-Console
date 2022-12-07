@@ -5,10 +5,10 @@
 #include "../../Utils/Helper.hpp"
 
 static float s_ParticleMaxSpeed = 0.05f;
-static float s_ParticleDecaySpeed = 2.2f;
+static float s_ParticleDecaySpeed = 5.0f;
 static float s_FireworkDeceleration = 0.1;
-static uint32_t s_FireworkMinDistance = 2;
-static uint32_t s_TrailIntensity = 5;
+static uint32_t s_FireworkMinDistance = 0;
+static uint32_t s_TrailIntensity = 6;
 
 static bool s_FireworkRandomColour = false;
 static bool s_ParticleRandomColour = false;
@@ -17,9 +17,9 @@ Effect_Fireworks::Effect_Fireworks(LEDMatrix* matrix)
     : Effect(EffectEnum::FIREWORKS, matrix)
 {
     m_ActiveFireworks = 0;
-    m_MaxFireworks = 20;
+    m_MaxFireworks = 10;
 
-    m_AnimateHue = false;
+    m_AnimateHue = true;
     m_HueOffset = 0;
     m_DeltaHue = 1;
 

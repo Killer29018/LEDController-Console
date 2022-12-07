@@ -11,7 +11,9 @@ Effect_Plasma::Effect_Plasma(LEDMatrix* matrix)
     m_Angle = 0.0f;
 
     m_HueChange = 1;
-    m_AngleChange = 1;
+    m_AngleChange = 0;
+
+    setFPS(20);
 }
 
 Effect_Plasma::~Effect_Plasma() {}

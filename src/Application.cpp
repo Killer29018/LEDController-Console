@@ -9,7 +9,7 @@
 
 #include "Console.hpp"
 
-uint8_t Application::updateFPS = 20;
+uint8_t Application::updateFPS = 40;
 bool Application::closeWindow = false;
 
 Socket Application::m_Socket;
@@ -26,7 +26,7 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     m_Socket.resetIp(ip, port);
     // m_Settings_Panel.setIpAndPort(ip, port);
 
-    m_Controller.setup(36, 21, StartPosition::BOTTOM_LEFT, StartDirection::SNAKE_ROW);
+    m_Controller.setup(7, 6, StartPosition::TOP_LEFT, StartDirection::SNAKE_COLUMN);
     
     FreeType::init();
     FreeType::loadFont("res/fonts/CascadiaMonoPL.ttf", m_Controller.getRows() / 2);
@@ -34,7 +34,7 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     m_Controller.setBrightness(255);
 
     m_EffectManager.init(m_Controller);
-    m_EffectManager.setEffect(EffectEnum::PLASMA);
+    m_EffectManager.setEffect(EffectEnum::NONE);
 
     WindowManager::addWindow(&m_EffectManager);
 
@@ -61,6 +61,7 @@ void Application::start()
         if (deltaTotal >= (1.0f/(float)updateFPS))
         {
             if (m_Output) m_Controller.upload(m_Socket);
+            // std::cout << "Update\n";
 
             deltaTotal = 0;
         }

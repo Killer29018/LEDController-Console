@@ -16,7 +16,7 @@ struct Blob
 class Effect_Metaballs : public Effect
 {
 private:
-    static const uint16_t MAX_BLOBS = 10;
+    static const uint16_t MAX_BLOBS = 2;
     Blob m_Blobs[MAX_BLOBS];
     uint8_t m_Threshold;
     uint16_t m_CurrentBlobs;

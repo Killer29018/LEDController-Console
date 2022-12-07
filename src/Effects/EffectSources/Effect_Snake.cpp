@@ -10,7 +10,7 @@ Effect_Snake::Effect_Snake(LEDMatrix* matrix)
     : Effect(EffectEnum::SNAKE, matrix)
 {
     m_AI = true;
-    m_AnimateHue = false;
+    m_AnimateHue = true;
     m_SnakeCurrentCount = 0;
     m_SnakeMaxCount = 10;
 

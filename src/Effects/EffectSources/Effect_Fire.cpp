@@ -19,8 +19,8 @@ Effect_Fire::Effect_Fire(LEDMatrix* matrix)
 { 
     m_OffsetY = 0.0f;
     m_OffsetX = 0.0f;
-    m_CoolingFactor = 40.0f;
-    m_Speed = 0.04f;
+    m_CoolingFactor = 139.0f;
+    m_Speed = 0.20f;
 
     m_BufferSizeX = m_Matrix->getColumns();
     m_BufferSizeY = m_Matrix->getRows();
@@ -37,6 +37,7 @@ Effect_Fire::Effect_Fire(LEDMatrix* matrix)
             m_Buffer2.at(getIndex(x, y)) = cHSV(0, 255, 255);
         }
     }
+    setFPS(20);
 }
 
 Effect_Fire::~Effect_Fire() {}

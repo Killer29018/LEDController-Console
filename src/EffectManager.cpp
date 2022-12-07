@@ -28,7 +28,6 @@ void EffectManager::setEffect(EffectEnum effect)
     switch (effect)
     {
     case EffectEnum::NONE:              m_CurrentEffect = new Effect_None(m_Matrix); break;
-    case EffectEnum::SOLID_COLOUR:      m_CurrentEffect = new Effect_SolidColour(m_Matrix); break;
     case EffectEnum::RAINBOW:           m_CurrentEffect = new Effect_Rainbow(m_Matrix); break;
     case EffectEnum::GLITTER:           m_CurrentEffect = new Effect_Glitter(m_Matrix); break;
     case EffectEnum::PLASMA:            m_CurrentEffect = new Effect_Plasma(m_Matrix); break;
@@ -37,8 +36,6 @@ void EffectManager::setEffect(EffectEnum effect)
     case EffectEnum::FALLING_RAIN:      m_CurrentEffect = new Effect_FallingRain(m_Matrix); break;
     case EffectEnum::FADING_PIXELS:     m_CurrentEffect = new Effect_FadingPixels(m_Matrix); break;
     case EffectEnum::FIRE:              m_CurrentEffect = new Effect_Fire(m_Matrix); break;
-    case EffectEnum::TEXT:              m_CurrentEffect = new Effect_Text(m_Matrix); break;
-    case EffectEnum::PONG:              m_CurrentEffect = new Effect_Pong(m_Matrix); break;
     case EffectEnum::SNAKE:             m_CurrentEffect = new Effect_Snake(m_Matrix); break;
 
     default:

@@ -9,12 +9,12 @@
 Effect_FadingPixels::Effect_FadingPixels(LEDMatrix* matrix)
     : Effect(EffectEnum::FADING_PIXELS, matrix)
 {
-    m_RandomPixels = 20;
-    m_DecaySpeed = 10;
+    m_RandomPixels = 5;
+    m_DecaySpeed = 4;
 
     m_HueOffset = 0;
     m_DeltaHue = 1;
-    m_AnimateHue = false;
+    m_AnimateHue = true;
     m_RandomColour = false;
 
     m_CurrentCount = 0;

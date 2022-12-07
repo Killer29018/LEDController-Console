@@ -7,10 +7,10 @@
 Effect_Metaballs::Effect_Metaballs(LEDMatrix* matrix)
     : Effect(EffectEnum::METABALLS, matrix)
 {
-    m_Threshold = 128;
+    m_Threshold = 0;
     m_CurrentBlobs = 2;
     m_MaxSpeed = 0.3f;
-    m_Size = 5;
+    m_Size = 2;
 
     createBlobs();
 }

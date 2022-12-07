@@ -4,22 +4,22 @@
 
 #include "../../Utils/Helper.hpp"
 
-static float s_RaindropMinSpeed = 0.5f;
-static float s_RaindropMaxSpeed = 0.9f;
-static float s_RaindropMaxAcceleration = 0.2f;
+static float s_RaindropMinSpeed = 0.37f;
+static float s_RaindropMaxSpeed = 0.47f;
+static float s_RaindropMaxAcceleration = 0.046f;
 static uint32_t s_TrailLength = 7;
 
 Effect_FallingRain::Effect_FallingRain(LEDMatrix* matrix)
     : Effect(EffectEnum::FALLING_RAIN, matrix) 
 {
-    m_CurrentRaindrops = 20;
+    m_CurrentRaindrops = 6;
     m_RainbowColours = false;
 
-    m_AnimateHue = false;
+    m_AnimateHue = true;
     m_DeltaHue = 1;
     m_HueOffset = 0;
 
-    m_MaxCount = 10;
+    m_MaxCount = 6;
 
     createRaindrops();
 }
