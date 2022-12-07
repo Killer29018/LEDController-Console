@@ -1,8 +1,5 @@
 #include "Application.hpp"
 
-#include "System/FreeType.hpp"
-
-
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -27,9 +24,6 @@ void Application::init(const char* name, const char* ip, uint32_t port)
     // m_Settings_Panel.setIpAndPort(ip, port);
 
     m_Controller.setup(7, 6, StartPosition::TOP_LEFT, StartDirection::SNAKE_COLUMN);
-    
-    FreeType::init();
-    FreeType::loadFont("res/fonts/CascadiaMonoPL.ttf", m_Controller.getRows() / 2);
 
     m_Controller.setBrightness(255);
 

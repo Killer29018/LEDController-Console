@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.10)
 
 project (LEDController)
 
@@ -22,7 +22,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     message ("Building Debug")
     set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/debug")
     set (linker "${linker} -g")
-    add_compile_definitions(DEBUG_MODE)
 else ()
     message ("Building Release")
     set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/release")
@@ -39,11 +38,9 @@ add_subdirectory(vendor)
 
 # Add libraries and include directories
 target_include_directories(${PROJECT_NAME} PUBLIC
-    vendor/FreeType/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${linker} PUBLIC
     glm::glm
-    freetype
 )
 

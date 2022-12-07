@@ -5,6 +5,3 @@ add_subdirectory(glm)
 
 # STB
 add_subdirectory(STB)
-
-# FreeType
-add_subdirectory(FreeType)
